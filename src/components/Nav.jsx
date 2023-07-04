@@ -1,5 +1,4 @@
 import React from 'react'
-import Login from '../auth/Login'
 
 function Nav() {
   return (
@@ -15,7 +14,7 @@ function Nav() {
                 <a href="" className='px-4 text-md text-white'>Feed</a>
                 <a href="" className='px-4 text-md text-white'>About</a>
                 <a href="" className='px-4 text-md text-white'>Careers</a>
-                <Login className='ml-10'/>
+                
             </ul>
         </div>
     </nav>

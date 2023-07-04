@@ -23,8 +23,9 @@ function Login() {
   //   console.log(User)
   // }, 1000);
   return (
-    <div>
-      <button className='text-md text-white px-2 py-1 rounded-lg bg-blue-800' onClick={handelClick}>Sign In</button>
+    <div className='flex justify-center px-2 rounded-lg bg-white items-center'>
+      <button className='text-base subpixel-antialiased antialiased font-semibold mx-2' onClick={handelClick}>Sign In with Google</button>
+      <img width="100" height="100" className='w-1/4' src="https://img.icons8.com/clouds/100/google-logo.png" alt="google-logo"/>
     </div>
   )
 }
