@@ -64,13 +64,13 @@ function Signin() {
                 </form>
             </div>
         </motion.div>
-        <motion.div className='grid grid-cols-6'
+        <motion.div className='grid grid-cols-6 bg-black'
         initial={{y:600}}
         animate={{y:-500}}
         transition={{duration:6,delay:0.6, ease:"easeInOut"}}
         >
             {photos?.map((element)=>
-                <img src={element.src.portrait} className='border-gray-50 border-2 brightness-50 even:saturate-100 odd:grayscale' alt={element.alt} key={element.id}/>
+                <img src={element.src.portrait} className='border-amber-100 border-2' alt={element.alt} key={element.id}/>
             )}
         </motion.div>
     </section>
