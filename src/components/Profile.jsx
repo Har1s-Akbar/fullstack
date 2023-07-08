@@ -1,12 +1,12 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 import Nav from './Nav'
-import {Avatar} from 'antd'
-import {PictureFilled,BookFilled} from '@ant-design/icons'
 import { useState, useEffect } from 'react'
+
 
 function Profile() {
   const user = useSelector((state)=> state.reducer.userdata);
+  console.log(user)
   const [photos, setPhotos] = useState([])
     const [loading, setloading] = useState(true)
     const api_key = '6hQbAQHftoja1nH9XPBCJ3g5vUrFBFPTIqmloRdxT5gih1o5aTFgQFQq' 
@@ -24,8 +24,6 @@ function Profile() {
     }
   }
   useEffect(()=>fetchImage,[])
-  console.log(user);
-  const username = user.email.substr(0,user.email.indexOf('@'));
   return (
     <section>
       <Nav/>

@@ -7,9 +7,9 @@ function Home() {
   const isLoggedin = useSelector(state => state.reducer.isAuthenticated)
   return (
     <section>
-      { isLoggedin ? <Profile/> : <Hero/>
-      }
+      <Hero/>
     </section>
+  
   )
 }
 

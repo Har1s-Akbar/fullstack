@@ -20,7 +20,6 @@ function Hero() {
     }
   }
   useEffect(()=>fetchImage,[])
-  console.log(loading)
     return (
         loading ? <div><h1>Loading...</h1></div>:
     <section className='w-full h-screen overflow-hidden relative grid gap-x-8 gap-y-4 items-center bg-black'>

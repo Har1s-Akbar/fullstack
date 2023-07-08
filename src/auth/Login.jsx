@@ -1,17 +1,17 @@
-import React from 'react'
-import {auth, provider} from './firebaseConfig'
-import {signInWithPopup, createUserWithEmailAndPassword} from 'firebase/auth'
-import {useDispatch} from 'react-redux'
-import { AuthFail, AuthSuccess, setUser } from '../store/slice'
-import { useState } from 'react'
-import { useNavigate, redirect } from 'react-router-dom'
+import React, { useEffect } from 'react';
+import {auth, provider} from './firebaseConfig';
+import {signInWithPopup, createUserWithEmailAndPassword} from 'firebase/auth';
+import {useDispatch} from 'react-redux';
+import { AuthFail, AuthSuccess, setUser } from '../store/slice';
+import { useState } from 'react';
+import { useNavigate} from 'react-router-dom';
 
 function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('');
-  const [visible, setVisible] = useState(false)
+  const [visible, setVisible] = useState(false);
   const openModel = () => {
     setVisible(true)
   };
@@ -35,7 +35,7 @@ function Login() {
       const user = result.user;
       dispatch(setUser(user));
       dispatch(AuthSuccess());
-
+      navigate('/profile')
     }).catch((error) => {
       console.log(error);
       dispatch(setUser([]))

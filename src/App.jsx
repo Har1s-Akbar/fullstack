@@ -1,5 +1,5 @@
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom'
-import {Home} from './components/index';
+import {Home, Create} from './components/index';
 import Login from './auth/Login';
 import Profile from './components/Profile';
 import Signin from './auth/Signin';
@@ -12,6 +12,7 @@ function App() {
         <Route path='/login' Component={Login} />
         <Route path='/profile' Component={Profile} />
         <Route path='/signin' Component={Signin} />
+        <Route path='/create' Component={Create} />
       </Routes>
     </Router>
   )
