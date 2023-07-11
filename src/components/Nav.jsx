@@ -47,7 +47,7 @@ const Nav = () => {
     const items = [
         getItem(name, 'sub1',<Avatar size={'large'} draggable='false' shape='square' className='drop-shadow-4xl' src={User?.photoURL} alt={User.email}/>
         , [
-          getItem('Posts', 'g1', null,),
+          getItem(<a href="/posts">Posts</a>, 'g1', null,),
           getItem('Followers', 'g2', null),
         ]),
         {

@@ -3,6 +3,8 @@ import userReducer from './slice'
 import {persistReducer} from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 import userSlice from './slice';
+import postSlice from './postSlice';
+import postReducer from './postSlice'
 
 const persistConfig = {
   key: 'root',
@@ -10,7 +12,8 @@ const persistConfig = {
 }
 
 const rootreducer = combineReducers({
-  reducer : userSlice.reducer
+  reducer : userSlice.reducer,
+  reducerPost: postSlice.reducer
 })
 
 const persistedReducer = persistReducer(persistConfig, rootreducer)

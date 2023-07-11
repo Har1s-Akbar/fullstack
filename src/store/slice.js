@@ -20,4 +20,4 @@ const userSlice = createSlice({
 });
 
 export const {setUser, AuthSuccess,AuthFail} = userSlice.actions;
-export default userSlice;
+export default userSlice
