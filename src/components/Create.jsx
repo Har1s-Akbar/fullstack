@@ -1,9 +1,9 @@
 import React from 'react';
 import Nav from './Nav';
-import { Upload,Button } from 'antd';
+import { Button } from 'antd';
 import {UploadOutlined, ArrowRightOutlined} from '@ant-design/icons';
 import { db,storage } from '../auth/firebaseConfig';
-import {ref, uploadBytes} from 'firebase/storage'
+import {ref, uploadBytes, getDownloadURL} from 'firebase/storage'
 import {collection, addDoc, getDoc} from 'firebase/firestore/lite';
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
@@ -13,40 +13,36 @@ import { useNavigate } from 'react-router-dom';
 function Create() {
   const [Description, setDescription] = useState(null);
   const [image, setImage] =useState('')
+  const [imageUrl, setImageUrl] = useState('')
+  // const [upload, setUpload] = useState(true);
   const user = useSelector((state)=> state.reducer.userdata);
   const collectionRef = collection(db, 'users');
   const navigate = useNavigate()
-  const metadata = {  
-    customMetadata: {
-      description: Description,
-      userName: user.displayName,
-      userEmail: user.email,
-      userPhoto:user.photoURL,
-      post_useruid: user.uid,
-      isVerified: user.emailVerified
-    }
-  }
   const setPost = () => {
     if(!image){
       alert("Add a picture first")
     }
     else{
       const imageRef = ref(storage, `/image/${image[0].name + v4()} `);
-      uploadBytes(imageRef, image[0], metadata).then((snapshot) => {
-        console.log('Uploaded a blob or file!');
-        console.log(snapshot)
+      uploadBytes(imageRef, image[0]).then((snapshot) => {
+        getDownloadURL(snapshot.ref).then( url => setImageUrl(url));
+        console.log('file uploaded and url obtained');
       });
+    }
+    // navigate('/posts')
+    if(image.length > 0){
       addDoc(collectionRef, {
         description: Description,
+        post_image: imageUrl,
         userName: user.displayName,
         userEmail: user.email,
         userPhoto:user.photoURL,
         post_useruid: user.uid,
-        isVerified: user.emailVerified
-      }).then((data)=> {console.log(data)}).catch((error)=> console.log(error))
+        isVerified: user.emailVerified,
+      }).then((data)=> {console.log('data added')}).catch((error)=> console.log(error))
     }
-    navigate('/posts')
   }
+ 
   return (
     <section className='flex'>
       <div>
