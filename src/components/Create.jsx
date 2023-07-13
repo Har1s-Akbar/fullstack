@@ -4,7 +4,7 @@ import { Button } from 'antd';
 import {UploadOutlined, ArrowRightOutlined} from '@ant-design/icons';
 import { db,storage } from '../auth/firebaseConfig';
 import {ref, uploadBytes, getDownloadURL} from 'firebase/storage'
-import {collection, addDoc, getDoc} from 'firebase/firestore/lite';
+import {collection, addDoc, setDoc, query, where, QuerySnapshot, getDocs} from 'firebase/firestore/lite';
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import {v4} from 'uuid'
@@ -12,37 +12,42 @@ import { useNavigate } from 'react-router-dom';
 
 function Create() {
   const [Description, setDescription] = useState(null);
-  const [image, setImage] =useState('')
-  const [imageUrl, setImageUrl] = useState('')
-  // const [upload, setUpload] = useState(true);
+  const [image, setImage] =useState('');
+  // const [numPost, setNumPost] = useState([])
   const user = useSelector((state)=> state.reducer.userdata);
-  const collectionRef = collection(db, 'users');
   const navigate = useNavigate()
-  const setPost = () => {
+  const setPost = async() => {
+    // const queryRef = collection(db, 'users');
+    // const postNum = query(queryRef, where("userEmail", "==", user.email))
+    // const querySnapshot = await getDocs(postNum);
+    // querySnapshot.forEach((doc) => {
+    //   console.log(doc.data())
+    //   setNumPost((prev)=> [...prev, doc.data()])
+    // });
+    
+    const collectionRef = collection(db, 'users');
     if(!image){
       alert("Add a picture first")
     }
     else{
       const imageRef = ref(storage, `/image/${image[0].name + v4()} `);
-      uploadBytes(imageRef, image[0]).then((snapshot) => {
-        getDownloadURL(snapshot.ref).then( url => setImageUrl(url));
-        console.log('file uploaded and url obtained');
+      const Img = await uploadBytes(imageRef, image[0]).then((snapshot) => {
+        getDownloadURL(snapshot.ref).then((url)=>{
+          addDoc(collectionRef, {
+            description: Description,
+            post_image: url,
+            userName: user.displayName,
+            userEmail: user.email,
+            userPhoto:user.photoURL,
+            post_useruid: user.uid,
+            isVerified: user.emailVerified,
+            likes: [],
+            Comments: []
+          }).then((data)=> {console.log('data added')}).catch((error)=> console.log(error))  
+        });
       });
     }
-    // navigate('/posts')
-    if(image.length > 0){
-      addDoc(collectionRef, {
-        description: Description,
-        post_image: imageUrl,
-        userName: user.displayName,
-        userEmail: user.email,
-        userPhoto:user.photoURL,
-        post_useruid: user.uid,
-        isVerified: user.emailVerified,
-      }).then((data)=> {console.log('data added')}).catch((error)=> console.log(error))
-    }
   }
- 
   return (
     <section className='flex'>
       <div>
