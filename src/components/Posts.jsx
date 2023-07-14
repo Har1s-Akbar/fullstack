@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Nav from './Nav'
-import { getDocs, collection } from 'firebase/firestore/lite'
+import { getDocs, collection, updateDoc, arrayUnion, arrayRemove, query, where, doc, getDoc, documentId } from 'firebase/firestore/lite'
 import { db} from '../auth/firebaseConfig'
 import { useDispatch, useSelector } from 'react-redux'
 import { setPosts } from '../store/postSlice'
@@ -9,7 +9,9 @@ import { LikeOutlined, CommentOutlined, ShareAltOutlined } from '@ant-design/ico
 
 function Posts() {
     const dataRef = collection(db,"users");
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
+    const [render, setRender] = useState(false)
+    const user = useSelector((state)=> state.reducer.userdata)
     const Allposts = useSelector((state)=> state.reducerPost.userPosts)
     const getData = () => {
         getDocs(dataRef).then((resp)=>{
@@ -17,8 +19,36 @@ function Posts() {
             dispatch(setPosts(data))
         })
     }
-    useEffect(()=> getData, [])
-    console.log(Allposts) 
+    useEffect(()=> getData, [render])
+    const handleLikes = async(post_url) => {
+        const queryRef = collection(db, 'users');
+        const likedPost = query(queryRef, where("post_image", "==", post_url))
+        const querySnapshot = await getDocs(likedPost);
+        querySnapshot.forEach((document) => {
+            setRender(true)
+            const idDocument = document.id
+            const specificRef = doc(db, "users", document.id)
+            getDoc(specificRef).then((resp)=> {
+            const data = resp.data()
+            const likesArray = data.likes
+            const updateRef = doc(db, "users", idDocument)
+            console.log(likesArray)
+                if(likesArray.includes(user.uid)){
+                    updateDoc(updateRef,{
+                        likes: arrayRemove(user.uid)
+                    })
+                    setRender(false)
+                }
+                else{
+                    updateDoc( updateRef,{
+                        likes: arrayUnion(user.uid)
+                    })
+                    setRender(false)
+                }
+
+            })
+        })
+    }
   return (
     <section className='flex'>
         <div className='w-1/5'>
@@ -38,7 +68,7 @@ function Posts() {
                         </div>
                     </div>
                     <div className='flex'>
-                        <button className='px-28 border-2 py-2 rounded flex jutsify-center items-center'>
+                        <button className='px-28 border-2 py-2 rounded flex jutsify-center items-center' type='button' onClick={()=> handleLikes(item.post_image)}>
                             <div className='flex items-center '>
                                 <h1 className='mx-2'>{item.likes.length}</h1>
                                 <LikeOutlined style={{fontSize:'20px'}}/>

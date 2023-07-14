@@ -17,14 +17,6 @@ function Create() {
   const user = useSelector((state)=> state.reducer.userdata);
   const navigate = useNavigate()
   const setPost = async() => {
-    // const queryRef = collection(db, 'users');
-    // const postNum = query(queryRef, where("userEmail", "==", user.email))
-    // const querySnapshot = await getDocs(postNum);
-    // querySnapshot.forEach((doc) => {
-    //   console.log(doc.data())
-    //   setNumPost((prev)=> [...prev, doc.data()])
-    // });
-    
     const collectionRef = collection(db, 'users');
     if(!image){
       alert("Add a picture first")
