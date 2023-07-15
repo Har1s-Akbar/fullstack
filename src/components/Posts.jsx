@@ -23,21 +23,19 @@ function Posts() {
             dispatch(setPosts(data))
         })
     }
-    console.log(Allposts)
     useEffect(()=> getData, [render])
-    const handleLikes = async(post_url) => {
-        const queryRef = collection(db, 'users');
-        const likedPost = query(queryRef, where("post_image", "==", post_url))
-        const querySnapshot = await getDocs(likedPost);
-        querySnapshot.forEach((document) => {
+    const handleLikes = async(Id) => {
+        // const queryRef = collection(db, 'users');
+        // const likedPost = query(queryRef, where("post_image", "==", post_url))
+        // const querySnapshot = await getDocs(likedPost);
+        // querySnapshot.forEach((document) => {
             setRender(true)
-            const idDocument = document.id
-            const specificRef = doc(db, "users", document.id)
+            const idDocument = Id
+            const specificRef = doc(db, "users", Id)
             getDoc(specificRef).then((resp)=> {
             const data = resp.data()
             const likesArray = data.likes
             const updateRef = doc(db, "users", idDocument)
-            console.log(likesArray)
                 if(likesArray.includes(user.uid)){
                     updateDoc(updateRef,{
                         likes: arrayRemove(user.uid)
@@ -52,8 +50,9 @@ function Posts() {
                 }
 
             })
-        })
-    }
+        }
+        // )
+    // }
   return (
     <section className='flex' nodeRef={nodeRef}>
         <div className='w-1/5'>
@@ -74,7 +73,7 @@ function Posts() {
                         </div>
                     </div>
                     <div className='flex'>
-                        <button className='px-28 border-2 py-2 rounded flex jutsify-center items-center' type='button' onClick={()=> handleLikes(item.post_image)}>
+                        <button className='px-28 border-2 py-2 rounded flex jutsify-center items-center' type='button' onClick={()=> handleLikes(item.Id)}>
                             <div className='flex items-center '>
                                 <h1 className='mx-2'>{item.likes.length}</h1>
                                 <LikeOutlined style={{fontSize:'20px'}}/>

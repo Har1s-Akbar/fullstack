@@ -4,8 +4,8 @@ import { Button } from 'antd';
 import {UploadOutlined, ArrowRightOutlined} from '@ant-design/icons';
 import { db,storage } from '../auth/firebaseConfig';
 import {ref, uploadBytes, getDownloadURL} from 'firebase/storage'
-import {collection, addDoc, setDoc, query, where, QuerySnapshot, getDocs, doc} from 'firebase/firestore/lite';
-import { useState, useEffect } from 'react';
+import { setDoc, doc, DocumentReference} from 'firebase/firestore/lite';
+import { useState} from 'react';
 import { useSelector } from 'react-redux';
 import {v4} from 'uuid'
 import { useNavigate } from 'react-router-dom';
@@ -13,7 +13,6 @@ import { useNavigate } from 'react-router-dom';
 function Create() {
   const [Description, setDescription] = useState(null);
   const [image, setImage] =useState('');
-  // const [numPost, setNumPost] = useState([])
   const user = useSelector((state)=> state.reducer.userdata);
   const navigate = useNavigate()
   const setPost = async() => {
@@ -36,7 +35,6 @@ function Create() {
             post_useruid: user.uid,
             isVerified: user.emailVerified,
             likes: [],
-            Comments: []
           }).then((data)=> {console.log('data added')}).catch((error)=> console.log(error))  
         });
       });

@@ -1,20 +1,28 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
-import { db,storage } from '../auth/firebaseConfig';
-import {ref, uploadBytes, getDownloadURL} from 'firebase/storage'
-import {collection, addDoc, setDoc, query, where, QuerySnapshot, getDocs} from 'firebase/firestore/lite';
+import { db } from '../auth/firebaseConfig';
+import {collection, doc, setDoc} from 'firebase/firestore/lite';
 import Nav from './Nav';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Image, Avatar } from 'antd';
-import { LikeOutlined, CommentOutlined, RightOutlined } from '@ant-design/icons';
+import { CommentOutlined, RightOutlined } from '@ant-design/icons';
 
 function Comments() {
-  // const [comment, setComment] = useState('')
+  const [commentText, setComment] = useState('')
   const {id} = useParams();
-  const commentRef = collection(db, 'users');
   const Allposts = useSelector((state)=> state.reducerPost.userPosts) 
+  const user = useSelector((state)=> state.reducer.userdata)
   const commentPost = Allposts.filter((item)=> item.Id === id)
+  const handleComment= async(event)=>{
+    event.preventDefault();
+    // setDoc(doc(db, "comments", id),{
+    //   commentId: id,
+    //   photoUrl :user.photoURL,
+    //   name: user.displayName,
+    //   comment: commentText
+    // }).then((data)=> console.log('comment added')).catch((error)=> console.log(error))
+  }
   return (
     <main className='flex'>
       <Nav/>
@@ -60,10 +68,10 @@ function Comments() {
           <div>
             <h1 className='text-4xl font-mono'>Create a Comment</h1>
           </div>
-            <form className='flex flex-col'>
+            <form className='flex flex-col' onSubmit={handleComment}>
                       <label htmlFor="comment" className='font-semibold my-2 text-base subpixel-antialiased antialiased'>Comment</label>
                       <div className='flex '>
-                          <input type="text" name="comment" id="comment" className='appearance-none border-b-2 bg-transparent border-black placeholder:italic pl-2 focus:outline-0 hover:outline-0' placeholder='write a comment....'/>
+                          <input type="text" name="comment" onChange={(e)=> setComment(e.target.value)} id="comment" className='appearance-none border-b-2 bg-transparent border-black placeholder:italic pl-2 focus:outline-0 hover:outline-0' placeholder='write a comment....'/>
 
                           <button type='submit' className=' m-auto rounded w-1/6 pb-1 hover:bg-black hover:text-white transition delay-100 duration-300'><RightOutlined /></button>
                       </div>
