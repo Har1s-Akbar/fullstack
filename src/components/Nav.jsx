@@ -1,12 +1,11 @@
 import { PlusSquareOutlined, SettingOutlined, AppstoreOutlined, UsergroupDeleteOutlined } from '@ant-design/icons';
-import { Menu, Avatar, message } from 'antd';
+import { Menu, Avatar, message,Affix } from 'antd';
 import { useSelector } from 'react-redux';
 import { auth } from '../auth/firebaseConfig';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setUser } from '../store/slice';
-import store from '../store/store';
-
+import { useState } from 'react';
 function getItem(label, key, icon, children, type) {
   const navigate = useNavigate()
   return {
@@ -74,8 +73,10 @@ const Nav = () => {
     <Menu
       onClick={onClick}
       style={{
-        width: 256,
+        width: 300,
       }}
+      className='min-h-screen'
+      theme='dark'
       defaultSelectedKeys={['1']}
       defaultOpenKeys={['sub1']}
       mode="inline"

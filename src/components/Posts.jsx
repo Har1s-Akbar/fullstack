@@ -3,11 +3,13 @@ import Nav from './Nav'
 import { getDocs, collection, updateDoc, arrayUnion, arrayRemove, query, where, doc, getDoc, documentId } from 'firebase/firestore/lite'
 import { db} from '../auth/firebaseConfig'
 import { useDispatch, useSelector } from 'react-redux'
-import { setPosts } from '../store/postSlice'
+import { setDocId, setPosts } from '../store/postSlice'
 import { Avatar, Image, Button, Space } from 'antd'
 import { LikeOutlined, CommentOutlined, ShareAltOutlined } from '@ant-design/icons'
+import { Link } from 'react-router-dom'
 
 function Posts() {
+    const nodeRef = React.useRef(null)
     const dataRef = collection(db,"users");
     const dispatch = useDispatch();
     const [render, setRender] = useState(false)
@@ -16,9 +18,12 @@ function Posts() {
     const getData = () => {
         getDocs(dataRef).then((resp)=>{
             const data = resp.docs.map((item)=> {return item.data()})
+            const IdDocs = resp.docs.map((item)=> {return item.id})
+            dispatch(setDocId(IdDocs))
             dispatch(setPosts(data))
         })
     }
+    console.log(Allposts)
     useEffect(()=> getData, [render])
     const handleLikes = async(post_url) => {
         const queryRef = collection(db, 'users');
@@ -50,7 +55,7 @@ function Posts() {
         })
     }
   return (
-    <section className='flex'>
+    <section className='flex' nodeRef={nodeRef}>
         <div className='w-1/5'>
             <Nav/>
         </div>
@@ -64,7 +69,8 @@ function Posts() {
                         </div>
                         <div>
                             <h1 className='font-medium text-xl my-3 border-l-2 border-black pl-2'>{item.description}</h1>
-                            <Image src={item.post_image} className='rounded drop-shadow-xl border-2 border-yellow-200' width={700} alt={item.userName} fallback='https://shorturl.at/IKMT0'/>  
+                            <Image src={item.post_image} className='rounded drop-shadow-xl border-2 border-yellow-200' 
+                            width={700} alt={item.userName} fallback='https://shorturl.at/IKMT0' />  
                         </div>
                     </div>
                     <div className='flex'>
@@ -75,7 +81,10 @@ function Posts() {
                             </div>
                         </button>
                         <button className='px-28 border-2 py-2 rounded flex jutsify-center items-center'>
-                            <CommentOutlined style={{fontSize:'20px'}}/>
+                            <Link to={`/posts/comments/${item.Id}`}>
+                            <CommentOutlined style={{fontSize:'20px'}} />
+                            </Link>
+                            
                         </button>
                         <button className='px-28 border-2 py-2 rounded flex jutsify-center items-center'>
                             <ShareAltOutlined style={{fontSize:'20px'}}/>

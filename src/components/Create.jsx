@@ -4,7 +4,7 @@ import { Button } from 'antd';
 import {UploadOutlined, ArrowRightOutlined} from '@ant-design/icons';
 import { db,storage } from '../auth/firebaseConfig';
 import {ref, uploadBytes, getDownloadURL} from 'firebase/storage'
-import {collection, addDoc, setDoc, query, where, QuerySnapshot, getDocs} from 'firebase/firestore/lite';
+import {collection, addDoc, setDoc, query, where, QuerySnapshot, getDocs, doc} from 'firebase/firestore/lite';
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import {v4} from 'uuid'
@@ -17,7 +17,8 @@ function Create() {
   const user = useSelector((state)=> state.reducer.userdata);
   const navigate = useNavigate()
   const setPost = async() => {
-    const collectionRef = collection(db, 'users');
+    const uniqueId = v4()
+    // const collectionRef = collection(db, 'users', uniqueId);
     if(!image){
       alert("Add a picture first")
     }
@@ -25,7 +26,8 @@ function Create() {
       const imageRef = ref(storage, `/image/${image[0].name + v4()} `);
       const Img = await uploadBytes(imageRef, image[0]).then((snapshot) => {
         getDownloadURL(snapshot.ref).then((url)=>{
-          addDoc(collectionRef, {
+          setDoc(doc(db, "users", uniqueId), {
+            Id : uniqueId,
             description: Description,
             post_image: url,
             userName: user.displayName,
