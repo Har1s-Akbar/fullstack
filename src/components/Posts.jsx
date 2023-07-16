@@ -9,7 +9,6 @@ import { LikeOutlined, CommentOutlined, ShareAltOutlined } from '@ant-design/ico
 import { Link } from 'react-router-dom'
 
 function Posts() {
-    const nodeRef = React.useRef(null)
     const dataRef = collection(db,"users");
     const dispatch = useDispatch();
     const [render, setRender] = useState(false)
@@ -54,7 +53,7 @@ function Posts() {
         // )
     // }
   return (
-    <section className='flex' nodeRef={nodeRef}>
+    <section className='flex'>
         <div className='w-1/5'>
             <Nav/>
         </div>

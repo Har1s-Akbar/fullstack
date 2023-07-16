@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { db } from '../auth/firebaseConfig';
-import {collection, doc, setDoc} from 'firebase/firestore/lite';
+import {arrayUnion, collection, doc, getDoc, setDoc, updateDoc} from 'firebase/firestore/lite';
 import Nav from './Nav';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -11,20 +11,35 @@ import { CommentOutlined, RightOutlined } from '@ant-design/icons';
 function Comments() {
   const [commentText, setComment] = useState('')
   const {id} = useParams();
+  const [loading, setloading] = useState(false)
   const Allposts = useSelector((state)=> state.reducerPost.userPosts) 
   const user = useSelector((state)=> state.reducer.userdata)
   const commentPost = Allposts.filter((item)=> item.Id === id)
+  const [cPost, setcPost] = useState(null);
+  
+  const getComments = () => {
+    const postRef = doc(db, "users", id)
+    getDoc(postRef).then((resp) => {
+      const data = resp.data();
+      setcPost(data.comments)
+      setloading(true)
+    })
+  }
   const handleComment= async(event)=>{
     event.preventDefault();
-    // setDoc(doc(db, "comments", id),{
-    //   commentId: id,
-    //   photoUrl :user.photoURL,
-    //   name: user.displayName,
-    //   comment: commentText
-    // }).then((data)=> console.log('comment added')).catch((error)=> console.log(error))
+    event.target.reset();
+    const commentRef = doc(db, "users", id)
+    updateDoc(commentRef,{
+      comments: arrayUnion({
+        commnetProfile: user.displayName,
+        commentPhoto:user.photoURL,
+        comment: commentText,
+      })
+    })
   }
+  useEffect(()=> getComments, [cPost, loading])
   return (
-    <main className='flex'>
+    <main className=  'flex'>
       <Nav/>
       <div className=' m-auto grid grid-cols-2'>
         <div>
@@ -47,19 +62,25 @@ function Comments() {
                             <h1 className='text-md mx-2'>Comments</h1>
                             <CommentOutlined style={{fontSize:'20px'}} />
                         </button>
+                        { loading ? 
                         <div className='border-2 rounded p-5 border-2 bg-teal-400'>
-                          <div className='border-2 p-3 rounded bg-stone-400 opacity-90 shadow-2xl'>
+                        {cPost.map((item)=> {
+                          return <div className='border-2 p-3 my-4 overflow-y-scroll rounded odd:bg-red-500 even:bg-blue-500 even:text-white opacity-90 shadow-2xl'>
                             <div className='flex items-center '>
-                              <Avatar src={item.userPhoto} className='border-2 border-orange-300'/>
-                              <h1 className='mx-2 font-medium'>{item.userName}</h1>
+                              <Avatar src={item.commentPhoto} className='border-2 border-orange-300'/>
+                              <h1 className='mx-2 font-medium'>{item.commnetProfile}</h1>
                             </div>
                             <div className='my-3 text-base'>
                               <h1 className='ml-2'>
-                                Hey this is a great Post!!!
+                                {item.comment}
                               </h1>
                             </div>
                           </div>
+                        })}
                         </div>
+                        :
+                        <div><h1>comments are being Loaded....</h1></div>
+                        }
                     </div>
                 </div>
             })}
