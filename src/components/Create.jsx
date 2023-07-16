@@ -13,7 +13,8 @@ import { useNavigate } from 'react-router-dom';
 function Create() {
   const [Description, setDescription] = useState(null);
   const [image, setImage] =useState('');
-  const user = useSelector((state)=> state.reducer.userdata);
+  // const user = useSelector((state)=> state.reducer.userdata);
+  const user = useSelector((state)=> state.reducer.copyUserdata);
   const navigate = useNavigate()
   const setPost = async() => {
     const uniqueId = v4()
@@ -29,11 +30,11 @@ function Create() {
             Id : uniqueId,
             description: Description,
             post_image: url,
-            userName: user.displayName,
+            userName: user.name,
             userEmail: user.email,
-            userPhoto:user.photoURL,
+            userPhoto:user.photo,
             post_useruid: user.uid,
-            isVerified: user.emailVerified,
+            isVerified: user.Isverified,
             likes: [],
             comments: []
           }).then((data)=> {console.log('data added')}).catch((error)=> console.log(error))  

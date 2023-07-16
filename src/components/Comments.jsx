@@ -13,7 +13,7 @@ function Comments() {
   const {id} = useParams();
   const [loading, setloading] = useState(false)
   const Allposts = useSelector((state)=> state.reducerPost.userPosts) 
-  const user = useSelector((state)=> state.reducer.userdata)
+  const user = useSelector((state)=> state.reducer.copyUserdata)
   const commentPost = Allposts.filter((item)=> item.Id === id)
   const [cPost, setcPost] = useState(null);
   
@@ -31,8 +31,8 @@ function Comments() {
     const commentRef = doc(db, "users", id)
     updateDoc(commentRef,{
       comments: arrayUnion({
-        commnetProfile: user.displayName,
-        commentPhoto:user.photoURL,
+        commnetProfile: user.name,
+        commentPhoto:user.photo,
         comment: commentText,
       })
     })

@@ -41,10 +41,10 @@ const Nav = () => {
       message.error('Failed to log out')}
     )
   }
-    const User = useSelector((state)=> state.reducer.userdata)
-    const name = User.displayName
+    const User = useSelector((state)=> state.reducer.copyUserdata)
+    const name = User.name
     const items = [
-        getItem(name, 'sub1',<Avatar size={'large'} draggable='false' shape='square' className='drop-shadow-4xl' src={User?.photoURL} alt={User.email}/>
+        getItem(name, 'sub1',<Avatar size={'large'} draggable='false' shape='square' className='drop-shadow-4xl' src={User?.photo} alt={User.email}/>
         , [
           getItem(<a href="/posts">Posts</a>, 'g1', null,),
           getItem('Followers', 'g2', null),
@@ -76,7 +76,7 @@ const Nav = () => {
         width: 300,
       }}
       className='min-h-screen'
-      theme='dark'
+        
       defaultSelectedKeys={['1']}
       defaultOpenKeys={['sub1']}
       mode="inline"

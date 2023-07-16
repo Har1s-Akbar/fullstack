@@ -12,7 +12,7 @@ function Posts() {
     const dataRef = collection(db,"users");
     const dispatch = useDispatch();
     const [render, setRender] = useState(false)
-    const user = useSelector((state)=> state.reducer.userdata)
+    const user = useSelector((state)=> state.reducer.copyUserdata)
     const Allposts = useSelector((state)=> state.reducerPost.userPosts)
     const getData = () => {
         getDocs(dataRef).then((resp)=>{
