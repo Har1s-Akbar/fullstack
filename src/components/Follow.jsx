@@ -16,17 +16,7 @@ function Follow() {
            setfollowusers(data)
         })
     }
-    const handleFollowerSingle = async(uid, index, event)=>{
-        // setFollowIndex(index)
-        // setDouble(prev => prev + event.detail)
-        // console.log(double)
-        // if (double === 1){
-        //     setFollowIndex(index)
-        // }
-        // if(double === 2){
-        //     setFollowIndex(index + 100)
-        //     setDouble(event.detail)
-        // }
+    const handleFollowerSingle = async(uid)=>{
         const followerRef = doc(db, 'usersProfile', uid)
         getDoc(followerRef).then((item)=> {  
             const data = item.data()
@@ -56,7 +46,8 @@ function Follow() {
         })
     }
     useEffect(()=> getUsers, [])
-    
+    const filterArray = followUsers.filter((item)=> item.uid !== user.uid)
+    console.log(filterArray)
   return (
     <section className='flex items-center'>
         <div className='w-1/5'>
@@ -70,8 +61,8 @@ function Follow() {
             </div>
             <div className=''>
                 {
-                    followUsers.map((items, index)=> {
-                        return <Link to={`/profile/${items.Id}`}>
+                    filterArray.map((items, index)=> {
+                        return <Link to={`/profile/${items.uid}`}>
                             <div className='flex justify-between my-5 border-2 bg-red-100 py-2 rounded px-2'>
                             <div className='flex items-center'>
                                 <Avatar size={'large'} src={items.photo} />
