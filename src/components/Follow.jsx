@@ -4,10 +4,10 @@ import { collection, getDocs, arrayRemove, doc,arrayUnion, getDoc, updateDoc } f
 import { db } from '../auth/firebaseConfig'
 import { Avatar } from 'antd'
 import { useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
 
 function Follow() {
-    const [followUsers, setfollowusers] = useState([])
-    const [remove, setRemove] = useState(false)
+    const [followUsers, setfollowusers] = useState([]);
     const user = useSelector((state)=> state.reducer.copyUserdata)
     const getUsers = async() => {
         const usersRef = collection(db, "usersProfile")
@@ -16,16 +16,23 @@ function Follow() {
            setfollowusers(data)
         })
     }
-    const handleFollower = async(uid)=>{
-        setRemove(false)
+    const handleFollowerSingle = async(uid, index, event)=>{
+        // setFollowIndex(index)
+        // setDouble(prev => prev + event.detail)
+        // console.log(double)
+        // if (double === 1){
+        //     setFollowIndex(index)
+        // }
+        // if(double === 2){
+        //     setFollowIndex(index + 100)
+        //     setDouble(event.detail)
+        // }
         const followerRef = doc(db, 'usersProfile', uid)
         getDoc(followerRef).then((item)=> {  
             const data = item.data()
             const followersArray = data.followers
               const followersData = data.followersData 
-              console.log(followersArray)
               if(followersArray.includes(user.uid)){
-                setRemove(false)
                 updateDoc(followerRef,{
                     followers: arrayRemove(user.uid),
                     followersData: arrayRemove({
@@ -36,7 +43,6 @@ function Follow() {
                     })
                 })
               }else{
-                setRemove(true)
                 updateDoc(followerRef,{
                     followers: arrayUnion(user.uid),
                     followersData: arrayUnion({
@@ -48,9 +54,9 @@ function Follow() {
                 })
               }
         })
-    } 
+    }
     useEffect(()=> getUsers, [])
-    console.log(followUsers)
+    
   return (
     <section className='flex items-center'>
         <div className='w-1/5'>
@@ -64,16 +70,15 @@ function Follow() {
             </div>
             <div className=''>
                 {
-                    followUsers.map((items)=> {
-                        return <div className='flex justify-between my-5 border-2 bg-red-100 py-2 rounded px-2'>
+                    followUsers.map((items, index)=> {
+                        return <Link to={`/profile/${items.Id}`}>
+                            <div className='flex justify-between my-5 border-2 bg-red-100 py-2 rounded px-2'>
                             <div className='flex items-center'>
                                 <Avatar size={'large'} src={items.photo} />
                                 <h1 className='mx-2 font-semibold'>{items.name}</h1>
                             </div>
-                            <div>
-                                <button className='border-2 px-2 py-1 rounded bg-black text-white font-semibold opacity-80 after:bg-blue' onClick={()=> handleFollower(items.uid)}>Follow</button>
-                            </div>
                         </div>
+                        </Link>
                     })
                 }
             </div>

@@ -6,9 +6,11 @@ import { db, storage } from '../auth/firebaseConfig';
 import { Avatar, Image, Dropdown } from 'antd';
 import { v4 } from 'uuid';
 import { setcopyData } from '../store/slice';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 function Profile() {
+  const {id} = useParams()
+  console.log(id)
   const user = useSelector((state)=> state.reducer.userdata);
   const CopyUser = useSelector((state)=> state.reducer.copyUserdata)
   const dispatch = useDispatch()
