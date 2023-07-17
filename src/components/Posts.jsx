@@ -14,13 +14,20 @@ function Posts() {
     const [render, setRender] = useState(false)
     const user = useSelector((state)=> state.reducer.copyUserdata)
     const Allposts = useSelector((state)=> state.reducerPost.userPosts)
-    const getData = () => {
-        getDocs(dataRef).then((resp)=>{
-            const data = resp.docs.map((item)=> {return item.data()})
-            const IdDocs = resp.docs.map((item)=> {return item.id})
-            dispatch(setDocId(IdDocs))
-            dispatch(setPosts(data))
-        })
+    
+    const getData = async() => {
+        const queryRef = collection(db, 'users');
+        const likedPost = query(queryRef, where("post_useruid", "==", user.uid))
+        const querySnapshot = await getDocs(likedPost);
+        // console.log(querySnapshot)
+        // getDocs(dataRef).then((resp)=>{
+        //     const data = resp.docs.map((item)=> {return item.data()})
+        //     const IdDocs = resp.docs.map((item)=> {return item.id})
+        //     dispatch(setDocId(IdDocs))
+        // })
+        const data = querySnapshot.docs.map((item)=> {return item.data()})
+        dispatch(setPosts(data))
+
     }
     useEffect(()=> getData, [render])
     const handleLikes = async(Id) => {
@@ -58,6 +65,9 @@ function Posts() {
             <Nav/>
         </div>
         <div className='w-full'>
+            {Allposts ?     
+            <section>
+
             {Allposts.map((item, index)=> {
                 return <div className='mt-10 flex flex-col items-center'>
                     <div key={index}>
@@ -90,6 +100,10 @@ function Posts() {
                     </div>
                 </div>
             })}
+            </section>
+            :
+            <div>Loading...</div>
+            }
         </div>
     </section>
   )

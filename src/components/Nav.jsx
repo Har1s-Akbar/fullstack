@@ -44,10 +44,10 @@ const Nav = () => {
     const User = useSelector((state)=> state.reducer.copyUserdata)
     const name = User.name
     const items = [
-        getItem(name, 'sub1',<Avatar size={'large'} draggable='false' shape='square' className='drop-shadow-4xl' src={User?.photo} alt={User.email}/>
-        , [
+        getItem(<a href="/profile">{name}</a>, 'sub1',<Avatar size={'large'} draggable='false' shape='square' className='drop-shadow-4xl' src={User.photo} alt={User.email}/>
+        ,   [
           getItem(<a href="/posts">Posts</a>, 'g1', null,),
-          getItem('Followers', 'g2', null),
+          getItem(<a href="/follow">Follow People</a>, 'g2', null),
         ]),
         {
             type: 'divider',

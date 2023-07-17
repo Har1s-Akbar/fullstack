@@ -65,7 +65,7 @@ function Comments() {
                         { loading ? 
                         <div className='border-2 rounded p-5 border-2 bg-teal-400'>
                         {cPost.map((item)=> {
-                          return <div className='border-2 p-3 my-4 overflow-y-scroll rounded odd:bg-red-500 even:bg-blue-500 even:text-white opacity-90 shadow-2xl'>
+                          return <div className='border-2 p-3 my-4 rounded odd:bg-red-500 even:bg-blue-500 even:text-white opacity-90 shadow-2xl'>
                             <div className='flex items-center '>
                               <Avatar src={item.commentPhoto} className='border-2 border-orange-300'/>
                               <h1 className='mx-2 font-medium'>{item.commnetProfile}</h1>

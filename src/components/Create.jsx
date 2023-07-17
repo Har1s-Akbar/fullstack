@@ -36,7 +36,8 @@ function Create() {
             post_useruid: user.uid,
             isVerified: user.Isverified,
             likes: [],
-            comments: []
+            comments: [],
+            followers:[]
           }).then((data)=> {console.log('data added')}).catch((error)=> console.log(error))  
         });
       });

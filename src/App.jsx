@@ -1,5 +1,5 @@
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom'
-import {Home, Create, Comments, Posts} from './components/index';
+import {Home, Create, Comments, Posts, Follow} from './components/index';
 import Login from './auth/Login';
 import Profile from './components/Profile';
 import Signin from './auth/Signin';
@@ -16,6 +16,7 @@ function App() {
         <Route path='/create' Component={Create} />
         <Route path='/posts/comments/:id' Component={Comments} />
         <Route path='/posts' Component={Posts}/>
+        <Route path='follow' Component={Follow}/>
       </Routes>
     </Router>
   )
