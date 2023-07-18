@@ -3,13 +3,12 @@ import { auth } from '../auth/firebaseConfig';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import {
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
   HomeFilled,
   PlusSquareFilled,
   SettingFilled,
   ContactsFilled,
-  BellFilled
+  BellFilled,
+  UserOutlined
 } from '@ant-design/icons';
 import { Button, Menu, ConfigProvider } from 'antd';
 import { signOut } from 'firebase/auth';
@@ -34,11 +33,11 @@ const items = [
   ]),
 ];
 const App = () => {
-
-
-  const Nav = () => {
+    const [currentKey, setKey] = useState('1')
+    const User = useSelector((state)=> state.reducer.copyUserdata)
+    const name = User.name
     const dispatch = useDispatch()
-    const navigate = useNavigate('')
+    const navigate = useNavigate()
     const currentUser = () => {
       auth.onAuthStateChanged((current)=>{
         if(current){
@@ -49,7 +48,7 @@ const App = () => {
       })
     }
     
-    const signOut = () => {
+    const signOutFunct = () => {
       currentUser();
       auth.signOut().then(()=>{
         console.log('signned out');
@@ -60,25 +59,18 @@ const App = () => {
         {console.log(error);
         message.error('Failed to log out')}
       )
-    }}
-    const User = useSelector((state)=> state.reducer.copyUserdata)
-    const name = User.name
-
-  const [currentKey, setKey] = useState('1')
-  const onClick = (e) => {
-    if(e.key === '5'){
-      signOut()
     }
-    setKey(e.key)
+  const handleClick = (e) => {
+    if(e.key === '5'){
+      signOutFunct()
+    }
   };
   return (
     <div className='sticky ml-16 top-48'
     >
       {/* </Button> */}
       <Menu
-        defaultSelectedKeys={['1']}
-        selectedKeys={currentKey}
-        onClick={onClick}    
+        onClick={handleClick}    
         mode="inline"
         theme='dark'
         className='bg-secondary rounded-full text-dim-white '

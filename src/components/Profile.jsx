@@ -7,10 +7,11 @@ import { Avatar, Image, Dropdown } from 'antd';
 import { v4 } from 'uuid';
 import { setcopyData } from '../store/slice';
 import { Link, useParams } from 'react-router-dom';
+import { PlusOutlined, BarsOutlined } from '@ant-design/icons';
 
 function Profile() {
-  const {id} = useParams()
-  console.log(id)
+  // const {id} = useParams()
+  // console.log(id)
   const user = useSelector((state)=> state.reducer.userdata);
   const CopyUser = useSelector((state)=> state.reducer.copyUserdata)
   const dispatch = useDispatch()
@@ -29,7 +30,7 @@ function Profile() {
             photo: user.photoURL,
             isanonymous : user.isAnonymous,
             Isverified: user.emailVerified
-          }).then((data)=> console.log(data)).catch((error)=> console.log(error))
+          })
         }
         else{
         querySnapshot.forEach((docs)=> {
@@ -42,54 +43,54 @@ function Profile() {
     const queryRef = collection(db, 'users');
       const likedPost = query(queryRef, where("post_useruid", "==", user.uid))
       const querySnapshot = await getDocs(likedPost);
-      querySnapshot.forEach((docs)=> {
-        setPosts((prev)=> [...prev, docs.data()]);
-      })
+      const data = querySnapshot.docs.map((item)=> {return item.data()})
+      setPosts(data)
     }
     useEffect(()=> getPosts, [user])
     useEffect(()=> getUser, [])
-    const unique = [...new Map(posts.map(item => [item['post_image'], item])).values()]
-  return (
+    // const unique = [...new Map(posts.map(item => [item['post_image'], item])).values()]
+    return (
     <section className='flex bg-main text-dim-white min-h-screen'>
     <div className=''>
       <Nav/>
     </div>
-    <div className='flex w-full flex-col items-center my-5'>
-        <Avatar src={CopyUser?.photo} size={'large'}/>
-        <h1 className='text-2xl '>{CopyUser?.name}</h1>
-        
-      <div className='my-2'>
-        <h1>
-          "Man Child in the promised NeverLand"
-        </h1>
+    <div className='flex flex-col'>
+      <div className='bg-secondary my-10 w-1/2 h-1/2 flex items-end rounded-xl m-auto'>
+          <Image src={CopyUser.photo} preview={false} fallback='https://rb.gy/tebns' className='rounded-full w-1/2 opacity-80 border-2 border-dim-white my-5 ml-5' width={55}/>
+          <PlusOutlined className='mb-6'/>
       </div>
-      <div className='flex'>
-        <div>
-          <button className='border-2 px-3 py-1 rounded font-semibold text-white bg-black opacity-60 '><div>
-          <h1>Followers</h1>
-          <p>0</p>
-          </div>
-          </button>
-        </div>
-        <div>
-          <button className='border-2 px-3 py-1 rounded font-semibold text-white bg-black opacity-60 '><div>
-          <h1>Following</h1>
-          <p>0</p>
-          </div>
-          </button>
-        </div>
-      </div>
-      <div className='my-10 flex w-11/12 flex-col items-center justify-center'>
-        <div>
-          <h1 className='text-5xl my-5 font-mono'>Your Posts</h1>
-        </div>
-        <div className='grid grid-cols-3 w-3/4 border-2 rounded grid-rows-4'>
-          {unique.map((item)=> {
-            return <Link className='group' to={`/posts/comments/${item.Id}`}>
-            <Image src={item.post_image} className='rounded ease-linear relative delay-75 duration-100 transition hover:brightness-50' preview={false}/>
-            </Link>
-          })}
-        </div>
+      <div className=' flex flex-col items-start'>
+        {posts.map((item)=> {
+          return <Link to={`/comments/${item.Id}`} className='bg-secondary w-2/3 ml-14 rounded-xl flex my-5 justify-between'>
+            <div className='w-1/2'>
+              <div className='w-full flex items-satrt justify-between mt-3 border-b-2 pb-5 border-dimest'>
+                <div className='flex ml-3 items-center'>
+                  <Image src={item.userPhoto} className='rounded-full' preview={false} width={60}/>
+                  <div className='flex flex-col items-start mx-3'>
+                    <h1 className='text-dim-white font-semibold'>{item.userName}</h1>
+                    <p className='italic text-xs font-bold'>@harisak</p>
+                    <p className='text-xs text-dim-white my-2 font-semibold'>{item.description}</p>
+                  </div>
+                </div>
+                <div className='mr-5'>
+                  <Avatar icon={<BarsOutlined />} className='bg-secondary'/>
+                </div>
+              </div>
+              <div className='w-full'>
+                {item.comments.map((cmnt)=> {
+                  return <div className='my-2 ml-3 flex items-center'>
+                    <Avatar src={cmnt.commentPhoto} size={'small'}/>
+                    <p className='text-xs font-bold text-dim-white mx-2'>{cmnt.commnetProfile} :</p>
+                    <p className='text-xs font-medium opacity-80 text-dim-white'>{cmnt.comment}</p>
+                  </div>
+                })}
+              </div>
+            </div>
+          <div className='w-3/5 flex'>
+            <Image src={item.post_image} className='rounded-xl '/>
+          </div> 
+          </Link>
+        })}
       </div>
     </div>
   </section>

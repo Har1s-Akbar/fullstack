@@ -3,7 +3,6 @@ import {persistReducer} from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 import userSlice from './slice';
 import postSlice from './postSlice';
-
 const persistConfig = {
   key: 'root',
   storage: storage,

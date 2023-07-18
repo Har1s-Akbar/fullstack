@@ -6,17 +6,17 @@ import Nav from './Nav';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Image, Avatar } from 'antd';
-import { CommentOutlined, RightOutlined } from '@ant-design/icons';
+import { CommentOutlined, RightOutlined, BarsOutlined, SmileOutlined, MessageOutlined } from '@ant-design/icons';
 
 function Comments() {
   const [commentText, setComment] = useState('')
   const {id} = useParams();
+  const [reqPost, setReqPost] = useState(null)
   const [loading, setloading] = useState(false)
   const Allposts = useSelector((state)=> state.reducerPost.userPosts) 
   const user = useSelector((state)=> state.reducer.copyUserdata)
-  const commentPost = Allposts.filter((item)=> item.Id === id)
   const [cPost, setcPost] = useState(null);
-  
+  // const commentPost = Allposts.filter((item)=> item.Id === id)
   const getComments = () => {
     const postRef = doc(db, "users", id)
     getDoc(postRef).then((resp) => {
@@ -39,51 +39,43 @@ function Comments() {
   }
   useEffect(()=> getComments, [cPost, loading])
   return (
-    <main className=  'flex'>
-      <Nav/>
-      <div className=' m-auto grid grid-cols-2'>
-        <div>
-          <h1 className='text-5xl font-mono '>Post</h1>
-          {commentPost.map((item, index)=> {
-                return <div className='mt-10 flex flex-col'>
-                    <div key={index}>
-                        <div className='flex ' key={index}>
-                            <Avatar src={item.userPhoto} size={'large'} className='border-2 border-orange-300' alt={item.userName}/>
-                            <h1 className='font-mono mx-2 font-thin'>{item.userName}</h1>
-                        </div>
-                        <div>
-                            <h1 className='font-medium text-xl my-3 border-l-2 border-black pl-2'>{item.description}</h1>
-                            <Image src={item.post_image} className='rounded drop-shadow-xl border-2 border-yellow-200' 
-                            width={400} alt={item.userName} fallback='https://shorturl.at/IKMT0' />  
-                        </div>
-                    </div>
-                    <div className=''>
-                        <button className='px-6 border-x-2 border-t-2 py-2 rounded flex justify-center items-center'>
-                            <h1 className='text-md mx-2'>Comments</h1>
-                            <CommentOutlined style={{fontSize:'20px'}} />
-                        </button>
-                        { loading ? 
-                        <div className='border-2 rounded p-5 border-2 bg-teal-400'>
-                        {cPost.map((item)=> {
-                          return <div className='border-2 p-3 my-4 rounded odd:bg-red-500 even:bg-blue-500 even:text-white opacity-90 shadow-2xl'>
-                            <div className='flex items-center '>
-                              <Avatar src={item.commentPhoto} className='border-2 border-orange-300'/>
-                              <h1 className='mx-2 font-medium'>{item.commnetProfile}</h1>
-                            </div>
-                            <div className='my-3 text-base'>
-                              <h1 className='ml-2'>
-                                {item.comment}
-                              </h1>
-                            </div>
-                          </div>
-                        })}
-                        </div>
-                        :
-                        <div><h1>comments are being Loaded....</h1></div>
-                        }
-                    </div>
+    <main className= 'flex bg-main text-dim-white min-h-screen'>
+      <div>
+        <Nav/>
+      </div>
+      <div className=' bg-secondary rounded-xl py-10 px-2 m-auto w-1/2'>
+        {
+          Allposts.map((item)=> {
+            return <div className='w-full'>
+              <div className='flex items-center w-full'>
+                <div className='flex items-center w-full'>
+                  <Image src={item.userPhoto} width={60} className='rounded-full'/>
+                  <div className='flex items-start flex-col ml-3'>
+                    <h1 className='text-xl text-dim-white font-medium'>{item.userName}</h1>
+                    <p className='text-xs text-sim-white font-bold italic opacity-90'>@harisak</p>
+                  </div>
                 </div>
-            })}
+                <div className='mr-5'>
+                  <Avatar icon={<BarsOutlined />} className='bg-secondary'/>
+                </div>
+              </div>
+              <div>
+                <h1 className='text-xl my-3 ml-2 text-dim-white font-semibold'>{item.description}</h1>
+              </div>
+              <div className='mt-2'>
+                  <Image src={item.post_image} className='rounded-md'/>
+              </div>
+              <div className='flex items-center justify-center'>
+                {/* <div className='mx-32'>
+                  <Avatar icon={<SmileOutlined />} className='bg-secondary'/>
+                </div>
+                <div className='mx-32'>
+                  <Avatar icon={<MessageOutlined />} className='bg-secondary'/>
+                </div> */}
+              </div>
+            </div>
+          })
+        }
         </div> 
         <div className='m-auto ml-10'>
           <div>
@@ -98,7 +90,7 @@ function Comments() {
                       </div>
             </form>
         </div>
-      </div>
+
     </main>
   )
 }

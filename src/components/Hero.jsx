@@ -40,7 +40,7 @@ function Hero() {
         transition={{duration:2, delay:4}}
         >
             <div className=' flex flex-col justif-center items-center'>
-                <h1 className='text-white subpixel-antialiased antialiased tracking-wider font-semibold text-3xl leading-10 text-center w-5/6 my-10 '>
+                <h1 className='text-dim-white subpixel-antialiased antialiased tracking-wider font-semibold text-3xl leading-10 text-center w-5/6 my-10 '>
                     Join the community &
                     share your moments with people!! 
                 </h1>
