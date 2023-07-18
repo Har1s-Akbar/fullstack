@@ -5,11 +5,11 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {
-      rotate:{
-        '30': '30deg'
-      }
-    },
+    colors:{
+      'main': '#121212',
+      'secondary':'#1e1e1e',
+      'dim-white' : '#c4c4c4'
+    }
   },
   plugins: [],
 }

@@ -4,7 +4,6 @@ import Login from './auth/Login';
 import Profile from './components/Profile';
 import Signin from './auth/Signin';
 import React from 'react';
-
 function App() {
   return (
     <Router>

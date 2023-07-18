@@ -50,9 +50,8 @@ function Profile() {
     useEffect(()=> getUser, [])
     const unique = [...new Map(posts.map(item => [item['post_image'], item])).values()]
   return (
-    // CopyUser ? 
-    <section className='flex'>
-    <div className='w-1/5'>
+    <section className='flex bg-main text-dim-white min-h-screen'>
+    <div className=''>
       <Nav/>
     </div>
     <div className='flex w-full flex-col items-center my-5'>

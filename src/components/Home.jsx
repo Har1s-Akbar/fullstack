@@ -6,7 +6,7 @@ import Hero from './Hero'
 function Home() {
   const isLoggedin = useSelector(state => state.reducer.isAuthenticated)
   return (
-    <section>
+    <section className='main-bg'>
       <Hero/>
     </section>
   
