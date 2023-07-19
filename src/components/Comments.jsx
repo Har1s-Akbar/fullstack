@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Image, Avatar } from 'antd';
 import { CommentOutlined, RightOutlined, BarsOutlined, SmileOutlined, MessageOutlined } from '@ant-design/icons';
+import { Link } from 'react-router-dom';
 
 function Comments() {
   const [commentText, setComment] = useState('')
@@ -15,8 +16,9 @@ function Comments() {
   const [loading, setloading] = useState(false)
   const Allposts = useSelector((state)=> state.reducerPost.userPosts) 
   const user = useSelector((state)=> state.reducer.copyUserdata)
-  const [cPost, setcPost] = useState(null);
-  // const commentPost = Allposts.filter((item)=> item.Id === id)
+  const [cPost, setcPost] = useState([]);
+  const specificPost = Allposts.filter((items)=> items.Id === id)
+  console.log(specificPost)
   const getComments = () => {
     const postRef = doc(db, "users", id)
     getDoc(postRef).then((resp) => {
@@ -27,7 +29,7 @@ function Comments() {
   }
   const handleComment= async(event)=>{
     event.preventDefault();
-    event.target.reset();
+    setloading(false)
     const commentRef = doc(db, "users", id)
     updateDoc(commentRef,{
       comments: arrayUnion({
@@ -37,60 +39,58 @@ function Comments() {
       })
     })
   }
-  useEffect(()=> getComments, [cPost, loading])
+  useEffect(()=> getComments, [loading])
+  console.log(cPost)
   return (
     <main className= 'flex bg-main text-dim-white min-h-screen'>
       <div>
         <Nav/>
       </div>
-      <div className=' bg-secondary rounded-xl py-10 px-2 m-auto w-1/2'>
-        {
-          Allposts.map((item)=> {
-            return <div className='w-full'>
-              <div className='flex items-center w-full'>
-                <div className='flex items-center w-full'>
-                  <Image src={item.userPhoto} width={60} className='rounded-full'/>
-                  <div className='flex items-start flex-col ml-3'>
-                    <h1 className='text-xl text-dim-white font-medium'>{item.userName}</h1>
-                    <p className='text-xs text-sim-white font-bold italic opacity-90'>@harisak</p>
-                  </div>
-                </div>
-                <div className='mr-5'>
-                  <Avatar icon={<BarsOutlined />} className='bg-secondary'/>
-                </div>
-              </div>
-              <div>
-                <h1 className='text-xl my-3 ml-2 text-dim-white font-semibold'>{item.description}</h1>
-              </div>
-              <div className='mt-2'>
-                  <Image src={item.post_image} className='rounded-md'/>
-              </div>
-              <div className='flex items-center justify-center'>
-                {/* <div className='mx-32'>
-                  <Avatar icon={<SmileOutlined />} className='bg-secondary'/>
-                </div>
-                <div className='mx-32'>
-                  <Avatar icon={<MessageOutlined />} className='bg-secondary'/>
-                </div> */}
-              </div>
-            </div>
-          })
-        }
-        </div> 
-        <div className='m-auto ml-10'>
-          <div>
-            <h1 className='text-4xl font-mono'>Create a Comment</h1>
-          </div>
-            <form className='flex flex-col' onSubmit={handleComment}>
-                      <label htmlFor="comment" className='font-semibold my-2 text-base subpixel-antialiased antialiased'>Comment</label>
-                      <div className='flex '>
-                          <input type="text" name="comment" onChange={(e)=> setComment(e.target.value)} id="comment" className='appearance-none border-b-2 bg-transparent border-black placeholder:italic pl-2 focus:outline-0 hover:outline-0' placeholder='write a comment....'/>
-
-                          <button type='submit' className=' m-auto rounded w-1/6 pb-1 hover:bg-black hover:text-white transition delay-100 duration-300'><RightOutlined /></button>
+        <div className='w-9/12'>
+                {specificPost.map((item)=> {
+                  return <section to={`/comments/${item.Id}`} className='bg-secondary w-full ml-14 rounded-xl flex my-5 justify-between'>
+                    <div className='w-1/2 flex flex-col justify-between'>
+                      <div className='flex flex-col'>
+                      <div className='w-full flex items-satrt justify-between mt-3 border-b-2 pb-5 border-dimest'>
+                        <div className='flex ml-3 items-center'>
+                          <Image src={item.userPhoto} className='rounded-full' preview={false} width={60}/>
+                          <div className='flex flex-col items-start mx-3'>
+                            <h1 className='text-dim-white font-semibold'>{item.userName}</h1>
+                            <p className='italic text-xs font-bold'>@harisak</p>
+                            <p className='text-xs text-dim-white my-2 font-semibold'>{item.description}</p>
+                          </div>
+                        </div>
+                        <div className='mr-5'>
+                          <Avatar icon={<BarsOutlined />} className='bg-secondary'/>
+                        </div>
                       </div>
-            </form>
-        </div>
-
+                        <div className=' flex-col flex'>
+                          {cPost.map((cmnt)=> {
+                            return <div className='my-2 ml-3 flex items-center'>
+                              <Avatar src={cmnt.commentPhoto} size={'small'}/>
+                              <p className='text-xs font-bold text-dim-white mx-2'>{cmnt.commnetProfile} :</p>
+                              <p className='text-xs font-medium opacity-80 text-dim-white'>{cmnt.comment}</p>
+                            </div>
+                          })}
+                        </div>
+                      </div>
+                        <div className='w-full mb-4 ml-2 flex flex-col items-start justify-center'>
+                              <div className='flex items-center'>
+                                <Avatar  src={user.photo} className=''/>
+                              <h1 className='text-xs font-bold mx-2'>{user.name}</h1>
+                              </div>
+                              <div className='flex items-end w-full'>
+                              <input type="text" name="comment" onChange={(e)=> setComment(e.target.value)} id="comment" className='w-9/12 appearance-none border-b-2 bg-transparent border-dim-white placeholder:italic pl-2 focus:outline-0 hover:outline-0' placeholder='write a comment....'/>
+                              <button type='submit' onClick={handleComment} className=' m-auto rounded w-1/6 pb-1'><RightOutlined /></button>
+                              </div>
+                        </div>  
+                    </div>
+                  <div className='w-3/5 flex'>
+                    <Image src={item.post_image} className='rounded-xl '/>
+                  </div> 
+                  </section>
+                })}
+              </div>
     </main>
   )
 }

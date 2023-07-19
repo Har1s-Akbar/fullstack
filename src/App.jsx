@@ -1,16 +1,22 @@
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom'
+import { lazy,Suspense } from 'react';
 import {Home, Create, Comments, Posts, Follow, ProfileSingle} from './components/index';
 import Login from './auth/Login';
-import Profile from './components/Profile';
+// import Profile from './components/Profile';
 import Signin from './auth/Signin';
 import React from 'react';
+const Profile = React.lazy(()=> import('./components/Profile'))
 function App() {
   return (
     <Router>
       <Routes>
         <Route path='/' Component={Home} />
         <Route path='/login' Component={Login} />
-        <Route path='/profile' Component={Profile} />
+        <Route path='/profile' element={
+          <React.Suspense fallback={<div>Loading....</div>}>
+            <Profile/>
+          </React.Suspense>
+        } />
         <Route path='/profile/:id' Component={ProfileSingle} />
         <Route path='/signin' Component={Signin} />
         <Route path='/create' Component={Create} />
