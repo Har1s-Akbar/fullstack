@@ -9,7 +9,6 @@ import { LikeOutlined, CommentOutlined, ShareAltOutlined } from '@ant-design/ico
 import { Link } from 'react-router-dom'
 
 function Posts() {
-    const dataRef = collection(db,"users");
     const dispatch = useDispatch();
     const [render, setRender] = useState(false)
     const user = useSelector((state)=> state.reducer.copyUserdata)
@@ -19,22 +18,11 @@ function Posts() {
         const queryRef = collection(db, 'users');
         const likedPost = query(queryRef, where("post_useruid", "==", user.uid))
         const querySnapshot = await getDocs(likedPost);
-        // console.log(querySnapshot)
-        // getDocs(dataRef).then((resp)=>{
-        //     const data = resp.docs.map((item)=> {return item.data()})
-        //     const IdDocs = resp.docs.map((item)=> {return item.id})
-        //     dispatch(setDocId(IdDocs))
-        // })
         const data = querySnapshot.docs.map((item)=> {return item.data()})
-        dispatch(setPosts(data))
 
     }
     useEffect(()=> getData, [render])
     const handleLikes = async(Id) => {
-        // const queryRef = collection(db, 'users');
-        // const likedPost = query(queryRef, where("post_image", "==", post_url))
-        // const querySnapshot = await getDocs(likedPost);
-        // querySnapshot.forEach((document) => {
             setRender(true)
             const idDocument = Id
             const specificRef = doc(db, "users", Id)

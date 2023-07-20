@@ -1,9 +1,9 @@
-import {createSlice} from '@reduxjs/toolkit';
+import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
 
 const postSlice = createSlice({
   name:'posts',
   initialState:{
-    userPosts: null,
+    userPosts: [],
     Ids : null
   }, 
   reducers:{
@@ -12,8 +12,8 @@ const postSlice = createSlice({
     },
     setDocId(state, action){
       state.Ids = action.payload
-    }
-  }
+    },
+  },
 })
 
 export const {setPosts, setDocId} = postSlice.actions;

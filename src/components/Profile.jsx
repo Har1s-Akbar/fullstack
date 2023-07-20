@@ -3,18 +3,20 @@ import { useSelector, useDispatch } from 'react-redux'
 import { query,collection, getDocs, where, setDoc, doc, getDoc, updateDoc, arrayRemove, arrayUnion} from 'firebase/firestore/lite';
 import Nav from './Nav'
 import { db, storage } from '../auth/firebaseConfig';
-import { Avatar, Image, Dropdown } from 'antd';
+import { Avatar, Image, Dropdown, Menu } from 'antd';
 import { v4 } from 'uuid';
 import { setcopyData } from '../store/slice';
+import { setPosts } from '../store/postSlice';
 import { Link, useParams } from 'react-router-dom';
-import { PlusOutlined, BarsOutlined, LikeOutlined, MessageOutlined , SendOutlined, BookOutlined} from '@ant-design/icons';
-import Settings from './Settings';
+import { PlusOutlined, LikeOutlined, MessageOutlined , SendOutlined, BookOutlined} from '@ant-design/icons';
+
 
 function Profile() {
   const user = useSelector((state)=> state.reducer.userdata);
   const CopyUser = useSelector((state)=> state.reducer.copyUserdata)
   const dispatch = useDispatch()
-  const [posts, setPosts] = useState([])
+  const [Loading, setloading] = useState(true)
+  const [posts, setposts] = useState([])
   const [ render, setRender] = useState(false)
   const getUser = async() => {
     const queryRef = collection(db, 'usersProfile');
@@ -26,10 +28,10 @@ function Profile() {
               Id: unique,
               name: user.displayName,
               email:user.email,
-            uid: user.uid,
-            photo: user.photoURL,
-            isanonymous : user.isAnonymous,
-            Isverified: user.emailVerified
+              uid: user.uid,
+              photo: user.photoURL,
+              isanonymous : user.isAnonymous,
+              Isverified: user.emailVerified
           })
         }
         else{
@@ -37,14 +39,17 @@ function Profile() {
           const data = docs.data()
           dispatch(setcopyData(data))
         })
-        }
-  }
+      }
+    }
+    
   const getPosts = async() => {
     const queryRef = collection(db, 'users');
-      const likedPost = query(queryRef, where("post_useruid", "==", user.uid))
-      const querySnapshot = await getDocs(likedPost);
+      // const likedPost = query(queryRef, where("post_useruid", "==", user.uid))
+      const querySnapshot = await getDocs(queryRef);
       const data = querySnapshot.docs.map((item)=> {return item.data()})
-      setPosts(data)
+      setposts(data)
+      dispatch(setPosts(data))
+      setloading(false)
     }
     const handleLikes = async(Id) => {
       setRender(true)
@@ -77,14 +82,16 @@ function Profile() {
     <div className=''>
       <Nav/>
     </div>
-    <div className='flex flex-col'>
-      <div className='bg-secondary my-10 w-1/2 h-1/2 flex items-end rounded-xl m-auto'>
+    {
+      Loading ? <div>Loading the posts.....</div> :
+      <div className='flex flex-col'>
+      <div className='bg-secondary my-10 w-1/2 flex items-end rounded-xl m-auto'>
           <Image src={CopyUser.photo} preview={false} fallback='https://rb.gy/tebns' className='rounded-full w-1/2 opacity-80 border-2 border-dim-white my-5 ml-5' width={55}/>
-          <PlusOutlined className='mb-6'/>
+          <PlusOutlined className='mb-4'/>
       </div>
       <div className='px-2 ml-10 w-1/2'>
         {
-          posts.map((item)=> {
+          posts.map((item, index)=> {
             return <section className='my-10'>
               <div className='w-full my-5 bg-secondary pt-5 pb-5 px-5 rounded-xl'>
               <div className='flex items-center w-full'>
@@ -95,9 +102,7 @@ function Profile() {
                     <p className='text-xs text-sim-white font-bold italic opacity-90'>@harisak</p>
                   </div>
                 </div>
-                <div className='mr-5'>
-                  <Settings/>
-                </div>
+                
               </div>
               <div>
                 <h1 className='text-xl my-3 ml-2 text-dim-white font-semibold'>{item.description}</h1>
@@ -130,6 +135,7 @@ function Profile() {
         }
         </div>
     </div>
+    }
   </section>
 
   )

@@ -21,7 +21,7 @@ function App() {
         <Route path='/signin' Component={Signin} />
         <Route path='/create' Component={Create} />
         <Route path='/comments/:id' Component={Comments} />
-        <Route path='/posts' Component={Posts}/>
+        {/* <Route path='/posts' Component={Posts}/> */}
         <Route path='follow' Component={Follow}/>
       </Routes>
     </Router>
