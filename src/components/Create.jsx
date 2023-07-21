@@ -4,7 +4,7 @@ import { Image, Avatar } from 'antd';
 import {BarsOutlined} from '@ant-design/icons';
 import { db,storage } from '../auth/firebaseConfig';
 import {ref, uploadBytes, getDownloadURL} from 'firebase/storage'
-import { setDoc, doc, DocumentReference} from 'firebase/firestore/lite';
+import { setDoc, doc, DocumentReference, serverTimestamp} from 'firebase/firestore/lite';
 import { useState} from 'react';
 import { useSelector } from 'react-redux';
 import {v4} from 'uuid'
@@ -41,8 +41,10 @@ function Create() {
             isVerified: user.Isverified,
             likes: [],
             comments: [],
-            followers:[]
-          }).then((data)=> {console.log('data added')}).catch((error)=> console.log(error))  
+            followers:[],
+            time: serverTimestamp(),
+            editedAt: null
+          }).then((data)=> {navigate(`/comments/${uniqueId}`)}).catch((error)=> console.log(error))  
         });
       });
     }

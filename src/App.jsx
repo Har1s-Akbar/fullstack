@@ -5,14 +5,14 @@ import Login from './auth/Login';
 // import Profile from './components/Profile';
 import Signin from './auth/Signin';
 import React from 'react';
-const Profile = React.lazy(()=> import('./components/Profile'))
+const Profile = React.lazy(()=> import('./components/Feed'))
 function App() {
   return (
     <Router>
       <Routes>
         <Route path='/' Component={Home} />
         <Route path='/login' Component={Login} />
-        <Route path='/profile' element={
+        <Route path='/feed' element={
           <React.Suspense fallback={<div>Loading....</div>}>
             <Profile/>
           </React.Suspense>

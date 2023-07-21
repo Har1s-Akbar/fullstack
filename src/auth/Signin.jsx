@@ -21,7 +21,7 @@ function Signin() {
         signInWithEmailAndPassword(auth, email,password,).then((userCred)=>{
             const user = userCred.user;
             dispatch(setUser(user));
-            navigate('/profile')
+            navigate('/feed')
         }).catch((error)=> {
             const errorCode = error.code;
             const errorMessage = error.message;

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { db } from '../auth/firebaseConfig';
-import {arrayUnion, collection, doc, getDoc, setDoc, updateDoc, deleteDoc} from 'firebase/firestore/lite';
+import {arrayUnion, collection, doc, getDoc, setDoc, updateDoc, deleteDoc, serverTimestamp} from 'firebase/firestore/lite';
 import Nav from './Nav';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -68,7 +68,8 @@ const getSinglePost = async()=>{
   const handleEditText = async(id) => {
     const editRef = doc(db, 'users', id)
     await updateDoc(editRef,{
-      description: editText
+      description: editText,
+      editedAt: serverTimestamp()
     })
     setmodal(false);
     setloading(true);

@@ -35,7 +35,7 @@ function Login() {
       const user = result.user;
       dispatch(setUser(user));
       dispatch(AuthSuccess());
-      navigate('/profile')
+      navigate('/feed')
     }).catch((error) => {
       console.log(error);
       dispatch(setUser([]))
