@@ -8,7 +8,7 @@ import { v4 } from 'uuid';
 import { setcopyData } from '../store/slice';
 import { setPosts } from '../store/postSlice';
 import { Link, useParams } from 'react-router-dom';
-import { PlusOutlined, LikeOutlined, MessageOutlined , SendOutlined, BookOutlined} from '@ant-design/icons';
+import { PlusOutlined, LikeOutlined, MessageOutlined , SendOutlined, BookOutlined, UserAddOutlined} from '@ant-design/icons';
 
 
 function Profile() {
@@ -31,6 +31,8 @@ function Profile() {
               uid: user.uid,
               description: '',
               photo: user.photoURL,
+              follwers: [],
+              following:[],
               isanonymous : user.isAnonymous,
               Isverified: user.emailVerified,
               time: serverTimestamp(),
@@ -76,6 +78,8 @@ function Profile() {
 
       })
   }
+  const followerExist = () =>{
+  }
     useEffect(()=> getPosts, [user, render])
     useEffect(()=> getUser, [])
     // const unique = [...new Map(posts.map(item => [item['post_image'], item])).values()]
@@ -99,12 +103,17 @@ function Profile() {
             return <section className='my-10'>
               <div className='w-full my-5 bg-secondary pt-5 pb-5 px-5 rounded-xl'>
               <div className='flex items-center w-full'>
-                <Skeleton paragraph={{rows:1}} loading={Loading} avatar className='flex items-center w-full'>
-                  <Image src={item.userPhoto} width={60} className='rounded-full'/>
-                  <div className='flex items-start flex-col ml-3'>
-                    <h1 className='text-xl text-dim-white font-medium'>{item.userName}</h1>
-                    <p className='text-xs text-sim-white font-bold italic opacity-90'>@harisak</p>
-                  </div>
+                <Skeleton paragraph={{rows:1}} loading={Loading} avatar>
+                  <Link to={`/profile/${item.post_useruid}`} className='flex items-center w-full'>
+                    <Image src={item.userPhoto} width={60} className='rounded-full'/>
+                    <div className='flex items-start flex-col ml-3'>
+                      <h1 className='text-xl text-dim-white font-medium'>{item.userName}</h1>
+                      <p className='text-xs text-sim-white font-bold italic opacity-90'>@harisak</p>
+                    </div>
+                  </Link>
+                  {/* <div>
+                      <Avatar icon={<UserAddOutlined />} size={'large'} className='bg-secondary'/>
+                  </div> */}
                 </Skeleton>
               </div>
               <Skeleton paragraph={{rows:0}} className='my-4' loading={Loading}>

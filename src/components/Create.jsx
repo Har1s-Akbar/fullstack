@@ -40,8 +40,6 @@ function Create() {
             post_useruid: user.uid,
             isVerified: user.Isverified,
             likes: [],
-            comments: [],
-            followers:[],
             time: serverTimestamp(),
             editedAt: null
           }).then((data)=> {navigate(`/comments/${uniqueId}`)}).catch((error)=> console.log(error))  

@@ -54,6 +54,7 @@ const getSinglePost = async()=>{
       commentPhoto:user.photo,
       comment: commentText,
     })
+    setloading(true)
   }
   const handleDelete = async(Id) => {
     const dltRef = doc(db, 'users', Id)
