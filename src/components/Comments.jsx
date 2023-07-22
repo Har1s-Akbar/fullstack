@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { db } from '../auth/firebaseConfig';
-import {arrayUnion, collection, doc, getDoc, setDoc, updateDoc, deleteDoc, serverTimestamp} from 'firebase/firestore/lite';
+import {arrayUnion, collection, doc, getDoc, setDoc, updateDoc, deleteDoc, serverTimestamp, addDoc, query, where, getDocs} from 'firebase/firestore/lite';
 import Nav from './Nav';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -33,24 +33,26 @@ const getSinglePost = async()=>{
   const data = Data.data()
   setSpecificPost(data)
 }
-  const getComments = () => {
-    const postRef = doc(db, "users", id)
-    getDoc(postRef).then((resp) => {
-      const data = resp.data();
-      setcPost(data.comments)
-      setloading(true)
-    })
+  const getComments = async() => {
+    const queryRef = collection(db, "comments")
+    const commentQuery = query(queryRef, where('postId' ,'==', id))
+    const rawData = await getDocs(commentQuery)
+    if(rawData.empty){
+    setcPost([])
+    }else{
+      const data = rawData.docs.map((item)=> {return item.data()})
+      setcPost(data)
+    }
   }
   const handleComment= async(event)=>{
     event.preventDefault();
     setloading(false)
-    const commentRef = doc(db, "users", id)
-    updateDoc(commentRef,{
-      comments: arrayUnion({
-        commnetProfile: user.name,
-        commentPhoto:user.photo,
-        comment: commentText,
-      })
+    await addDoc(collection(db, 'comments'),{
+      post_useruid : user.uid,
+      postId: specificPost.Id,
+      commnetProfile: user.name,
+      commentPhoto:user.photo,
+      comment: commentText,
     })
   }
   const handleDelete = async(Id) => {

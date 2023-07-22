@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { collection, doc, getDoc, getDocs, where, query, updateDoc, arrayRemove, arrayUnion } from 'firebase/firestore/lite'
 import { db } from '../auth/firebaseConfig'
 import Nav from './Nav'
@@ -10,6 +10,7 @@ import { useSelector } from 'react-redux'
 
 function ProfileSingle() {
   const {id} = useParams()
+  const navigate = useNavigate()
   const [profilePosts, setprofilePosts] = useState([])
   const [Name, setName] = useState('')
   const [nameBtn, setnameBtn] = useState(false)
@@ -76,7 +77,25 @@ const nameChangeHandle = async() =>{
     const nameRef = doc(db, 'usersProfile', id)
     updateDoc(nameRef,{
       name: Name
-    }).then(setnameBtn(false))
+    }).then(async()=>{
+      const postUpdate = collection(db, "users")
+      const postQuery = query(postUpdate, where('post_useruid', '==', id))
+      const rawData = getDocs(postQuery)
+      const data = (await rawData).docs.map((item)=>{
+        updateDoc(item.ref, {
+          userName: Name
+        }).then(navigate('/feed'))
+      })
+      const commentUpdate =collection(db, 'comments')
+      const commentQuery = query(commentUpdate, where('post_useruid', '==', id))
+      const commentRawData = await getDocs(commentQuery)
+      const updateData = commentRawData.docs.map((name)=>{
+        updateDoc(name.ref,{
+          commnetProfile: Name
+        })
+      })
+    }
+    )
   }
 }
   useEffect(()=> handlePosts, [])
