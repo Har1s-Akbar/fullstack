@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { query,collection, getDocs, where, setDoc, doc, getDoc, updateDoc, arrayRemove, arrayUnion, serverTimestamp} from 'firebase/firestore/lite';
+import { query,collection, getDocs, where, setDoc, doc, getDoc, updateDoc, arrayRemove, arrayUnion, serverTimestamp, deleteDoc, addDoc} from 'firebase/firestore/lite';
 import Nav from './Nav'
 import { db, storage } from '../auth/firebaseConfig';
-import { Avatar, Image, Skeleton } from 'antd';
+import { Avatar, Image, Skeleton, message } from 'antd';
 import { v4 } from 'uuid';
 import { setcopyData } from '../store/slice';
 import { setPosts } from '../store/postSlice';
 import { Link, useParams } from 'react-router-dom';
 import { PlusOutlined, LikeOutlined, MessageOutlined , SendOutlined, BookOutlined, UserAddOutlined} from '@ant-design/icons';
+import SavedPosts from './SavedPosts';
 
 
 function Profile() {
@@ -17,6 +18,8 @@ function Profile() {
   const dispatch = useDispatch()
   const [Loading, setloading] = useState(true)
   const [posts, setposts] = useState([])
+  const [refArray, setRefArray] = useState([])
+  const [RefuserId, setRefuserId] = useState([])
   const [ render, setRender] = useState(false)
   const getUser = async() => {
     const queryRef = collection(db, 'usersProfile');
@@ -78,7 +81,21 @@ function Profile() {
 
       })
   }
-  const followerExist = () =>{
+  const savePost = async(id) => {
+    event.preventDefault();
+    const documentRef = doc(db, 'users', id)
+    const getSave = await getDoc(doc(db, 'saved', id))
+    
+    if(getSave.exists() === true){
+      const remove = deleteDoc(doc(db, 'saved' , id)).then(()=> message.info('Post Unsaved Successfully'))
+    }else{
+      const postSave = setDoc(doc(db, 'saved', id),{
+        savedby: user.uid,
+        postId : id,
+        savedAt: serverTimestamp(),
+        ref: documentRef,
+      }).then(()=> {message.success('Post Saved successfully')})
+    }
   }
     useEffect(()=> getPosts, [user, render])
     useEffect(()=> getUser, [])
@@ -90,63 +107,68 @@ function Profile() {
     </div>
     {/* {
       Loading ? <div>Loading the posts.....</div> : */}
-      <div className='flex flex-col'>
+    <div className='flex flex-col'>
       <Skeleton loading={Loading} paragraph={{rows:0}}>
           <Link to={`/profile/${user.uid}`} className='bg-secondary my-10 w-1/2 flex items-end rounded-xl m-auto'>
             <Image src={CopyUser.photo} preview={false} fallback='https://rb.gy/tebns' className='rounded-full w-1/2 opacity-80 border-2 border-dim-white my-5 ml-5' width={55}/>
             <PlusOutlined className='mb-4'/>
           </Link>
       </Skeleton>
-      <div className='px-2 ml-10 w-1/2'>
-        {
-          posts.map((item)=> {
-            return <section className='my-10'>
-              <div className='w-full my-5 bg-secondary pt-5 pb-5 px-5 rounded-xl'>
-              <div className='flex items-center w-full'>
-                <Skeleton paragraph={{rows:1}} loading={Loading} avatar>
-                  <Link to={`/profile/${item.post_useruid}`} className='flex items-center w-full'>
-                    <Image src={item.userPhoto} width={60} className='rounded-full'/>
-                    <div className='flex items-start flex-col ml-3'>
-                      <h1 className='text-xl text-dim-white font-medium'>{item.userName}</h1>
-                      <p className='text-xs text-sim-white font-bold italic opacity-90'>@harisak</p>
-                    </div>
-                  </Link>
-                  {/* <div>
-                      <Avatar icon={<UserAddOutlined />} size={'large'} className='bg-secondary'/>
-                  </div> */}
+      <div className='flex w-10/12 justify-between'>
+        <div className='px-2 ml-10 w-2/3'>
+          {
+            posts.map((item)=> {
+              return <section className='my-10'>
+                <div className='w-full my-5 bg-secondary pt-5 pb-5 px-5 rounded-xl'>
+                <div className='flex items-center w-full'>
+                  <Skeleton paragraph={{rows:1}} loading={Loading} avatar>
+                    <Link to={`/profile/${item.post_useruid}`} className='flex items-center w-full'>
+                      <Image src={item.userPhoto} width={60} className='rounded-full'/>
+                      <div className='flex items-start flex-col ml-3'>
+                        <h1 className='text-xl text-dim-white font-medium'>{item.userName}</h1>
+                        <p className='text-xs text-sim-white font-bold italic opacity-90'>@harisak</p>
+                      </div>
+                    </Link>
+                    {/* <div>
+                        <Avatar icon={<UserAddOutlined />} size={'large'} className='bg-secondary'/>
+                    </div> */}
+                  </Skeleton>
+                </div>
+                <Skeleton paragraph={{rows:0}} className='my-4' loading={Loading}>
+                  <h1 className='text-xl my-3 ml-2 text-dim-white font-semibold'>{item.description}</h1>
                 </Skeleton>
+                <div className='mt-2'>
+                    <Image src={item.post_image} className='rounded-md'/>
+                </div>
               </div>
-              <Skeleton paragraph={{rows:0}} className='my-4' loading={Loading}>
-                <h1 className='text-xl my-3 ml-2 text-dim-white font-semibold'>{item.description}</h1>
-              </Skeleton>
-              <div className='mt-2'>
-                  <Image src={item.post_image} className='rounded-md'/>
-              </div>
-            </div>
-              <div className='bg-secondary rounded-xl w-full py-5 '>
-                  <div className='flex items-center w-11/12 m-auto justify-between'>
-                    <button onClick={()=> handleLikes(item.Id)} className='flex items-end'>
-                      <h1 className='mx-2 text-xl font-thin text-dim-white'>{item.likes.length}</h1>
-                      <Avatar icon={<LikeOutlined />} className='bg-secondary' style={{fontSize: '150%'}} size={'large'}/>
-                    </button>
-                    <button>
-                      <Link to={`/comments/${item.Id}`}>
-                        <Avatar icon={<MessageOutlined />} className='bg-secondary'style={{fontSize: '150%'}} size={'large'}/>
-                      </Link>
-                    </button>
-                    <button>
-                      <Avatar icon={<SendOutlined />} className='bg-secondary -rotate-45'style={{fontSize: '150%'}} size={'large'}/>
-                    </button>
-                    <button>
-                      <Avatar icon={<BookOutlined />} className='bg-secondary'style={{fontSize: '150%'}} size={'large'}/>
-                    </button>
-                  </div>
-              </div>
-            </section>
-          })
-        }
+                <div className='bg-secondary rounded-xl w-full py-5 '>
+                    <div className='flex items-center w-11/12 m-auto justify-between'>
+                      <button onClick={()=> handleLikes(item.Id)} className='flex items-center'>
+                        <h1 className='mx-2 text-xl font-thin text-dim-white'>{item.likes.length}</h1>
+                        <Avatar icon={<LikeOutlined />} className='bg-secondary' style={{fontSize: '150%'}} size={'large'}/>
+                      </button>
+                      <button>
+                        <Link to={`/comments/${item.Id}`}>
+                          <Avatar icon={<MessageOutlined />} className='bg-secondary'style={{fontSize: '150%'}} size={'large'}/>
+                        </Link>
+                      </button>
+                      <button>
+                        <Avatar icon={<SendOutlined />} className='bg-secondary -rotate-45'style={{fontSize: '150%'}} size={'large'}/>
+                      </button>
+                      <button onClick={()=> {savePost(item.Id)}}>
+                        <Avatar icon={<BookOutlined />} className='bg-secondary'style={{fontSize: '150%'}} size={'large'}/>
+                      </button>
+                    </div>
+                </div>
+              </section>
+            })
+          }
+          </div>
+        <div>
+          <SavedPosts/>
         </div>
-    </div>
+      </div>
+      </div>
     {/* } */}
   </section>
 

@@ -16,6 +16,7 @@ function ProfileSingle() {
   const [showDescp, setDescp] = useState(false)
   const [nameBtn, setnameBtn] = useState(false)
   const[inputDisable, setDisable] = useState(true);
+  const [followerReload, setReload] = useState(false)
   const [Loading, setloading] = useState(false)
   const [descp, setDescpText] = useState('')
   const user = useSelector((state)=> state.reducer.copyUserdata)
@@ -39,11 +40,11 @@ function ProfileSingle() {
     getDoc(followerRef).then((item)=> {  
         const data = item.data()
         const followersArray = data.followers
-          const followersData = data.followersData 
           if(followersArray.includes(user.uid)){
-            setIsFollower(false)
+            updateDoc(doc(db, 'usersProfile', user.uid),{
+              following: arrayRemove(id)
+            })
             updateDoc(followerRef,{
-              following: arrayRemove(id),
                 followers: arrayRemove(user.uid),
                 followersData: arrayRemove({
                     Id: user.uid,
@@ -51,11 +52,18 @@ function ProfileSingle() {
                     photo: user.photo,
                     email:user.email
                 })
+            }).then(()=> {
+              if(followerReload){
+                setReload(false);
+              }else{
+                setReload(true)
+              }
             })
           }else{
-            setIsFollower(false)
+            updateDoc(doc(db, 'usersProfile', user.uid),{
+              following:arrayUnion(id)
+            })
             updateDoc(followerRef,{
-              following: arrayUnion(id),
                 followers: arrayUnion(user.uid),
                 followersData: arrayUnion({
                     Id: user.uid,
@@ -63,6 +71,12 @@ function ProfileSingle() {
                     photo: user.photo,
                     email:user.email
                 })
+            }).then(()=> {
+              if(followerReload){
+                setReload(false);
+              }else{
+                setReload(true)
+              }
             })
           }
     })
@@ -109,7 +123,7 @@ const updateDescp = async() => {
   }
 }
   useEffect(()=> handlePosts, [])
-  useEffect(()=> getProfile, [nameBtn])
+  useEffect(()=> getProfile, [nameBtn, followerReload])
   useEffect(()=>{
     if(user.uid !== id){
     setDisable(true)
@@ -118,44 +132,44 @@ const updateDescp = async() => {
   }
   },[])
   return (
-    <section className='flex bg-main min-h-screen text-dim-white'>
-    <div className='w-1/5'>
+    <section className='flex bg-main min-h-screen w-full text-dim-white'>
+    <div className='w-10'>
       <Nav/>
     </div>
-    {Loading && <div className='grid grid-cols-1 items-center place-content-center rounded-xl'>
-        <div className='flex flex-col w-full items-center justify-end m-auto'>
+    {Loading && <div className='grid grid-cols-1 w-9/12 items-center place-content-center rounded-xl'>
+        <div className='flex flex-col w-2/3 items-center justify-end m-auto'>
           <div className='flex w-full justify-center items-start'>
-            <section className='flex w-4/12 items-start justify-start'>
+            <section className='flex w-full items-start justify-start'>
             <section className='w-1/3'>
               <Image src={profile.photo} sizes={'large'} className='w-96 rounded-full'/>
             </section>
-              <div className='w-full m-auto'>
+              <div className='w-9/12 m-auto'>
                   <div className='flex'>
                     <input type="text" disabled={inputDisable} onChange={(e)=> setName(e.target.value)} className='bg-transparent w-11/12 outline-0 font-bold text-xl' defaultValue={profile.name} onClick={()=> {if(nameBtn){setnameBtn(false)}else{setnameBtn(true)}}}/>
                     <button onClick={nameChangeHandle} className={nameBtn ? 'block': 'hidden'}>
-                      <Avatar size={'small'} icon={<RightOutlined />}/>
+                      <Avatar size={'small'} icon={<RightOutlined />} className='bg-main'/>
                     </button>
                   </div>
                   <h1 className='text-xs font-normal italic text-dim-white'>@harisak</h1>
                   <div className='w-full mt-5 flex items-start justify-center'>
                   <textarea type="text" disabled={inputDisable} defaultValue={profile.description} onChange={(e)=> setDescpText(e.target.value)} onClick={()=>{if(showDescp){ setDescp(false)}else{setDescp(true)}}} className='w-full bg-transparent outline-0 text-xl font-thin' />
                   <button onClick={updateDescp}>
-                  <Avatar icon={<RightOutlined/>} className={showDescp ? 'bg-main flex': 'hidden'}/>
+                  <Avatar icon={<RightOutlined/>} size={'small'} className={showDescp ? 'bg-main flex': 'hidden'}/>
                   </button>
                   </div>
                 </div>
             </section>
-            <section className='mx-10 flex items-center justify-between'>
-              <div className='flex flex-col items-center mx-10'>
+            <section className=' flex w-9/12 items-center justify-between'>
+              <div className='flex flex-col items-center border-r-2 px-8 border-dimest'>
                 <h1 className='text-2xl font-bold'>{profilePosts.length}</h1>
                 <h1 className='text-lg font-normal'>Posts</h1>
               </div>
-              <div className='flex flex-col items-center'>
+              <div className='flex flex-col items-center px-8'>
                 <h1 className='text-2xl font-bold'>{profile?.followers.length}</h1>
                 <h1 className='text-lg font-normal'>Followers</h1>
               </div>
-              <div className='flex flex-col items-center mx-10'>
-                <h1 className='text-2xl font-bold'>0</h1>
+              <div className='flex flex-col items-center border-l-2 px-8 border-dimest'>
+                <h1 className='text-2xl font-bold'>{profile?.following.length}</h1>
                 <h1 className='text-lg font-normal'>Following</h1>
               </div>
             </section>
@@ -164,16 +178,18 @@ const updateDescp = async() => {
         {
           inputDisable ?
             <div className='w-1/6 flex items-center my-5 justify-center m-auto'>
-              <button onClick={handleFollowerSingle} className='border w-full rounded-md bg-secondary border-dimest text-xl py-1 font-semibold'>
+              <button onClick={()=> handleFollowerSingle(id)} className='border w-full rounded-md bg-secondary border-dimest text-xl py-1 font-semibold'>
                 Follow
               </button>
             </div>  :
-        <div className=' w-2/3 m-auto  mt-10 mb-2'>
-        <label htmlFor="file" className=''>
-          <Avatar icon={<PlusOutlined/>} className='outline outline-dimest bg-secondary flex items-center justify-center p-7 font-bold text-dim-white opacity-90' style={{fontSize: '150%'}} />
-        </label>
-        <h1 className='mt-2 text-sm font-thin opacity-80'>Add New</h1>
-        <input type="file" id='file' className='hidden'/>
+        <div className='w-2/3 m-auto mt-10 mb-2'>
+        <div className='w-1/12'>
+          <label htmlFor="file" className=''>
+            <Avatar icon={<PlusOutlined/>} className='outline outline-dimest bg-secondary flex items-center justify-center p-7 font-bold text-dim-white opacity-90' style={{fontSize: '150%'}} />
+            <input type="file" id='file' className='hidden'/>
+          </label>
+          <h1 className='mt-2 text-sm font-thin opacity-80'>Add New</h1>
+        </div>
       </div>
         }
         <div className='gap-4 overflow-y-scroll grid grid-cols-3 w-2/3 m-auto border-t border-dim-white'>
