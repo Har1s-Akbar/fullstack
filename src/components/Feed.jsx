@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { query,collection, getDocs, where, setDoc, doc, getDoc, updateDoc, arrayRemove, arrayUnion, serverTimestamp, deleteDoc, addDoc} from 'firebase/firestore/lite';
+import { query,collection, getDocs, where, setDoc, doc, getDoc, updateDoc, arrayRemove, arrayUnion, serverTimestamp, deleteDoc, addDoc, limit, orderBy} from 'firebase/firestore/lite';
 import Nav from './Nav'
 import { db, storage } from '../auth/firebaseConfig';
 import { Avatar, Image, Skeleton, message } from 'antd';
@@ -9,7 +9,6 @@ import { setcopyData } from '../store/slice';
 import { setPosts } from '../store/postSlice';
 import { Link, useParams } from 'react-router-dom';
 import { PlusOutlined, LikeOutlined, MessageOutlined , SendOutlined, BookOutlined, UserAddOutlined} from '@ant-design/icons';
-import SavedPosts from './SavedPosts';
 
 
 function Profile() {
@@ -18,9 +17,11 @@ function Profile() {
   const dispatch = useDispatch()
   const [Loading, setloading] = useState(true)
   const [posts, setposts] = useState([])
-  const [refArray, setRefArray] = useState([])
-  const [RefuserId, setRefuserId] = useState([])
   const [ render, setRender] = useState(false)
+  //  states for getting saved posts
+  const [saved, setSaved] = useState([])
+  const [uniqueSaved, setuniqueSaved] = useState([])
+// for setting Initial user
   const getUser = async() => {
     const queryRef = collection(db, 'usersProfile');
       const userQuery = query(queryRef, where("uid", "==", user.uid))
@@ -48,7 +49,9 @@ function Profile() {
         })
       }
     }
-    
+// End setting initial User
+
+// start of getting all posts from the users collection firebase
   const getPosts = async() => {
     const queryRef = collection(db, 'users');
       // const likedPost = query(queryRef, where("post_useruid", "==", user.uid))
@@ -58,6 +61,9 @@ function Profile() {
       dispatch(setPosts(data))
       setloading(false)
     }
+  // end of getting posts
+  
+  // start of handleing the likes on posts Logic
     const handleLikes = async(Id) => {
       setRender(true)
       const idDocument = Id
@@ -81,24 +87,56 @@ function Profile() {
 
       })
   }
+  // end of handeling likes on posts
+
+  // start of the saving post Logic
   const savePost = async(id) => {
     event.preventDefault();
     const documentRef = doc(db, 'users', id)
     const getSave = await getDoc(doc(db, 'saved', id))
     
     if(getSave.exists() === true){
-      const remove = deleteDoc(doc(db, 'saved' , id)).then(()=> message.info('Post Unsaved Successfully'))
+      const remove = deleteDoc(doc(db, 'saved' , id)).then(()=> {message.info('Post Unsaved Successfully')})
+      getSavedPosts
     }else{
       const postSave = setDoc(doc(db, 'saved', id),{
         savedby: user.uid,
         postId : id,
         savedAt: serverTimestamp(),
         ref: documentRef,
-      }).then(()=> {message.success('Post Saved successfully')})
+      }).then(()=> {message.success('Post Saved successfully')
+    })
+    getSavedPosts
     }
   }
+  // end of saving posts Logic
+
+  // start of getting the saved Posts from firebase
+  const getSavedPosts = async() => {
+    const queryRef = collection(db, 'saved')
+    const savedQuery = query(queryRef, where('savedby', '==', user.uid), orderBy('savedAt') ,limit(3))
+    const getPosts = await getDocs(savedQuery)
+    const Data =  getPosts.docs.map(async(items)=> {
+        if(items.exists()){
+            const data = items.data()
+            const getSaved = await getDoc(data.ref)
+            const savedData = getSaved.data()
+            setSaved((prev)=> [...prev, savedData])
+        }else{
+            return []
+        }
+    })
+    // console.log(Data)
+}
     useEffect(()=> getPosts, [user, render])
     useEffect(()=> getUser, [])
+    useEffect(()=> getSavedPosts, [user, render])
+    // console.log(saved)
+    useEffect(()=> {
+      const unique = [...new Map(saved.map(item => [item['Id'], item])).values()]
+      setuniqueSaved(unique)
+  },[saved])
+  console.log(uniqueSaved)
     // const unique = [...new Map(posts.map(item => [item['post_image'], item])).values()]
     return (
     <section className='flex bg-main text-dim-white min-h-screen'>
@@ -114,8 +152,8 @@ function Profile() {
             <PlusOutlined className='mb-4'/>
           </Link>
       </Skeleton>
-      <div className='flex w-10/12 justify-between'>
-        <div className='px-2 ml-10 w-2/3'>
+      <div className='flex justify-between w-11/12'>
+        <div className='px-2 ml-10 w-7/12'>
           {
             posts.map((item)=> {
               return <section className='my-10'>
@@ -164,8 +202,25 @@ function Profile() {
             })
           }
           </div>
-        <div>
-          <SavedPosts/>
+        <div className='sticky top-10 w-1/3 h-80 border-b border-dim-white '>
+          <div className=' mb-5'>
+            <h1 className='text-3xl text-dim-white'>Saved Posts</h1>
+          </div>
+          <div className='items-center rounded-xl gap-1 justify-items-center grid grid-cols-2 w-full'>
+            {uniqueSaved.map((item)=> {
+              return <div>
+                <Image className='rounded-xl' preview={false} src={item.post_image}/>
+              </div>
+            })}
+            <div className='flex flex-col items-center justify-center'>
+              <h1 className='text-dim-white text-base font-semibold my-1'>See All Saved Photos</h1>
+              <button className='w-9/12 bg-secondary rounded-lg py-2 my-1'>
+                <Link to={`/profile/${user.uid}`}>
+                  Visit
+                </Link>
+              </button>
+            </div>
+            </div>
         </div>
       </div>
       </div>
