@@ -21,7 +21,8 @@ function Profile() {
   //  states for getting saved posts
   const [saved, setSaved] = useState([])
   const [uniqueSaved, setuniqueSaved] = useState([])
-// for setting Initial user
+  const [suggestionUser, setsuggestionUser] = useState([])
+  // for setting Initial user
   const getUser = async() => {
     const queryRef = collection(db, 'usersProfile');
       const userQuery = query(queryRef, where("uid", "==", user.uid))
@@ -32,10 +33,11 @@ function Profile() {
               Id: unique,
               name: user.displayName,
               email:user.email,
+              username: '',
               uid: user.uid,
               description: '',
               photo: user.photoURL,
-              follwers: [],
+              followers: [],
               following:[],
               isanonymous : user.isAnonymous,
               Isverified: user.emailVerified,
@@ -126,28 +128,36 @@ function Profile() {
             return []
         }
     })
-    // console.log(Data)
 }
+// end of saved posts Logic
+
+const getSuggestions = async() => {
+  const fetchDocs = await getDocs(collection(db, 'usersProfile'))
+  const Data = fetchDocs.docs.map((item)=> {return item.data()})
+  console.log(Data)
+  setsuggestionUser(Data)
+}
+
+
     useEffect(()=> getPosts, [user, render])
-    useEffect(()=> getUser, [])
+    useEffect(()=> getUser , [])
+    useEffect(()=> getSuggestions , [])
     useEffect(()=> getSavedPosts, [user, render])
-    // console.log(saved)
     useEffect(()=> {
       const unique = [...new Map(saved.map(item => [item['Id'], item])).values()]
       setuniqueSaved(unique)
-  },[saved])
-  console.log(uniqueSaved)
-    // const unique = [...new Map(posts.map(item => [item['post_image'], item])).values()]
+    },[saved])
+  // console.log(suggestionUser)
     return (
-    <section className='flex bg-main text-dim-white min-h-screen'>
+    <section className={posts.length === 0 ? 'grid grid-cols-5 justify-items-center flex min-h-screen bg-main': 'flex min-h-screen bg-main text-dim-white'}>
     <div className=''>
       <Nav/>
     </div>
     {/* {
       Loading ? <div>Loading the posts.....</div> : */}
-    <div className='flex flex-col'>
+    <div className={posts.length === 0? 'w-7/12 col-start-2 col-end-6 flex flex-col items-center justify-center': "flex flex-col"}>
       <Skeleton loading={Loading} paragraph={{rows:0}}>
-          <Link to={`/profile/${user.uid}`} className='bg-secondary my-10 w-1/2 flex items-end rounded-xl m-auto'>
+          <Link to={`/profile/${user.uid}`} className={posts.length === 0? 'bg-secondary my-10 w-full flex items-end rounded-xl': 'bg-secondary my-10 w-1/2 flex items-end rounded-xl m-auto'}>
             <Image src={CopyUser.photo} preview={false} fallback='https://rb.gy/tebns' className='rounded-full w-1/2 opacity-80 border-2 border-dim-white my-5 ml-5' width={55}/>
             <PlusOutlined className='mb-4'/>
           </Link>
@@ -202,26 +212,51 @@ function Profile() {
             })
           }
           </div>
-        <div className='sticky top-10 w-1/3 h-80 border-b border-dim-white '>
-          <div className=' mb-5'>
-            <h1 className='text-3xl text-dim-white'>Saved Posts</h1>
-          </div>
-          <div className='items-center rounded-xl gap-1 justify-items-center grid grid-cols-2 w-full'>
-            {uniqueSaved.map((item)=> {
-              return <div>
-                <Image className='rounded-xl' preview={false} src={item.post_image}/>
+          <section className=' flex flex-col w-1/3'>
+            <Skeleton loading={Loading} className='sticky top-10'>
+              <div className={uniqueSaved.length === 0 ? ' border-b border-dim-white ' : 'h-80 border-b border-dim-white '}>
+                <div className=' mb-5'>
+                  <h1 className='text-2xl font-semibold text-dim-white'>Saved Posts</h1>
+                </div>
+                <div className='items-center rounded-xl gap-1 place-content-center grid grid-cols-2 w-full'>
+                  {uniqueSaved.map((item)=> {
+                    return <div>
+                      <Image className='rounded-xl' preview={false} src={item.post_image}/>
+                    </div>
+                  })}
+                  <div className={uniqueSaved.length === 0 ? 'flex flex-col items-center justify-center col-span-2': 'flex flex-col items-center justify-center'}>
+                    <h1 className={uniqueSaved.length === 0 ? 'text-dim-white text-2xl opacity-50 font-thin my-1': 'text-dim-white text-base font-semibold my-1'}>{
+                      uniqueSaved.length === 0 ? 'Save some posts' : 'See AllSaved Posts' 
+                    }</h1>
+                    <button className={uniqueSaved.length === 0 ? 'hidden': 'w-9/12 bg-secondary rounded-lg py-2 my-1 opacity-60 hover:opacity-100 transition delay-200 ease-in-out'}>
+                      <Link to={`/profile/${user.uid}`}>
+                        Visit
+                      </Link>
+                    </button>
+                  </div>
+                  </div>
               </div>
-            })}
-            <div className='flex flex-col items-center justify-center'>
-              <h1 className='text-dim-white text-base font-semibold my-1'>See All Saved Photos</h1>
-              <button className='w-9/12 bg-secondary rounded-lg py-2 my-1'>
-                <Link to={`/profile/${user.uid}`}>
-                  Visit
-                </Link>
-              </button>
+            </Skeleton>
+            <div className='my-10 w-full'>
+              <div>
+                <h1 className='text-xl font-semibold ml-1 text-dim-white'>
+                Follow New Accounts</h1>
+              </div>
+              <div className=' flex items-center bg-secondary w-full rounded-xl my-5 py-10 justify-between'>
+                { suggestionUser.length === 1 ? <div>
+                  <h1 className='text-xl text-dim-white text-center px-10 font-thin'>No Accounts to Follow Currently</h1>
+                </div> :
+                  suggestionUser.map((item)=> {
+                    return <Link to={`/profile/${item.uid}`} className={item.uid === user.uid ? 'hidden': 'bg-main rounded-xl shadow-2xl backdrop-blur-3xl p-4 flex flex-col items-center m-auto'}>
+                        <img src={item.photo} className='rounded-full w-10/12 ' alt="" />
+                        <h1 className='my-2'>{item.name}</h1>
+                    </Link>
+                    
+                  })
+                }
+              </div>
             </div>
-            </div>
-        </div>
+          </section>
       </div>
       </div>
     {/* } */}

@@ -1,15 +1,25 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { collection, doc, getDoc, getDocs, where, query, updateDoc, arrayRemove, arrayUnion } from 'firebase/firestore/lite'
+import { collection, doc, getDoc, getDocs, where, query, updateDoc, arrayRemove, arrayUnion, orderBy, limit } from 'firebase/firestore/lite'
 import { db } from '../auth/firebaseConfig'
 import Nav from './Nav'
 import { Avatar, Image } from 'antd'
-import { PlusOutlined, TableOutlined, TabletOutlined, CloseOutlined, RightOutlined, PlusCircleOutlined} from '@ant-design/icons'
+import { PlusOutlined, TableOutlined, TabletOutlined,CloseOutlined, RightOutlined, TabletFilled} from '@ant-design/icons'
 import { Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
+import { motion } from 'framer-motion'
+
+const variant ={
+  open: { opacity : 1, y : 0, sizeX: '100%'},
+  closed:{ opacity:0, y: '-100%'},
+}
 
 function ProfileSingle() {
   const {id} = useParams()
+  const [saved, setSaved] = useState([]);
+  const [showPosts, setshowPosts] = useState(true)
+  const [showSaved, setshowSaved] = useState(false)
+  const [uniqueSaved, setuniqueSaved] = useState([])
   const navigate = useNavigate()
   const [profilePosts, setprofilePosts] = useState([])
   const [Name, setName] = useState('')
@@ -122,7 +132,25 @@ const updateDescp = async() => {
     setloading(false)
   }
 }
-  useEffect(()=> handlePosts, [])
+
+const getSavedPosts = async() => {
+  const queryRef = collection(db, 'saved')
+  const savedQuery = query(queryRef, where('savedby', '==', user.uid), orderBy('savedby'))
+  const getPosts = await getDocs(savedQuery)
+  const Data =  getPosts.docs.map(async(items)=> {
+      if(items.exists()){
+          const data = items.data()
+          const getSaved = await getDoc(data.ref)
+          const savedData = getSaved.data()
+          setSaved((prev)=> [...prev, savedData])
+      }else{
+          return []
+      }
+  })
+}
+
+
+useEffect(()=> handlePosts, [])
   useEffect(()=> getProfile, [nameBtn, followerReload])
   useEffect(()=>{
     if(user.uid !== id){
@@ -131,13 +159,19 @@ const updateDescp = async() => {
     setDisable(false)
   }
   },[])
+  useEffect(()=> getSavedPosts, [user])
+  useEffect(()=> {
+    const unique = [...new Map(saved.map(item => [item['Id'], item])).values()]
+    setuniqueSaved(unique)
+  },[saved])
+  console.log(user)
   return (
-    <section className='flex bg-main min-h-screen w-full text-dim-white'>
-    <div className='w-10'>
+    <section className='flex bg-main text-dim-white min-h-screen'>
+    <div className=''>
       <Nav/>
     </div>
-    {Loading && <div className='grid grid-cols-1 w-9/12 items-center place-content-center rounded-xl'>
-        <div className='flex flex-col w-2/3 items-center justify-end m-auto'>
+    {Loading && <div className='sticky top-10 grid grid-cols-1 w-full place-content-center'>
+      <div className=' flex flex-col w-2/3 items-center justify-end m-auto'>
           <div className='flex w-full justify-center items-start'>
             <section className='flex w-full items-start justify-start'>
             <section className='w-1/3'>
@@ -192,22 +226,38 @@ const updateDescp = async() => {
         </div>
       </div>
         }
-        <div className='gap-4 overflow-y-scroll grid grid-cols-3 w-2/3 m-auto border-t border-dim-white'>
+        <div className='gap-4 overflow-y-scroll h-96 place-content-start grid grid-cols-3 w-2/3 m-auto border-t border-dim-white'>
             <div className='col-span-3 flex items-center '>
-              <button className='m-auto' key='1'>
-              <Avatar className='bg-main' size={'large'} icon={<TableOutlined />}/>
+              <button className={showPosts? 'm-auto text-white' : 'opacity-50 m-auto'} key='1' onClick={()=> {setshowPosts(true)
+              setshowSaved(false)}}>
+                <Avatar className='bg-main' size={'large'} icon={<TableOutlined />}/>
               </button>
-              <button className=' m-auto' key='2'>
-              <Avatar className='bg-main' size={'large'} icon={<TabletOutlined />}/>
+              <button className={showSaved ? 'm-auto' : 'm-auto opacity-50'} key='2' onClick={()=> {setshowSaved(true)
+              setshowPosts(false)}}>
+                <Avatar className='bg-main' size={'large'} icon={<TabletOutlined />}/>
               </button>
             </div>
         {profilePosts.map((item)=> {
-          return <Link to={`/comments/${item.Id}`}>
-            <div>
+          return <Link className={showPosts ? '': 'hidden'} to={`/comments/${item.Id}`}>
+            <motion.div
+            animate={showPosts ? 'open' : 'closed'}
+            variants={variant}>
               <Image preview={false} src={item.post_image} className='rounded-xl hover:brightness-50 transition ease-in-out  delay-100 duration-100'/>
-            </div>
+            </motion.div>
           </Link>
         })}
+        {
+          uniqueSaved.map((item)=>{
+            return <Link className={showSaved ? '' : 'hidden'} to={`/comments/${item.Id}`}>
+            <motion.div
+            animate={showSaved ? 'open' : 'closed'}
+            variants={variant}
+            >
+              <Image src={item.post_image} preview={false} className='rounded-xl hover:brightness-50 transition ease-in-out  delay-100 duration-100'/>
+            </motion.div>
+            </Link>
+          })
+        }
         </div>
     </div> }
   </section>

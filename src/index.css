@@ -8,13 +8,13 @@
   
 /* Track */
 ::-webkit-scrollbar-track {
-    background: transparent;
+    background: #12121212;
 }
   
 /* Handle */
 ::-webkit-scrollbar-thumb {
-    background: #888;
-    border-radius: 5px;
+    background: #12121212;
+    border-radius: 100px;
 }
   
 /* Handle on hover */

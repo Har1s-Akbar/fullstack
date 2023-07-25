@@ -45,7 +45,7 @@ function Signin() {
     <section className='h-screen overflow-hidden grid grid-cols-2 m-auto '>
         <motion.div className='flex flex-col items-center justify-center rounded drop-shadow-2xl bg-orange-50 outline-8 outline-slate-500 border-amber-100 m-auto border-black w-4/5 h-2/3'
                 initial={{y:-2000}}
-                animate={{y:-775}}
+                animate={{y:-1000}}
                 transition={{duration:6,delay:0.6, ease:"easeInOut"}}        
         >
             <div>

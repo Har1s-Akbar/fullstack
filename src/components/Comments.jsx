@@ -21,6 +21,7 @@ function Comments() {
   const [cPost, setcPost] = useState([]);
   const [specificPost, setSpecificPost] = useState([]) 
   const navigate = useNavigate();
+  
   const settingShow = () => {
     if(showSetting){
       setSetting(false)
@@ -59,7 +60,7 @@ const getSinglePost = async()=>{
   const handleDelete = async(Id) => {
     const dltRef = doc(db, 'users', Id)
     await deleteDoc(dltRef)
-    navigate('/profile')
+    navigate('/feed')
   }
   const handleEdit = async(Id) => {
     if(!editModal){
