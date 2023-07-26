@@ -191,7 +191,7 @@ const getSuggestions = async() => {
               </div>
                 <div className='bg-secondary rounded-xl w-full py-5 '>
                     <div className='flex items-center w-11/12 m-auto justify-between'>
-                      <button onClick={()=> handleLikes(item.Id)} className='flex items-center'>
+                      <button onClick={()=> handleLikes(item.Id)} className='flex items-end'>
                         <h1 className='mx-2 text-xl font-thin text-dim-white'>{item.likes.length}</h1>
                         <Avatar icon={<LikeOutlined />} className='bg-secondary' style={{fontSize: '150%'}} size={'large'}/>
                       </button>
@@ -212,9 +212,9 @@ const getSuggestions = async() => {
             })
           }
           </div>
-          <section className=' flex flex-col w-1/3'>
-            <Skeleton loading={Loading} className='sticky top-10'>
-              <div className={uniqueSaved.length === 0 ? ' border-b border-dim-white ' : 'h-80 border-b border-dim-white '}>
+          <section className=' flex flex-col sticky top-16 h-1/4 w-1/4'>
+            {/* <Skeleton loading={Loading} className=''> */}
+              <div className={uniqueSaved.length === 0 ? ' border-b border-dim-white ' : 'h-64 border-b border-dim-white '}>
                 <div className=' mb-5'>
                   <h1 className='text-2xl font-semibold text-dim-white'>Saved Posts</h1>
                 </div>
@@ -226,7 +226,7 @@ const getSuggestions = async() => {
                   })}
                   <div className={uniqueSaved.length === 0 ? 'flex flex-col items-center justify-center col-span-2': 'flex flex-col items-center justify-center'}>
                     <h1 className={uniqueSaved.length === 0 ? 'text-dim-white text-2xl opacity-50 font-thin my-1': 'text-dim-white text-base font-semibold my-1'}>{
-                      uniqueSaved.length === 0 ? 'Save some posts' : 'See AllSaved Posts' 
+                      uniqueSaved.length === 0 ? 'Save some posts' : 'See All Saved Posts' 
                     }</h1>
                     <button className={uniqueSaved.length === 0 ? 'hidden': 'w-9/12 bg-secondary rounded-lg py-2 my-1 opacity-60 hover:opacity-100 transition delay-200 ease-in-out'}>
                       <Link to={`/profile/${user.uid}`}>
@@ -236,8 +236,8 @@ const getSuggestions = async() => {
                   </div>
                   </div>
               </div>
-            </Skeleton>
-            <div className='my-10 w-full'>
+            {/* </Skeleton> */}
+            <div className='my-10 w-11/12'>
               <div>
                 <h1 className='text-xl font-semibold ml-1 text-dim-white'>
                 Follow New Accounts</h1>

@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import Nav from './Nav';
-import { Image, Avatar } from 'antd';
-import {BarsOutlined} from '@ant-design/icons';
+import { Upload } from 'antd';
+import ImgCrop from 'antd-img-crop';
 import { db,storage } from '../auth/firebaseConfig';
 import {ref, uploadBytes, getDownloadURL} from 'firebase/storage'
-import { setDoc, doc, DocumentReference, serverTimestamp} from 'firebase/firestore/lite';
+import { setDoc, doc, serverTimestamp} from 'firebase/firestore/lite';
 import { useState} from 'react';
 import { useSelector } from 'react-redux';
 import {v4} from 'uuid'
@@ -12,12 +12,31 @@ import { useNavigate } from 'react-router-dom';
 
 function Create() {
   const [Description, setDescription] = useState(null);
+  const [fileList, setFileList] = useState([])
   const [image, setImage] =useState('');
   const [previewImage, setPrevviewImage] =useState(null);
   const [Preview, setPreview] = useState(false)
   // const user = useSelector((state)=> state.reducer.userdata);
   const user = useSelector((state)=> state.reducer.copyUserdata);
   const navigate = useNavigate()
+
+  const onChange = ({ fileList: newFileList }) => {
+    setFileList(newFileList);
+  };
+  const onPreview = async (file) => {
+    let src = file.url;
+    if (!src) {
+      src = await new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file.originFileObj);
+        reader.onload = () => resolve(reader.result);
+      });
+    }
+    const image = new Image();
+    image.src = src;
+    const imgWindow = window.open(src);
+    imgWindow?.document.write(image.outerHTML);
+  };
   const setPost = async() => {
     event.preventDefault()
     const uniqueId = v4()
@@ -47,7 +66,6 @@ function Create() {
       });
     }
   }
-  console.log(previewImage)
   const preview = () => {
     event.preventDefault()
     if (image.length > 0) {
@@ -69,7 +87,7 @@ function Create() {
               <h1 className='text-5xl my-20 font-medium antialiased subpixel-antialiased tracking-wide font-mono text-center'>Create A Post</h1>
         </div>
         <div className=''>
-          <form className='flex flex-col items-center justify-center w-ful'>
+          {/* <form className='flex flex-col items-center justify-center w-ful'>
             <label htmlFor="file" className='text-2xl font-medium antialiased subpixel-antialiased px-10 py-20 bg-dimest w-1/2 rounded tracking-wide my-2 text-center'>+ Upload photo</label>
             <input type="file" id='file' onChange={(e)=> setImage(e.target.files)} className='hidden' accept='image/png, image/jpg, image/jpeg' />
 
@@ -80,12 +98,23 @@ function Create() {
             <button className='w-1/6 mt-10 border-2 transition duration-100 delay-100 ease-in hover:bg-dim-white hover:text-secondary mx-3 rounded py-1' onClick={setPost} >Post</button>
             <button className='w-1/6 mt-10 border-2 transition duration-100 delay-100 ease-in hover:bg-dim-white hover:text-secondary rounded py-1' onClick={preview} >Preview</button>
             </div>
-          </form>
+          </form> */}
+        <ImgCrop rotationSlider showReset={true} aspect={2/1}>
+      <Upload 
+        action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+        listType="picture-card"
+        fileList={fileList}
+        onChange={onChange}
+        onPreview={onPreview}
+      >
+        {fileList.length < 5 && '+ Upload'}
+      </Upload>
+    </ImgCrop>
         </div>
       </div>
       <div className='w-1/3 bg-secondary rounded-xl m-auto py-5'>
       <h1 className='text-center text-xl font-dim-white font-bold'>Preview</h1>
-      {
+      {/* {
         Preview ? <div className='bg-secondary ml-14 rounded-xl flex my-5 justify-between'>
         <div className=''>
           <div className='w-full flex items-satrt justify-between mt-3 border-b-2 pb-5 border-dimest'>
@@ -109,7 +138,7 @@ function Create() {
         <Image src={previewImage} className='rounded-xl '/>
       </div> 
       </div> : <div className='text-base font-medium text-dim-white opacity-80 text-center my-20'>Add an Image for the Preview</div>
-      }
+      } */}
       </div>
     </section>
   )

@@ -3,11 +3,12 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { collection, doc, getDoc, getDocs, where, query, updateDoc, arrayRemove, arrayUnion, orderBy, limit } from 'firebase/firestore/lite'
 import { db } from '../auth/firebaseConfig'
 import Nav from './Nav'
-import { Avatar, Image } from 'antd'
+import { Avatar, Image, Tooltip, Modal, message } from 'antd'
 import { PlusOutlined, TableOutlined, TabletOutlined,CloseOutlined, RightOutlined, TabletFilled} from '@ant-design/icons'
 import { Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { motion } from 'framer-motion'
+import ProfilePicture from './ProfilePicture'
 
 const variant ={
   open: { opacity : 1, y : 0, sizeX: '100%'},
@@ -30,7 +31,7 @@ function ProfileSingle() {
   const [Loading, setloading] = useState(false)
   const [descp, setDescpText] = useState('')
   const user = useSelector((state)=> state.reducer.copyUserdata)
-  const [profile, setprofile] = useState([])
+  const [profile, setprofile] = useState([]);
   const handlePosts = async() =>{
     const queryRef = collection(db, 'users')
     const queryPosts = query(queryRef, where("post_useruid", "==", id))
@@ -148,8 +149,6 @@ const getSavedPosts = async() => {
       }
   })
 }
-
-
 useEffect(()=> handlePosts, [])
   useEffect(()=> getProfile, [nameBtn, followerReload])
   useEffect(()=>{
@@ -164,7 +163,6 @@ useEffect(()=> handlePosts, [])
     const unique = [...new Map(saved.map(item => [item['Id'], item])).values()]
     setuniqueSaved(unique)
   },[saved])
-  console.log(user)
   return (
     <section className='flex bg-main text-dim-white min-h-screen'>
     <div className=''>
@@ -174,19 +172,21 @@ useEffect(()=> handlePosts, [])
       <div className=' flex flex-col w-2/3 items-center justify-end m-auto'>
           <div className='flex w-full justify-center items-start'>
             <section className='flex w-full items-start justify-start'>
-            <section className='w-1/3'>
-              <Image src={profile.photo} sizes={'large'} className='w-96 rounded-full'/>
-            </section>
+            <ProfilePicture profile={profile}/>
               <div className='w-9/12 m-auto'>
                   <div className='flex'>
-                    <input type="text" disabled={inputDisable} onChange={(e)=> setName(e.target.value)} className='bg-transparent w-11/12 outline-0 font-bold text-xl' defaultValue={profile.name} onClick={()=> {if(nameBtn){setnameBtn(false)}else{setnameBtn(true)}}}/>
+                    <Tooltip placement='right' color='volcano' title={'Edit the name by clicking on it'}>
+                      <input type="text" disabled={inputDisable} onChange={(e)=> setName(e.target.value)} className='bg-transparent w-11/12 outline-0 font-bold text-xl' defaultValue={profile.name} onClick={()=> {if(nameBtn){setnameBtn(false)}else{setnameBtn(true)}}}/>
+                    </Tooltip>
                     <button onClick={nameChangeHandle} className={nameBtn ? 'block': 'hidden'}>
                       <Avatar size={'small'} icon={<RightOutlined />} className='bg-main'/>
                     </button>
                   </div>
                   <h1 className='text-xs font-normal italic text-dim-white'>@harisak</h1>
                   <div className='w-full mt-5 flex items-start justify-center'>
-                  <textarea type="text" disabled={inputDisable} defaultValue={profile.description} onChange={(e)=> setDescpText(e.target.value)} onClick={()=>{if(showDescp){ setDescp(false)}else{setDescp(true)}}} className='w-full bg-transparent outline-0 text-xl font-thin' />
+                    <Tooltip placement='right' title={'Edit the description by clicking on it'} color='volcano'>
+                      <textarea type="text" disabled={inputDisable} defaultValue={profile.description} onChange={(e)=> setDescpText(e.target.value)} onClick={()=>{if(showDescp){ setDescp(false)}else{setDescp(true)}}} className='w-full bg-transparent outline-0 text-xl font-thin' />
+                    </Tooltip>
                   <button onClick={updateDescp}>
                   <Avatar icon={<RightOutlined/>} size={'small'} className={showDescp ? 'bg-main flex': 'hidden'}/>
                   </button>

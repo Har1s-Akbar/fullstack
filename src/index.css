@@ -24,3 +24,45 @@
 textarea{
     resize: none;
 }
+
+.stick{
+    position: sticky;
+    top: 0;
+}
+
+.ant-modal-content { 
+    background-color: #121212!important;
+}
+.ant-modal-title { 
+    background-color: #121212!important;
+    color: #c4c4c4!important;
+}
+.ant-btn{
+    color: #c4c4c4!important;
+}
+.ant-btn-primary{
+    border-color: #c4c4c4!important;
+}
+.ant-modal-close{
+    background: #c4c4c4!important;
+    border-radius: 100%!important;
+    visibility: hidden;
+}
+
+.ant-upload{
+    color: #c4c4c4;
+    border-style: solid!important ;
+}
+.ant-modal-title{
+    font-size: small!important;
+    text-align: center;
+    width: 100%;
+}
+.ant-modal-footer{
+    display: flex;
+    justify-content: center;
+}
+
+.img-crop-control{
+    color: #c4c4c4!important;
+}
