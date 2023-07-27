@@ -66,3 +66,11 @@ textarea{
 .img-crop-control{
     color: #c4c4c4!important;
 }
+
+.ant-upload-list-item-container{
+    width: 50%!important;
+    height: 50%!important;
+}
+.ant-upload-list-item-thumbnail{
+    width: fit-content;
+}

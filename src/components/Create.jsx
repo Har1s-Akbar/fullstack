@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import Nav from './Nav';
-import { Upload } from 'antd';
+import { Upload, Modal } from 'antd';
 import ImgCrop from 'antd-img-crop';
 import { db,storage } from '../auth/firebaseConfig';
 import {ref, uploadBytes, getDownloadURL} from 'firebase/storage'
@@ -10,11 +10,22 @@ import { useSelector } from 'react-redux';
 import {v4} from 'uuid'
 import { useNavigate } from 'react-router-dom';
 
+const getBase64 = (file) =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = (error) => reject(error);
+  });
+
 function Create() {
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState('');
+  const [previewTitle, setPreviewTitle] = useState('');
   const [Description, setDescription] = useState(null);
   const [fileList, setFileList] = useState([])
   const [image, setImage] =useState('');
-  const [previewImage, setPrevviewImage] =useState(null);
+  // const [previewImage, setPrevviewImage] =useState(null);
   const [Preview, setPreview] = useState(false)
   // const user = useSelector((state)=> state.reducer.userdata);
   const user = useSelector((state)=> state.reducer.copyUserdata);
@@ -23,19 +34,15 @@ function Create() {
   const onChange = ({ fileList: newFileList }) => {
     setFileList(newFileList);
   };
-  const onPreview = async (file) => {
-    let src = file.url;
-    if (!src) {
-      src = await new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file.originFileObj);
-        reader.onload = () => resolve(reader.result);
-      });
+  const handleCancel = () => setPreviewOpen(false);
+  const handleChange = ({ fileList: newFileList }) => setFileList(newFileList);
+  const handlePreview = async (file) => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj);
     }
-    const image = new Image();
-    image.src = src;
-    const imgWindow = window.open(src);
-    imgWindow?.document.write(image.outerHTML);
+    setPreviewImage(file.url || file.preview);
+    setPreviewOpen(true);
+    setPreviewTitle(file.name || file.url.substring(file.url.lastIndexOf('/') + 1));
   };
   const setPost = async() => {
     event.preventDefault()
@@ -76,7 +83,7 @@ function Create() {
       setPreview(false)
     }
   }
-  console.log(previewImage)
+  // console.log(previewImage)
   return (
     <section className='flex bg-main min-h-screen text-dim-white'>
       <div>
@@ -86,7 +93,7 @@ function Create() {
         <div className=''>
               <h1 className='text-5xl my-20 font-medium antialiased subpixel-antialiased tracking-wide font-mono text-center'>Create A Post</h1>
         </div>
-        <div className=''>
+        <div className=' m-auto'>
           {/* <form className='flex flex-col items-center justify-center w-ful'>
             <label htmlFor="file" className='text-2xl font-medium antialiased subpixel-antialiased px-10 py-20 bg-dimest w-1/2 rounded tracking-wide my-2 text-center'>+ Upload photo</label>
             <input type="file" id='file' onChange={(e)=> setImage(e.target.files)} className='hidden' accept='image/png, image/jpg, image/jpeg' />
@@ -99,17 +106,27 @@ function Create() {
             <button className='w-1/6 mt-10 border-2 transition duration-100 delay-100 ease-in hover:bg-dim-white hover:text-secondary rounded py-1' onClick={preview} >Preview</button>
             </div>
           </form> */}
-        <ImgCrop rotationSlider showReset={true} aspect={2/1}>
+      <ImgCrop rotationSlider showReset={true} aspect={2/1}>
       <Upload 
+      style={{aspectRatio: 2/1}}
         action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
         listType="picture-card"
         fileList={fileList}
-        onChange={onChange}
-        onPreview={onPreview}
+        onChange={handleChange}
+        onPreview={handlePreview}
       >
-        {fileList.length < 5 && '+ Upload'}
+        {fileList.length === 0 && '+ Upload'}
       </Upload>
     </ImgCrop>
+      <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handleCancel}>
+        <img
+          alt="example"
+          style={{
+            width: '100%',
+          }}
+          src={previewImage}
+        />
+      </Modal>
         </div>
       </div>
       <div className='w-1/3 bg-secondary rounded-xl m-auto py-5'>
