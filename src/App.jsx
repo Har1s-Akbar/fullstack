@@ -5,6 +5,8 @@ import Login from './auth/Login';
 // import Profile from './components/Profile';
 import Signin from './auth/Signin';
 import React from 'react';
+import Loading from './components/Loading';
+import Profileform from './components/Profileform';
 const Profile = React.lazy(()=> import('./components/Feed'))
 function App() {
   return (
@@ -21,8 +23,9 @@ function App() {
         <Route path='/signin' Component={Signin} />
         <Route path='/create' Component={Create} />
         <Route path='/comments/:id' Component={Comments} />
-        {/* <Route path='/posts' Component={Posts}/> */}
+        <Route path='/:id/:id' Component={Loading}/>
         <Route path='follow' Component={Follow}/>
+        <Route path='/userform/:id/:id' Component={Profileform}/>
       </Routes>
     </Router>
   )

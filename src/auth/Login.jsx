@@ -5,6 +5,7 @@ import {useDispatch} from 'react-redux';
 import { AuthFail, AuthSuccess, setUser } from '../store/slice';
 import { useState } from 'react';
 import { useNavigate} from 'react-router-dom';
+import { v4 } from 'uuid';
 
 function Login() {
   const navigate = useNavigate();
@@ -35,7 +36,8 @@ function Login() {
       const user = result.user;
       dispatch(setUser(user));
       dispatch(AuthSuccess());
-      navigate('/feed')
+      const unq = v4()
+      navigate(`/${unq}/${user.uid}`)
     }).catch((error) => {
       console.log(error);
       dispatch(setUser([]))
@@ -70,10 +72,10 @@ function Login() {
         </div>
         <form onSubmit={handleSignUp} className='flex flex-col'>
           <label  htmlFor="email" className='text-base text-main subpixel-antialiased antialiased font-normal my-2'>Email</label>
-          <input type="email" onChange={(e)=> setEmail(e.target.value)} className='placeholder:italic text-xs outline-0 border-0 border-b-2 border-black placeholder:text-slate-400 placeholder:text-xs placeholder:pl-2' id='email' name='email' required placeholder='you@email.com'/>
+          <input type="email" onChange={(e)=> setEmail(e.target.value)} className='placeholder:italic text-main font-semibold text-xs outline-0 border-0 border-b-2 border-black placeholder:text-slate-400 placeholder:text-xs placeholder:pl-2' id='email' name='email' required placeholder='you@email.com'/>
           
           <label htmlFor="email" className='text-base text-main subpixel-antialiased antialiased font-normal my-2'>Password</label>
-          <input type="password" onChange={(e)=> setPassword(e.target.value)} id='password' name='password' required className='placeholder:italic border-0 outline-0 border-b-2 border-black placeholder:text-slate-400 placeholder:text-xs placeholder:pl-2' placeholder='*****'/>
+          <input type="password" onChange={(e)=> setPassword(e.target.value)} id='password' name='password' required className='text-main font-semibold placeholder:italic border-0 outline-0 border-b-2 border-black placeholder:text-slate-400 placeholder:text-xs placeholder:pl-2' placeholder='*****'/>
           <button type="submit" className='mt-4 bg-blue-500 py-2 w-1/2 m-auto text-white rounded'>Sign Up</button>
         </form>
       </div>

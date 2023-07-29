@@ -32,6 +32,7 @@ function ProfileSingle() {
   const [descp, setDescpText] = useState('')
   const user = useSelector((state)=> state.reducer.copyUserdata)
   const [profile, setprofile] = useState([]);
+  
   const handlePosts = async() =>{
     const queryRef = collection(db, 'users')
     const queryPosts = query(queryRef, where("post_useruid", "==", id))
@@ -227,14 +228,14 @@ useEffect(()=> handlePosts, [])
       </div>
         }
         <div className='gap-4 overflow-y-scroll h-96 place-content-start grid grid-cols-3 w-2/3 m-auto border-t border-dim-white'>
-            <div className='col-span-3 flex items-center '>
+            <div className={user.uid === id ? 'col-span-3 flex items-center': 'col-span-3 m-auto'}>
               <button className={showPosts? 'm-auto text-white' : 'opacity-50 m-auto'} key='1' onClick={()=> {setshowPosts(true)
               setshowSaved(false)}}>
                 <Avatar className='bg-main' size={'large'} icon={<TableOutlined />}/>
               </button>
               <button className={showSaved ? 'm-auto' : 'm-auto opacity-50'} key='2' onClick={()=> {setshowSaved(true)
               setshowPosts(false)}}>
-                <Avatar className='bg-main' size={'large'} icon={<TabletOutlined />}/>
+                <Avatar className={user.uid === id ? 'bg-main': 'hidden'} size={'large'} icon={<TabletOutlined />}/>
               </button>
             </div>
         {profilePosts.map((item)=> {

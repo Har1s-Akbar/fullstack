@@ -6,6 +6,7 @@ import {useDispatch } from 'react-redux';
 import { setUser } from '../store/slice';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { v4 } from 'uuid';
 
 function Signin() {
     const [photos, setPhotos] = useState([]);
@@ -21,7 +22,8 @@ function Signin() {
         signInWithEmailAndPassword(auth, email,password,).then((userCred)=>{
             const user = userCred.user;
             dispatch(setUser(user));
-            navigate('/feed')
+            const unq = v4()
+            navigate(`/${unq}/${user.uid}`)
         }).catch((error)=> {
             const errorCode = error.code;
             const errorMessage = error.message;
@@ -55,7 +57,7 @@ function Signin() {
             <div>
                 <form onSubmit={signIn} className='flex flex-col'>
                     <label htmlFor="email" className='font-semibold my-2 text-base subpixel-antialiased antialiased'>Email</label>
-                    <input type="email" onChange={(e)=> setEmail(e.target.value)} name="email" id="email" className='appearance-none border-b-2 bg-transparent border-black placeholder:italic pl-2 focus:outline-0 hover:outline-0' placeholder='email@gmail.com'/>
+                    <input type="email" onChange={(e)=> setEmail(e.target.value)} name="email" id="email" className='bg-transparent outline-0 border-b-2 border-black placeholder:italic pl-2 ' placeholder='email@gmail.com'/>
 
                     <label htmlFor="password" className='font-semibold  text-base mt-6 my-2 subpixel-antialiased antialiased'>Password</label>
                     <input type="password" name="password" id="password" onChange={(e)=> setPassword(e.target.value)} className='appearance-none border-b-2 border-black bg-transparent placeholder:italic pl-2 focus:outline-0 hover:outline-0' placeholder='password'/>
