@@ -66,11 +66,30 @@ textarea{
 .img-crop-control{
     color: #c4c4c4!important;
 }
-
+/* 
 .ant-upload-list-item-container{
-    width: 50%!important;
-    height: 50%!important;
-}
-.ant-upload-list-item-thumbnail{
-    width: fit-content;
-}
+    margin: auto;
+    width: 100%!important;
+    height: 300px!important;
+} */
+/* .ant-upload-list-item{
+    height: 200px!important;
+} */
+/* .ant-upload{
+    margin: auto;
+    width: 100%!important;
+} */
+
+/* .ant-upload-list-item{
+    inset: 100px;
+} */
+/* .ant-tooltip-open{
+    visibility: collapse;
+} */
+/* .ant-upload-list-item-container{
+    width: 550px!important;
+    height: fit-content!important;
+} */
+/* .ant-upload-list-item-error{
+    border-color: #c4c4c4!important;
+} */

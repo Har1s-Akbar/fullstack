@@ -23,7 +23,6 @@ function getItem(label, key, icon, children, type) {
 }
 const items = [
   getItem(<a href="/feed">Home</a> , '1', <HomeFilled />),
-  getItem(<a href="/create">Create</a>, '2', <PlusSquareFilled />),
   getItem(<a href="#">Communities</a>, '3', <ContactsFilled />),
   
   getItem(<a href="/notifications">Notifications</a>, 'sub2', <BellFilled />),

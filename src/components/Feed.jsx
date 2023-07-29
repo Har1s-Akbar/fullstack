@@ -9,6 +9,7 @@ import { setcopyData } from '../store/slice';
 import { setPosts } from '../store/postSlice';
 import { Link, useParams } from 'react-router-dom';
 import { PlusOutlined, LikeOutlined, MessageOutlined , SendOutlined, BookOutlined, UserAddOutlined} from '@ant-design/icons';
+import Create from './Create';
 
 
 function Profile() {
@@ -56,8 +57,8 @@ function Profile() {
 // start of getting all posts from the users collection firebase
   const getPosts = async() => {
     const queryRef = collection(db, 'users');
-      // const likedPost = query(queryRef, where("post_useruid", "==", user.uid))
-      const querySnapshot = await getDocs(queryRef);
+      const likedPost = query(queryRef, orderBy('time'))
+      const querySnapshot = await getDocs(likedPost);
       const data = querySnapshot.docs.map((item)=> {return item.data()})
       setposts(data)
       dispatch(setPosts(data))
@@ -116,7 +117,7 @@ function Profile() {
   // start of getting the saved Posts from firebase
   const getSavedPosts = async() => {
     const queryRef = collection(db, 'saved')
-    const savedQuery = query(queryRef, where('savedby', '==', user.uid), orderBy('savedAt') ,limit(3))
+    const savedQuery = query(queryRef, where('savedby', '==', user.uid), orderBy('savedAt') ,limit(2))
     const getPosts = await getDocs(savedQuery)
     const Data =  getPosts.docs.map(async(items)=> {
         if(items.exists()){
@@ -130,18 +131,16 @@ function Profile() {
     })
 }
 // end of saved posts Logic
-
 const getSuggestions = async() => {
   const fetchDocs = await getDocs(collection(db, 'usersProfile'))
   const Data = fetchDocs.docs.map((item)=> {return item.data()})
-  console.log(Data)
   setsuggestionUser(Data)
 }
 
 
     useEffect(()=> getPosts, [user, render])
     useEffect(()=> getUser , [])
-    useEffect(()=> getSuggestions , [])
+    // useEffect(()=> getSuggestions , [])
     useEffect(()=> getSavedPosts, [user, render])
     useEffect(()=> {
       const unique = [...new Map(saved.map(item => [item['Id'], item])).values()]
@@ -212,9 +211,12 @@ const getSuggestions = async() => {
             })
           }
           </div>
-          <section className=' flex flex-col sticky top-16 h-1/4 w-1/4'>
-            {/* <Skeleton loading={Loading} className=''> */}
-              <div className={uniqueSaved.length === 0 ? ' border-b border-dim-white ' : 'h-64 border-b border-dim-white '}>
+          <section className=' flex flex-col sticky top-0 h-1/4 w-1/4'>
+          <div className={posts.length === 0 ? 'hidden':'my-10 w-11/12'}>
+              <Create/>
+            </div>
+            <span className='w-full border border-dim-white opacity-70'></span>
+              <div className={uniqueSaved.length === 0 ? ' border-b hidden border-dim-white ' : ' my-5'}>
                 <div className=' mb-5'>
                   <h1 className='text-2xl font-semibold text-dim-white'>Saved Posts</h1>
                 </div>
@@ -224,7 +226,7 @@ const getSuggestions = async() => {
                       <Image className='rounded-xl' preview={false} src={item.post_image}/>
                     </div>
                   })}
-                  <div className={uniqueSaved.length === 0 ? 'flex flex-col items-center justify-center col-span-2': 'flex flex-col items-center justify-center'}>
+                  <div className={uniqueSaved.length === 0 ? 'flex flex-col items-center justify-center col-span-2': 'flex flex-col items-center col-span-2 justify-center'}>
                     <h1 className={uniqueSaved.length === 0 ? 'text-dim-white text-2xl opacity-50 font-thin my-1': 'text-dim-white text-base font-semibold my-1'}>{
                       uniqueSaved.length === 0 ? 'Save some posts' : 'See All Saved Posts' 
                     }</h1>
@@ -236,26 +238,6 @@ const getSuggestions = async() => {
                   </div>
                   </div>
               </div>
-            {/* </Skeleton> */}
-            <div className='my-10 w-11/12'>
-              <div>
-                <h1 className='text-xl font-semibold ml-1 text-dim-white'>
-                Follow New Accounts</h1>
-              </div>
-              <div className=' flex items-center bg-secondary w-full rounded-xl my-5 py-10 justify-between'>
-                { suggestionUser.length === 1 ? <div>
-                  <h1 className='text-xl text-dim-white text-center px-10 font-thin'>No Accounts to Follow Currently</h1>
-                </div> :
-                  suggestionUser.map((item)=> {
-                    return <Link to={`/profile/${item.uid}`} className={item.uid === user.uid ? 'hidden': 'bg-main rounded-xl shadow-2xl backdrop-blur-3xl p-4 flex flex-col items-center m-auto'}>
-                        <img src={item.photo} className='rounded-full w-10/12 ' alt="" />
-                        <h1 className='my-2'>{item.name}</h1>
-                    </Link>
-                    
-                  })
-                }
-              </div>
-            </div>
           </section>
       </div>
       </div>
