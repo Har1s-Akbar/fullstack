@@ -9,8 +9,9 @@ import {
   Space,
   Upload,
 } from 'antd';
+import ImgCrop from 'antd-img-crop'
 import TextArea from 'antd/es/input/TextArea';
-import React from 'react';
+import React, { useState } from 'react';
 const { Option } = Select;
 const formItemLayout = {
   labelCol: {
@@ -20,17 +21,20 @@ const formItemLayout = {
     span: 14,
   },
 };
-const normFile = (e) => {
-  console.log('Upload event:', e);
-  if (Array.isArray(e)) {
-    return e;
-  }
-  return e?.fileList;
-};
-const onFinish = (values) => {
-  console.log('Received values of form: ', values);
-};
-const Profileform = () => (
+function Profileform (){
+  const [filelist, setFileList] = useState([])
+  const normFile = (e) => {
+    setFileList(e)
+    console.log(filelist)
+    if (Array.isArray(e)) {
+      return e;
+    }
+    return e?.fileList;
+  };
+  const onFinish = (values) => {
+    console.log('Received values of form: ', values);
+  };
+  return(
   <section className='flex flex-col items-center justify-center w-full'>
     <div className='text-center'>
     <h1 className='text-xl font-normal'>Help Us Set Your</h1>
@@ -53,47 +57,14 @@ const Profileform = () => (
   >
     
     <section className='flex w-full'>
-
-    {/* <Form.Item name="switch" label="Switch" valuePropName="checked">
-      <Switch />
-    </Form.Item> */}
-
-    {/* <Form.Item name="slider" label="Slider">
-      <Slider
-        marks={{
-          0: 'A',
-          20: 'B',
-          40: 'C',
-          60: 'D',
-          80: 'E',
-          100: 'F',
-        }}
-      />
-    </Form.Item> */}
-
-    {/* <Form.Item name="radio-group" label="Radio.Group">
-      <Radio.Group>
-        <Radio value="a">item 1</Radio>
-        <Radio value="b">item 2</Radio>
-        <Radio value="c">item 3</Radio>
-      </Radio.Group>
-    </Form.Item> */}
-
-
-    {/* <Form.Item name="rate" label="Rate">
-      <Rate />
-    </Form.Item> */}
-
     <div>
     <Form.Item label="Dragger">
       <Form.Item name="dragger" valuePropName="fileList" getValueFromEvent={normFile} noStyle>
-        <Upload.Dragger name="files" action="/upload.do">
-          <p className="ant-upload-drag-icon">
-            <InboxOutlined />
-          </p>
-          <p className="ant-upload-text">Click or drag file to this area to upload</p>
-          <p className="ant-upload-hint">Support for a single or bulk upload.</p>
-        </Upload.Dragger>
+      <ImgCrop>
+        <Upload accept='.png, .jpeg' maxCount={1} listType='picture-circle' beforeUpload={()=> false}>
+          {filelist.length === 0 && 'upload'}
+        </Upload>
+      </ImgCrop>
       </Form.Item>
     </Form.Item>
     <Form.Item
@@ -118,7 +89,7 @@ const Profileform = () => (
       <Input placeholder='@johndoe'/>
     </Form.Item>
     <Form.Item label="Description" name='description' rules={[{ required: true, message: 'Please input your profile Description!' }]}>
-      <TextArea rows={4} onResize={true} placeholder='Hey new here....'/>
+      <TextArea rows={4} placeholder='Hey new here....'/>
     </Form.Item>
     <Form.Item
       name="select"
@@ -172,6 +143,6 @@ const Profileform = () => (
       </Space>
     </Form.Item>
   </Form>
-  </section>
-);
+  </section>)
+};
 export default Profileform;
