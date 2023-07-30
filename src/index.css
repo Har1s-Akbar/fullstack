@@ -38,7 +38,7 @@ textarea{
     color: #c4c4c4!important;
 }
 .ant-btn{
-    color: #c4c4c4!important;
+    color: #ffffff;
 }
 .ant-btn-primary{
     border-color: #c4c4c4!important;
@@ -93,3 +93,10 @@ textarea{
 /* .ant-upload-list-item-error{
     border-color: #c4c4c4!important;
 } */
+
+.ant-form-item{
+    width :20rem;
+}
+.ant-form-item-label{
+    font-weight: 500;
+}
