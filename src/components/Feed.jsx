@@ -11,7 +11,6 @@ import { Link, useParams } from 'react-router-dom';
 import { PlusOutlined, LikeOutlined, MessageOutlined , SendOutlined, BookOutlined, UserAddOutlined} from '@ant-design/icons';
 import Create from './Create';
 
-
 function Profile() {
   const user = useSelector((state)=> state.reducer.userdata);
   const CopyUser = useSelector((state)=> state.reducer.copyUserdata)
@@ -22,38 +21,8 @@ function Profile() {
   //  states for getting saved posts
   const [saved, setSaved] = useState([])
   const [uniqueSaved, setuniqueSaved] = useState([])
-  const [suggestionUser, setsuggestionUser] = useState([])
-  // for setting Initial user
-  const getUser = async() => {
-    const queryRef = collection(db, 'usersProfile');
-      const userQuery = query(queryRef, where("uid", "==", user.uid))
-      const querySnapshot = await getDocs(userQuery);
-      if(querySnapshot.empty){
-          const unique = v4()
-          setDoc(doc(db, "usersProfile", user.uid),{
-              Id: unique,
-              name: user.displayName,
-              email:user.email,
-              username: '',
-              uid: user.uid,
-              description: '',
-              photo: user.photoURL,
-              followers: [],
-              following:[],
-              isanonymous : user.isAnonymous,
-              Isverified: user.emailVerified,
-              time: serverTimestamp(),
-          })
-        }
-        else{
-        querySnapshot.forEach((docs)=> {
-          const data = docs.data()
-          dispatch(setcopyData(data))
-        })
-      }
-    }
-// End setting initial User
-
+  console.log(CopyUser)
+  
 // start of getting all posts from the users collection firebase
   const getPosts = async() => {
     const queryRef = collection(db, 'users');
@@ -139,7 +108,6 @@ const getSuggestions = async() => {
 
 
     useEffect(()=> getPosts, [user, render])
-    useEffect(()=> getUser , [])
     // useEffect(()=> getSuggestions , [])
     useEffect(()=> getSavedPosts, [user, render])
     useEffect(()=> {
@@ -154,7 +122,7 @@ const getSuggestions = async() => {
     </div>
     {/* {
       Loading ? <div>Loading the posts.....</div> : */}
-    <div className={posts.length === 0? 'w-7/12 col-start-2 col-end-6 flex flex-col items-center justify-center': "flex flex-col"}>
+    <div className={posts.length === 0? 'w-9/12 col-start-2 col-end-5': "flex flex-col"}>
       <Skeleton loading={Loading} paragraph={{rows:0}}>
           <Link to={`/profile/${user.uid}`} className={posts.length === 0? 'bg-secondary my-10 w-full flex items-end rounded-xl': 'bg-secondary my-10 w-1/2 flex items-end rounded-xl m-auto'}>
             <Image src={CopyUser.photo} preview={false} fallback='https://rb.gy/tebns' className='rounded-full w-1/2 opacity-80 border-2 border-dim-white my-5 ml-5' width={55}/>
@@ -162,7 +130,7 @@ const getSuggestions = async() => {
           </Link>
       </Skeleton>
       <div className='flex justify-between w-11/12'>
-        <div className='px-2 ml-10 w-7/12'>
+        <div className={posts.length === 0 ? '': 'px-2 ml-10 w-7/12'}>
           {
             posts.map((item)=> {
               return <section className='my-10'>
@@ -176,9 +144,6 @@ const getSuggestions = async() => {
                         <p className='text-xs text-sim-white font-bold italic opacity-90'>@harisak</p>
                       </div>
                     </Link>
-                    {/* <div>
-                        <Avatar icon={<UserAddOutlined />} size={'large'} className='bg-secondary'/>
-                    </div> */}
                   </Skeleton>
                 </div>
                 <Skeleton paragraph={{rows:0}} className='my-4' loading={Loading}>
@@ -211,11 +176,11 @@ const getSuggestions = async() => {
             })
           }
           </div>
-          <section className=' flex flex-col sticky top-0 h-1/4 w-1/4'>
-          <div className={posts.length === 0 ? 'hidden':'my-10 w-11/12'}>
+          <section className={posts.length === 0 ? ' flex flex-col w-1/2': 'flex flex-col sticky top-0 h-1/4 w-1/4'}>
+          <div className={posts.length === 0 ? 'w-full ml-96 my-10':'my-10 w-11/12'}>
               <Create/>
             </div>
-            <span className='w-full border border-dim-white opacity-70'></span>
+            <span className={posts.length === 0 ? 'w-full border border-dim-white opacity-70 ml-96': 'w-full border border-dim-white opacity-70'}></span>
               <div className={uniqueSaved.length === 0 ? ' border-b hidden border-dim-white ' : ' my-5'}>
                 <div className=' mb-5'>
                   <h1 className='text-2xl font-semibold text-dim-white'>Saved Posts</h1>

@@ -183,7 +183,7 @@ useEffect(()=> handlePosts, [])
                       <Avatar size={'small'} icon={<RightOutlined />} className='bg-main'/>
                     </button>
                   </div>
-                  <h1 className='text-xs font-normal italic text-dim-white'>@harisak</h1>
+                  <h1 className='text-xs font-normal italic text-dim-white'>{profile.username}</h1>
                   <div className='w-full mt-5 flex items-start justify-center'>
                     <Tooltip placement='right' title={'Edit the description by clicking on it'} color='volcano'>
                       <textarea type="text" disabled={inputDisable} defaultValue={profile.description} onChange={(e)=> setDescpText(e.target.value)} onClick={()=>{if(showDescp){ setDescp(false)}else{setDescp(true)}}} className='w-full bg-transparent outline-0 text-xl font-thin' />

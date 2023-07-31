@@ -100,7 +100,6 @@ return (
                 >
               <ImgCrop rotationSlider>
                 <Upload
-
                     listType='picture-circle'
                     fileList={fileList}
                     onChange={onChange}

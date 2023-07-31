@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { Spin } from 'antd'
 import { useNavigate, useParams } from 'react-router-dom'
-import { collection, getDoc, getDocs, query, where, doc, runTransaction } from 'firebase/firestore/lite'
+import { collection, getDoc, getDocs, query, where, doc, runTransaction, Transaction } from 'firebase/firestore/lite'
 import { db } from '../auth/firebaseConfig'
 import { v4 } from 'uuid'
 
@@ -17,11 +17,15 @@ function Loading() {
                         const unq = v4()
                         navigate(`/userform/${unq}/${id}`)
                     }else{
-                        const newLog =reqDoc.data().login + 1;
+                        const newLog =  await reqDoc.data().login + 1;
+                        const actualTrans = trans.update(doc(db, 'usersProfile', id),{login : newLog})
+                        if(newLog >0){
+                            navigate('/feed')
+                        }
                     }
                 })
-            }catch{
-
+            }catch(e){
+                console.log(e)
             }
         }
         useEffect(()=> checkUser,[])

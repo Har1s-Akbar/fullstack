@@ -1,4 +1,7 @@
 import { InboxOutlined, UploadOutlined } from '@ant-design/icons';
+import { db, storage } from '../auth/firebaseConfig';
+import { doc, serverTimestamp, setDoc } from 'firebase/firestore/lite';
+import { getDownloadURL, uploadBytes, ref } from 'firebase/storage';
 import {
   Button,
   Input,
@@ -9,10 +12,15 @@ import {
   Select,
   Space,
   Upload,
+  message,
 } from 'antd';
 import ImgCrop from 'antd-img-crop'
 import TextArea from 'antd/es/input/TextArea';
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
+import { v4 } from 'uuid';
+import { useNavigate, useParams } from 'react-router-dom';
+import { setUser } from '../store/slice';
 const { Option } = Select;
 
 const getBase64 = (file) =>
@@ -31,18 +39,14 @@ const formItemLayout = {
   },
 };
 function Profileform (){
+  const {id} = useParams()
+  const navigate = useNavigate()
+  const user = useSelector((state)=> state.reducer.userdata);
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
   const [previewTitle, setPreviewTitle] = useState('');
   const [filelist, setFileList] = useState([])
-  const normFile = (e) => {
-    setFileList(e)
-    if (Array.isArray(e)) {
-      return e;
-    }
-    return e?.fileList;
-  };
-  const handleChange = ({ fileList: newFileList }) => setFileList(newFileList);
+  const handleChange = ({ fileList: newFileList }) => {setFileList(newFileList)};
   const handleCancel = () => setPreviewOpen(false);
   const handlePreview = async (file) => {
     if (!file.url && !file.preview) {
@@ -52,15 +56,41 @@ function Profileform (){
     setPreviewOpen(true);
     setPreviewTitle(file.name || file.url.substring(file.url.lastIndexOf('/') + 1));
   };
-  console.log(filelist)
-  const onFinish = (values) => {
-    console.log('Received values of form: ', values);
+  const onFinish = async(values) => {
+    message.loading('creating your account', 7)
+    const profilepicRef = ref(storage, `profile/${filelist[0].uid}`);
+    const uploadPic = await  uploadBytes(profilepicRef, filelist[0].originFileObj).then((snap)=>{
+      getDownloadURL(snap.ref).then(async(url)=>{
+        const unique = v4()
+        await setDoc(doc(db, 'usersProfile', user.uid),{
+              Id: unique,
+              name: values.name,
+              email:user.email,
+              age: values.input_number,
+              gender:values.select,
+              username: values.username,
+              login: 0,
+              uid: user.uid,
+              description: values.description,
+              photo: url,
+              followers: [],
+              following:[],
+              isanonymous : user.isAnonymous,
+              Isverified: user.emailVerified,
+              time: serverTimestamp(),
+        }).then(()=> {
+          message.success(`${values.name}, your account is created`)
+          navigate('/feed')
+        })
+      })
+    })
   };
   return(
-  <section className='flex flex-col items-center justify-center w-full mt-10'>
+  <section className='flex flex-col items-center justify-center w-full mt-4'>
     <div className='text-center'>
-    <h1 className='text-xl font-normal'>Help Us Set Your</h1>
-    <h1 className='text-7xl font-thin  my-6'>
+    <h1 className='text-2xl my-2 font-normal'>Hi, <span className='italic'>{user.email}</span></h1>
+    <h1 className='text-lg font-normal my-4'>Help us set up your</h1>
+    <h1 className='text-7xl font-light my-6'>
     Profile
     </h1>
     </div>
@@ -86,18 +116,18 @@ function Profileform (){
           message: 'profile picture is required',
         },
       ]}>
-      {/* <Form.Item name="dragger" valuePropName="fileList" getValueFromEvent={normFile} noStyle> */}
-      <ImgCrop rotationSlider>
-      <Upload
-      beforeUpload={()=> false}
-      maxCount={1}
-        listType="picture-circle"
-        onChange={handleChange}
-        onPreview={handlePreview}
-      >
-        {filelist.length < 1 && '+ Upload'}
-      </Upload>
-    </ImgCrop>
+      <Form.Item noStyle>
+      <ImgCrop rotationSlider showReset={true}>
+        <Upload 
+        style={{aspectRatio: 2/1}}
+          listType="picture-circle"
+          fileList={filelist}
+          onChange={handleChange}
+          onPreview={handlePreview}
+        >
+          {filelist.length === 0 && '+ Upload'}
+        </Upload>
+      </ImgCrop>
     <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handleCancel}>
         <img
           alt="example"
@@ -107,7 +137,7 @@ function Profileform (){
           src={previewImage}
         />
       </Modal>
-      {/* </Form.Item> */}
+      </Form.Item>
     </Form.Item>
     <Form.Item
       name="colorPicker"
@@ -124,7 +154,7 @@ function Profileform (){
     </Form.Item>
 
     <Form.Item label="Age">
-      <Form.Item name='input-number' noStyle>
+      <Form.Item name='input_number' noStyle>
         <InputNumber min={18} max={100} />
       </Form.Item>
     </Form.Item>

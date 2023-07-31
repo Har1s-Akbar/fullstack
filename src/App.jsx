@@ -1,6 +1,6 @@
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom'
 import { lazy,Suspense } from 'react';
-import {Home, Create, Comments, Posts, Follow, ProfileSingle} from './components/index';
+import {Home, Create, Comments, ProfileSingle} from './components/index';
 import Login from './auth/Login';
 // import Profile from './components/Profile';
 import Signin from './auth/Signin';
@@ -24,7 +24,6 @@ function App() {
         <Route path='/create' Component={Create} />
         <Route path='/comments/:id' Component={Comments} />
         <Route path='/:id/:id' Component={Loading}/>
-        <Route path='follow' Component={Follow}/>
         <Route path='/userform/:id/:id' Component={Profileform}/>
       </Routes>
     </Router>

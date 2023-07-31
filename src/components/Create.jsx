@@ -73,12 +73,9 @@ function Create() {
     }
   }
   return (
-    <section className=' text-dim-white'>
-      {/* <div>
-        <Nav/>
-      </div> */}
+    <section className='w-full text-dim-white'>
       <div className='w-full flex flex-col bg-secondary rounded-xl m-auto py-5'>
-        <div className='w-10/12 m-auto'>
+        <div className=' w-11/12 m-auto'>
           <div className='w-full'>
             <div className='flex items-center'>
             <div className='w-2/5'>
