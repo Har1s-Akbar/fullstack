@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react';
 import {auth, provider} from './firebaseConfig';
-import {signInWithPopup, createUserWithEmailAndPassword} from 'firebase/auth';
+import {signInWithPopup, createUserWithEmailAndPassword, sendSignInLinkToEmail} from 'firebase/auth';
 import {useDispatch} from 'react-redux';
 import { AuthFail, AuthSuccess, setUser } from '../store/slice';
+import { message } from 'antd';
 import { useState } from 'react';
 import { useNavigate} from 'react-router-dom';
 import { v4 } from 'uuid';
@@ -19,12 +20,22 @@ function Login() {
   const closeModel = () => {
     setVisible(false)
   };
+  console.log(email, password)
   const handleSignUp = (event) => {
     event.preventDefault();
-    createUserWithEmailAndPassword(auth, email, password).then((userCred)=>{
+    createUserWithEmailAndPassword(auth, email, password).then(async(userCred)=>{
       const user = userCred.user;
+      const actionSetting = {
+        url: 'http://localhost:5173/signin',
+        handleCodeInApp: true
+      }
+      sendSignInLinkToEmail(auth, email, actionSetting).then(()=>{
+        message.info('sent')
+      }).catch((e)=>{
+        console.log(e)
+      })
       dispatch(setUser(user));
-      navigate('/signin');
+      // navigate('/signin');
     }).catch((error)=> {
       const errorCode = error.code;
       const errorMessage = error.message;

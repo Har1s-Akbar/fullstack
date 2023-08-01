@@ -124,7 +124,7 @@ const getSinglePost = async()=>{
                           </div>}
                           </div>
                       </div>
-                        <div className=' flex-col flex overflow-y-scroll h-28'>
+                        <div className=' flex-col flex overflow-y-scroll h-26'>
                           {cPost.map((cmnt)=> {
                             return <div className='my-2 ml-3 flex items-center'>
                               <Avatar src={cmnt.commentPhoto} size={'small'}/>

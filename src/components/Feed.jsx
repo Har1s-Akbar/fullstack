@@ -21,8 +21,13 @@ function Profile() {
   //  states for getting saved posts
   const [saved, setSaved] = useState([])
   const [uniqueSaved, setuniqueSaved] = useState([])
-  console.log(CopyUser)
   
+  const getcurrentUser = async() => {
+    const getData = await getDoc(doc(db, 'usersProfile', user.uid))
+    const data = getData.data()
+    dispatch(setcopyData(data))
+  }
+
 // start of getting all posts from the users collection firebase
   const getPosts = async() => {
     const queryRef = collection(db, 'users');
@@ -99,16 +104,9 @@ function Profile() {
         }
     })
 }
-// end of saved posts Logic
-const getSuggestions = async() => {
-  const fetchDocs = await getDocs(collection(db, 'usersProfile'))
-  const Data = fetchDocs.docs.map((item)=> {return item.data()})
-  setsuggestionUser(Data)
-}
-
 
     useEffect(()=> getPosts, [user, render])
-    // useEffect(()=> getSuggestions , [])
+    useEffect(()=> getcurrentUser , [])
     useEffect(()=> getSavedPosts, [user, render])
     useEffect(()=> {
       const unique = [...new Map(saved.map(item => [item['Id'], item])).values()]

@@ -11,7 +11,6 @@ import {
   UserOutlined
 } from '@ant-design/icons';
 import { Button, Menu, ConfigProvider } from 'antd';
-import { signOut } from 'firebase/auth';
 function getItem(label, key, icon, children, type) {
   return {
     key,

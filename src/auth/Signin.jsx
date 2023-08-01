@@ -1,26 +1,31 @@
 import React from 'react';
 import { useState,useEffect } from 'react';
-import {signInWithEmailAndPassword} from 'firebase/auth';
+import {sendPasswordResetEmail, signInWithEmailAndPassword} from 'firebase/auth';
 import { auth } from './firebaseConfig';
 import {useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { setUser } from '../store/slice';
+import { Modal, message } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { v4 } from 'uuid';
 
 function Signin() {
+  const [modal2Open, setModal2Open] = useState(false);
     const [photos, setPhotos] = useState([]);
     const [loading, setloading] = useState(true);
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
+    const [resetEmail, setResetEmail] = useState([])
     const navigate = useNavigate();
-
+    const unq = v4()
     const dispatch = useDispatch()
     const api_key = '6hQbAQHftoja1nH9XPBCJ3g5vUrFBFPTIqmloRdxT5gih1o5aTFgQFQq';
     const signIn = (event) =>{
         event.preventDefault();
         signInWithEmailAndPassword(auth, email,password,).then((userCred)=>{
             const user = userCred.user;
+            console.log(user)
             dispatch(setUser(user));
             const unq = v4()
             navigate(`/${unq}/${user.uid}`)
@@ -28,6 +33,14 @@ function Signin() {
             const errorCode = error.code;
             const errorMessage = error.message;
           });
+    }
+    const reset = () =>{
+        sendPasswordResetEmail(auth, resetEmail).then(()=>{
+            message.success('reset link sent successfully', 3)
+            setModal2Open(false)
+        }).catch((e)=>{
+            message.error(e)
+        })
     }
   const fetchImage = async() => {
     setloading(true)
@@ -59,12 +72,26 @@ function Signin() {
                     <label htmlFor="email" className='font-semibold my-2 text-base subpixel-antialiased antialiased'>Email</label>
                     <input type="email" onChange={(e)=> setEmail(e.target.value)} name="email" id="email" className='bg-transparent outline-0 border-b-2 border-black placeholder:italic pl-2 ' placeholder='email@gmail.com'/>
 
-                    <label htmlFor="password" className='font-semibold  text-base mt-6 my-2 subpixel-antialiased antialiased'>Password</label>
+                    <label htmlFor="password" className='font-semibold  text-base mt-6  subpixel-antialiased antialiased'>Password</label>
                     <input type="password" name="password" id="password" onChange={(e)=> setPassword(e.target.value)} className='appearance-none border-b-2 border-black bg-transparent placeholder:italic pl-2 focus:outline-0 hover:outline-0' placeholder='password'/>
-
-                    <button type='submit' className='border-2 border-black mt-10 w-1/2 m-auto rounded py-1 hover:bg-black hover:text-white transition delay-100 duration-300'>Log In</button>
+                    {/* <Link className='text-blue-500 my-4' to={`/signin/${unq}`}>Forget Your password? Click here</Link> */}
+                    <button onClick={()=> setModal2Open(true)} className='my-3 text-blue-500'>Reset the password?</button>
+                    
+                    <button type='submit' className='border-2 border-black w-1/2 m-auto rounded py-1 hover:bg-black hover:text-white transition delay-100 duration-300'>Log In</button>
                 </form>
             </div>
+            <Modal
+        title="Reset the password"
+        centered
+        open={modal2Open}
+        onOk={reset}
+        onCancel={() => setModal2Open(false)}
+       >
+        <div className='flex flex-col items-start w-11/12 m-auto'>
+        <label htmlFor="text" className='text-white text-2xl'>Email</label>
+        <input type="text" onChange={(e)=> setResetEmail(e.target.value)} required placeholder='reset@gmail.com' className='border-b-2 w-2/3 placeholder:italic pl-1 text-white placeholder:white border-b-blue-100 bg-transparent outline-0' />
+        </div>
+      </Modal>
         </motion.div>
         <motion.div className='grid grid-cols-6 bg-black'
         initial={{y:600}}
