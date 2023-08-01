@@ -163,6 +163,7 @@ const getSinglePost = async()=>{
                     </button>
                   </div>
                 </div>
+                
       </section>
     </main>
   )

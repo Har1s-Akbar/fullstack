@@ -20,7 +20,6 @@ function Login() {
   const closeModel = () => {
     setVisible(false)
   };
-  console.log(email, password)
   const handleSignUp = (event) => {
     event.preventDefault();
     createUserWithEmailAndPassword(auth, email, password).then(async(userCred)=>{

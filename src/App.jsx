@@ -4,7 +4,6 @@ import {Home, Create, Comments, ProfileSingle} from './components/index';
 import Login from './auth/Login';
 // import Profile from './components/Profile';
 import Signin from './auth/Signin';
-import Reset from './components/Reset';
 import React from 'react';
 import Loading from './components/Loading';
 import Profileform from './components/Profileform';
@@ -26,7 +25,6 @@ function App() {
         <Route path='/comments/:id' Component={Comments} />
         <Route path='/:id/:id' Component={Loading}/>
         <Route path='/userform/:id/:id' Component={Profileform}/>
-        <Route path='/signin/:id' Component={Reset}/>
       </Routes>
     </Router>
   )

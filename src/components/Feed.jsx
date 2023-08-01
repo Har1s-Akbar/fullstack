@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { query,collection, getDocs, where, setDoc, doc, getDoc, updateDoc, arrayRemove, arrayUnion, serverTimestamp, deleteDoc, addDoc, limit, orderBy} from 'firebase/firestore/lite';
+import { query,collection, getDocs, where, doc, getDoc, limit, orderBy} from 'firebase/firestore/lite';
 import Nav from './Nav'
 import { db, storage } from '../auth/firebaseConfig';
-import { Avatar, Image, Skeleton, message } from 'antd';
-import { v4 } from 'uuid';
+import { Image, Skeleton } from 'antd';
 import { setcopyData } from '../store/slice';
 import { setPosts } from '../store/postSlice';
-import { Link, useParams } from 'react-router-dom';
-import { PlusOutlined, LikeOutlined, MessageOutlined , SendOutlined, BookOutlined, UserAddOutlined} from '@ant-design/icons';
+import { Link } from 'react-router-dom';
+import { PlusOutlined} from '@ant-design/icons';
 import Create from './Create';
+import PostsActions from './PostsActions';
 
 function Profile() {
   const user = useSelector((state)=> state.reducer.userdata);
   const CopyUser = useSelector((state)=> state.reducer.copyUserdata)
+  const reload = useSelector((state)=> state.reducerPost.reload)
   const dispatch = useDispatch()
   const [Loading, setloading] = useState(true)
   const [posts, setposts] = useState([])
@@ -31,8 +32,7 @@ function Profile() {
 // start of getting all posts from the users collection firebase
   const getPosts = async() => {
     const queryRef = collection(db, 'users');
-      const likedPost = query(queryRef, orderBy('time'))
-      const querySnapshot = await getDocs(likedPost);
+      const querySnapshot = await getDocs(queryRef);
       const data = querySnapshot.docs.map((item)=> {return item.data()})
       setposts(data)
       dispatch(setPosts(data))
@@ -40,54 +40,6 @@ function Profile() {
     }
   // end of getting posts
   
-  // start of handleing the likes on posts Logic
-    const handleLikes = async(Id) => {
-      setRender(true)
-      const idDocument = Id
-      const specificRef = doc(db, "users", Id)
-      getDoc(specificRef).then((resp)=> {
-      const data = resp.data()
-      const likesArray = data.likes
-      const updateRef = doc(db, "users", idDocument)
-          if(likesArray.includes(user.uid)){
-              updateDoc(updateRef,{
-                  likes: arrayRemove(user.uid)
-              })
-              setRender(false)
-          }
-          else{
-              updateDoc( updateRef,{
-                  likes: arrayUnion(user.uid)
-              })
-              setRender(false)
-          }
-
-      })
-  }
-  // end of handeling likes on posts
-
-  // start of the saving post Logic
-  const savePost = async(id) => {
-    event.preventDefault();
-    const documentRef = doc(db, 'users', id)
-    const getSave = await getDoc(doc(db, 'saved', id))
-    
-    if(getSave.exists() === true){
-      const remove = deleteDoc(doc(db, 'saved' , id)).then(()=> {message.info('Post Unsaved Successfully')})
-      getSavedPosts
-    }else{
-      const postSave = setDoc(doc(db, 'saved', id),{
-        savedby: user.uid,
-        postId : id,
-        savedAt: serverTimestamp(),
-        ref: documentRef,
-      }).then(()=> {message.success('Post Saved successfully')
-    })
-    getSavedPosts
-    }
-  }
-  // end of saving posts Logic
-
   // start of getting the saved Posts from firebase
   const getSavedPosts = async() => {
     const queryRef = collection(db, 'saved')
@@ -104,10 +56,9 @@ function Profile() {
         }
     })
 }
-
-    useEffect(()=> getPosts, [user, render])
+    useEffect(()=> getPosts, [user, reload])
     useEffect(()=> getcurrentUser , [])
-    useEffect(()=> getSavedPosts, [user, render])
+    useEffect(()=> getSavedPosts, [user, reload])
     useEffect(()=> {
       const unique = [...new Map(saved.map(item => [item['Id'], item])).values()]
       setuniqueSaved(unique)
@@ -151,24 +102,8 @@ function Profile() {
                     <Image src={item.post_image} className='rounded-md'/>
                 </div>
               </div>
-                <div className='bg-secondary rounded-xl w-full py-5 '>
-                    <div className='flex items-center w-11/12 m-auto justify-between'>
-                      <button onClick={()=> handleLikes(item.Id)} className='flex items-end'>
-                        <h1 className='mx-2 text-xl font-thin text-dim-white'>{item.likes.length}</h1>
-                        <Avatar icon={<LikeOutlined />} className='bg-secondary' style={{fontSize: '150%'}} size={'large'}/>
-                      </button>
-                      <button>
-                        <Link to={`/comments/${item.Id}`}>
-                          <Avatar icon={<MessageOutlined />} className='bg-secondary'style={{fontSize: '150%'}} size={'large'}/>
-                        </Link>
-                      </button>
-                      <button>
-                        <Avatar icon={<SendOutlined />} className='bg-secondary -rotate-45'style={{fontSize: '150%'}} size={'large'}/>
-                      </button>
-                      <button onClick={()=> {savePost(item.Id)}}>
-                        <Avatar icon={<BookOutlined />} className='bg-secondary'style={{fontSize: '150%'}} size={'large'}/>
-                      </button>
-                    </div>
+                <div>
+                  <PostsActions item={item}/>
                 </div>
               </section>
             })

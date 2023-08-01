@@ -6,9 +6,10 @@ import Nav from './Nav'
 import { Avatar, Image, Tooltip, Modal, message } from 'antd'
 import { PlusOutlined, TableOutlined, TabletOutlined,CloseOutlined, RightOutlined, TabletFilled} from '@ant-design/icons'
 import { Link } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useSelector,useDispatch } from 'react-redux'
 import { motion } from 'framer-motion'
 import ProfilePicture from './ProfilePicture'
+import { setUser } from '../store/slice'
 
 const variant ={
   open: { opacity : 1, y : 0, sizeX: '100%'},
@@ -16,8 +17,10 @@ const variant ={
 }
 
 function ProfileSingle() {
+  const dispatch = useDispatch()
   const {id} = useParams()
   const [saved, setSaved] = useState([]);
+  const [isFollower, setisFollower] = useState(false)
   const [showPosts, setshowPosts] = useState(true)
   const [showSaved, setshowSaved] = useState(false)
   const [uniqueSaved, setuniqueSaved] = useState([])
@@ -46,6 +49,13 @@ function ProfileSingle() {
     const data = Data.data()
     setprofile(data)
     setloading(true)
+    const uptoDateUserData = await getDoc(doc(db, 'usersProfile', user.uid))
+            const actualData = uptoDateUserData.data()
+            if(actualData.following.includes(id)){
+            setisFollower(true)
+          }else{
+          setisFollower(false)
+      }
   }
   const handleFollowerSingle = async(uid)=>{
     const followerRef = doc(db, 'usersProfile', uid)
@@ -64,6 +74,7 @@ function ProfileSingle() {
                     photo: user.photo,
                     email:user.email
                 })
+              
             }).then(()=> {
               if(followerReload){
                 setReload(false);
@@ -83,7 +94,7 @@ function ProfileSingle() {
                     photo: user.photo,
                     email:user.email
                 })
-            }).then(()=> {
+            }).then(async()=> {
               if(followerReload){
                 setReload(false);
               }else{
@@ -213,8 +224,8 @@ useEffect(()=> handlePosts, [])
         {
           inputDisable ?
             <div className='w-1/6 flex items-center my-5 justify-center m-auto'>
-              <button onClick={()=> handleFollowerSingle(id)} className='border w-full rounded-md bg-secondary border-dimest text-xl py-1 font-semibold'>
-                Follow
+              <button onClick={()=> handleFollowerSingle(id)} className={isFollower ? 'border w-full rounded-md bg-lime-900 border-dimest text-xl py-1 font-semibold': 'border w-full rounded-md bg-secondary border-dimest text-xl py-1 font-semibold'}>
+                {isFollower ? 'Following': 'Follow'}
               </button>
             </div>  :
         <div className='w-2/3 m-auto mt-10 mb-2'>
