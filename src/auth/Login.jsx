@@ -57,7 +57,7 @@ function Login() {
   return (
     <section className='h-min-screen text-dim-white'>
       {!visible && <section>
-          <div className='flex justify-center items-center bg-secondary my-4 rounded-lg' onClick={openModel}>
+          <div className='flex justify-center items-center bg-secondary lg:my-4 sm:my-8 rounded-lg' onClick={openModel}>
           <button className='text-base subpixel-antialiased antialiased font-semibold mx-2'>
             Sign Up
           </button>

@@ -14,12 +14,8 @@ const postSlice = createSlice({
     setDocId(state, action){
       state.Ids = action.payload
     },
-    setReload(state){
-      if(state.reload){
-        state.reload = false
-      }else{
-        state.reload =true
-      }
+    setReload(state, action){
+     state.reload = action.payload
     }
   },
 })

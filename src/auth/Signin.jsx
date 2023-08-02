@@ -57,17 +57,13 @@ function Signin() {
   }
   useEffect(()=>fetchImage,[])
   return (
-    <section className='h-screen overflow-hidden grid grid-cols-2 m-auto '>
-        <motion.div className='flex flex-col items-center justify-center rounded drop-shadow-2xl bg-orange-50 outline-8 outline-slate-500 border-amber-100 m-auto border-black w-4/5 h-2/3'
-                initial={{y:-2000}}
-                animate={{y:-1000}}
-                transition={{duration:6,delay:0.6, ease:"easeInOut"}}        
-        >
+    <section className='overflow-hidden h-screen'>
+        <div className='flex flex-col relative items-center z-10 top-10 lg:top-0 justify-center rounded drop-shadow-2xl bg-orange-50 outline-8 outline-slate-500 border-amber-100 m-auto border-black w-11/12 lg:w-2/5 h-4/5 '>
             <div>
-                <h1 className='text-3xl font-semibold my-5 text-center'>Welcome Back, Log in</h1>
-                <p className='font-thin text-sm my-10 text-center'>Enter your credentials to Log in your account</p>
+                <h1 className='lg:text-4xl text-2xl font-semibold my-5 text-center'>Welcome Back, Log in</h1>
+                <p className='text-xs lg:text-sm font-normal my-10 text-center'>Enter your credentials to Log in your account</p>
             </div>
-            <div>
+            <div className='w-3/5 lg:w-1/2'>
                 <form onSubmit={signIn} className='flex flex-col'>
                     <label htmlFor="email" className='font-semibold my-2 text-base subpixel-antialiased antialiased'>Email</label>
                     <input type="email" onChange={(e)=> setEmail(e.target.value)} name="email" id="email" className='bg-transparent outline-0 border-b-2 border-black placeholder:italic pl-2 ' placeholder='email@gmail.com'/>
@@ -75,7 +71,7 @@ function Signin() {
                     <label htmlFor="password" className='font-semibold  text-base mt-6  subpixel-antialiased antialiased'>Password</label>
                     <input type="password" name="password" id="password" onChange={(e)=> setPassword(e.target.value)} className='appearance-none border-b-2 border-black bg-transparent placeholder:italic pl-2 focus:outline-0 hover:outline-0' placeholder='password'/>
                     {/* <Link className='text-blue-500 my-4' to={`/signin/${unq}`}>Forget Your password? Click here</Link> */}
-                    <button onClick={()=> setModal2Open(true)} className='my-3 text-blue-500'>Reset the password?</button>
+                    <button onClick={()=> setModal2Open(true)} className='my-6 lg:my-3 text-blue-500'>Reset the password?</button>
                     
                     <button type='submit' className='border-2 border-black w-1/2 m-auto rounded py-1 hover:bg-black hover:text-white transition delay-100 duration-300'>Log In</button>
                 </form>
@@ -92,10 +88,10 @@ function Signin() {
         <input type="text" onChange={(e)=> setResetEmail(e.target.value)} required placeholder='reset@gmail.com' className='border-b-2 w-2/3 placeholder:italic pl-1 text-white placeholder:white border-b-blue-100 bg-transparent outline-0' />
         </div>
       </Modal>
-        </motion.div>
-        <motion.div className='grid grid-cols-6 bg-black'
+        </div>
+        <motion.div className='grid grid-cols-4 lg:grid-cols-8 brightness-50'
         initial={{y:600}}
-        animate={{y:-500}}
+        animate={{y:-900}}
         transition={{duration:6,delay:0.6, ease:"easeInOut"}}
         >
             {photos?.map((element)=>

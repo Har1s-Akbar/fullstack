@@ -22,25 +22,25 @@ function Hero() {
   useEffect(()=>fetchImage,[])
     return (
         loading ? <div><h1>Loading...</h1></div>:
-    <section className='w-full h-screen overflow-hidden relative grid gap-x-8 gap-y-4 items-center bg-black'>
+    <section className='w-full h-screen overflow-hidden relative grid gap-x-8 gap-y-4 sm:gap-x-1 sm-gap-y-1 items-center bg-black'>
         {/* bg-gradient-to-r from-left to-right */}
-        <motion.div className='grid grid-cols-8 m-auto'
+        <motion.div className='grid lg:grid-cols-8 m-auto sm:grid-cols-4'
             
             initial={{y:250, scale:1}}
             animate={{y:-500, scale:[1.5]}}
             transition={{duration:6,delay:0.6, ease:"easeInOut"}}
             >
             {photos?.map((element)=>
-                <img src={element.src.portrait} className='border-gray-50 border-2 brightness-50 even:saturate-100 odd:grayscale' alt={element.alt} key={element.id}/>
+                <img src={element.src.portrait} className='border-gray-50 border-2 sm:border brightness-50 even:saturate-100 odd:grayscale' alt={element.alt} key={element.id}/>
             )}
         </motion.div>
-        <motion.div className='absolute w-1/2 bottom-1/3 left-1/4'
+        <motion.div className='absolute lg:w-1/2 bottom-1/3 lg:left-1/4 sm:w-full sm:left-0'
         initial={{opacity:0}}
         animate={{opacity:1}}
         transition={{duration:2, delay:4}}
         >
             <div className=' flex flex-col justif-center items-center'>
-                <h1 className='text-dim-white subpixel-antialiased antialiased tracking-wider font-semibold text-3xl leading-10 text-center w-5/6 my-10 '>
+                <h1 className='text-dim-white subpixel-antialiased antialiased tracking-wider font-semibold lg:text-3xl sm:text-xl leading-10 text-center w-5/6 my-10 '>
                     Join the community &
                     share your moments with people!! 
                 </h1>
