@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import {
   HomeFilled,
-  PlusSquareFilled,
+  PlusOutlined,
   SettingFilled,
   ContactsFilled,
   BellFilled,
@@ -20,19 +20,31 @@ function getItem(label, key, icon, children, type) {
     type,
   };
 }
-const items = [
-  getItem(<a href="/feed"></a> , '1',<HomeFilled style={{fontSize:'150%'}} />),
-  getItem(<a href="#"></a>, '3', <ContactsFilled style={{fontSize:'150%'}} />),
-  
-  getItem(<a href="/notifications"></a>, 'sub2', <BellFilled  style={{fontSize:'150%'}}/>),
-  getItem('', 'sub1', <SettingFilled style={{fontSize:'150%'}} />, [
-    getItem('Sign Out', '5'),
-    getItem(<a href="/signup"></a>, '6'),
-  ]),
-];
 const App = () => {
-    const [currentKey, setKey] = useState('1')
-    const User = useSelector((state)=> state.reducer.copyUserdata)
+  const [currentKey, setKey] = useState('1')
+  const User = useSelector((state)=> state.reducer.copyUserdata)
+  const items = [
+    getItem(<a href="/feed"></a> , '1', <HomeFilled style={{fontSize:'140%'}} />),
+    getItem(<a href="#"></a>, '3', <ContactsFilled style={{fontSize:'140%'}} />),
+    getItem(<a href="#"><img className='rounded-full w-10' src={User.photo} alt="" /></a>, '3'),
+    
+    getItem(<a href="/notifications"></a>, 'sub2', <PlusOutlined style={{fontSize:'140%'}} />),
+    getItem('', 'sub1', <SettingFilled style={{fontSize:'140%'}} />, [
+      getItem('Sign Out', '5'),
+      getItem(<a href="/signup">Sign Up</a>, '6'),
+    ]),
+  ];
+  const itemLap = [
+    getItem(<a href="/feed"></a> , '1', <HomeFilled style={{fontSize:'120%'}} />),
+    getItem(<a href="#"></a>, '3', <ContactsFilled style={{fontSize:'120%'}} />),
+    getItem(<a href="#"><img className='rounded-full w-10' src={User.photo} alt="" /></a>, '3'),
+    
+    getItem(<a href="/notifications"></a>, 'sub2', <BellFilled style={{fontSize:'120%'}} />),
+    getItem('', 'sub1', <SettingFilled style={{fontSize:'120%'}} />, [
+      getItem('Sign Out', '5'),
+      getItem(<a href="/signup">Sign Up</a>, '6'),
+    ]),
+  ];
     const name = User.name
     const dispatch = useDispatch()
     const navigate = useNavigate()
@@ -58,29 +70,29 @@ const App = () => {
         message.error('Failed to log out')}
       )
     }
-    
   const handleClick = (e) => {
     if(e.key === '5'){
       signOutFunct()
     }
   };
   return (
-    <div className='sticky top-96 lg:ml-16 lg:top-48'
+    <div className='sticky lg:ml-16 lg:top-48'
     >
       {/* </Button> */}
       <Menu
         onClick={handleClick}    
-        mode='inline'
+        mode="inline"
         theme='dark'
-        className='bg-secondary sm:hidden lg:block lg:rounded-full text-dim-white '
+        className='bg-secondary sm:hidden lg:block rounded-full text-dim-white '
         inlineCollapsed={true}
-        items={items}
+        items={itemLap}
       />
       <Menu
         onClick={handleClick}    
+        mode="horizontal"
         theme='dark'
-        className='bg-secondary flex items-center justify-center pt-2 pl-10 lg:hidden sm:block lg:rounded-full text-dim-white '
-        mode='horizontal'
+        className='bg-secondary p-2 lg:p-0 lg:rounded-full lg:hidden text-dim-white '
+        inlineCollapsed={true}
         items={items}
       />
     </div>

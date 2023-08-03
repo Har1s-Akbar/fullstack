@@ -11,7 +11,7 @@ export default {
     },
     extend:{
       spacing:{
-        '32rem': '41rem'
+        '32rem': '38rem'
       },
       colors:{
         'main': '#121212',
