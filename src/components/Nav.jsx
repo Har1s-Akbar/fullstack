@@ -21,13 +21,13 @@ function getItem(label, key, icon, children, type) {
   };
 }
 const items = [
-  getItem(<a href="/feed">Home</a> , '1', <HomeFilled />),
-  getItem(<a href="#">Communities</a>, '3', <ContactsFilled />),
+  getItem(<a href="/feed"></a> , '1',<HomeFilled style={{fontSize:'150%'}} />),
+  getItem(<a href="#"></a>, '3', <ContactsFilled style={{fontSize:'150%'}} />),
   
-  getItem(<a href="/notifications">Notifications</a>, 'sub2', <BellFilled />),
-  getItem('Settings', 'sub1', <SettingFilled />, [
+  getItem(<a href="/notifications"></a>, 'sub2', <BellFilled  style={{fontSize:'150%'}}/>),
+  getItem('', 'sub1', <SettingFilled style={{fontSize:'150%'}} />, [
     getItem('Sign Out', '5'),
-    getItem(<a href="/signup">Sign Up</a>, '6'),
+    getItem(<a href="/signup"></a>, '6'),
   ]),
 ];
 const App = () => {
@@ -58,21 +58,29 @@ const App = () => {
         message.error('Failed to log out')}
       )
     }
+    
   const handleClick = (e) => {
     if(e.key === '5'){
       signOutFunct()
     }
   };
   return (
-    <div className='sticky ml-16 top-48'
+    <div className='sticky top-96 lg:ml-16 lg:top-48'
     >
       {/* </Button> */}
       <Menu
         onClick={handleClick}    
-        mode="inline"
+        mode='inline'
         theme='dark'
-        className='bg-secondary rounded-full text-dim-white '
+        className='bg-secondary sm:hidden lg:block lg:rounded-full text-dim-white '
         inlineCollapsed={true}
+        items={items}
+      />
+      <Menu
+        onClick={handleClick}    
+        theme='dark'
+        className='bg-secondary flex items-center justify-center pt-2 pl-10 lg:hidden sm:block lg:rounded-full text-dim-white '
+        mode='horizontal'
         items={items}
       />
     </div>

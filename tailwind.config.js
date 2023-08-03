@@ -9,7 +9,10 @@ export default {
       lg: '700px',
       sm: '200px'
     },
-    extend:{ 
+    extend:{
+      spacing:{
+        '32rem': '41rem'
+      },
       colors:{
         'main': '#121212',
         'secondary':'#1e1e1e',

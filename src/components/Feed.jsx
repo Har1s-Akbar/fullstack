@@ -7,7 +7,7 @@ import { Image, Skeleton, Avatar } from 'antd';
 import { setcopyData } from '../store/slice';
 import { setPosts } from '../store/postSlice';
 import { Link } from 'react-router-dom';
-import { PlusOutlined, LikeOutlined, MessageOutlined , SendOutlined, BookOutlined} from '@ant-design/icons';
+import { PlusOutlined, LikeOutlined, MessageOutlined , SendOutlined, BookOutlined, MenuOutlined} from '@ant-design/icons';
 import Create from './Create';
 
 function Profile() {
@@ -69,7 +69,7 @@ const savePost = async(id) => {
     
     if(getSave.exists() === true){
       const remove = deleteDoc(doc(db, 'saved' , id)).then(()=> {message.info('Post Unsaved Successfully')})
-      dispatch(setReload())
+    setRender(true)
     }else{
       const postSave = setDoc(doc(db, 'saved', id),{
         savedby: user.uid,
@@ -78,7 +78,7 @@ const savePost = async(id) => {
         ref: documentRef,
       }).then(()=> {message.success('Post Saved successfully')
     })
-    dispatch(setReload())
+    setRender(false)
     }
   }
 
@@ -108,59 +108,65 @@ const savePost = async(id) => {
     },[saved])
   // console.log(suggestionUser)
     return (
-    <section className={posts.length === 0 ? 'grid grid-cols-5 justify-items-center flex min-h-screen bg-main': 'flex min-h-screen bg-main text-dim-white'}>
-    <div className=''>
+    <section className={posts.length === 0 ? 'grid grid-cols-5 justify-items-center flex min-h-screen bg-main': 'flex flex-col lg:flex-row min-h-screen bg-main text-dim-white'}>
+    <div className='w-full sm:sticky sm:top-32rem sm:z-10'>
       <Nav/>
     </div>
     {/* {
       Loading ? <div>Loading the posts.....</div> : */}
-    <div className={posts.length === 0? 'w-9/12 col-start-2 col-end-5': "flex flex-col"}>
+    <div className={posts.length === 0? 'lg:w-9/12 col-start-2 col-end-5': "flex flex-col"}>
       <Skeleton loading={Loading} paragraph={{rows:0}}>
-          <Link to={`/profile/${user.uid}`} className={posts.length === 0? 'bg-secondary my-10 w-full flex items-end rounded-xl': 'bg-secondary my-10 w-1/2 flex items-end rounded-xl m-auto'}>
-            <Image src={CopyUser.photo} preview={false} fallback='https://rb.gy/tebns' className='rounded-full w-1/2 opacity-80 border-2 border-dim-white my-5 ml-5' width={55}/>
-            <PlusOutlined className='mb-4'/>
-          </Link>
+          <div className={posts.length === 0? 'bg-secondary lg:my-10 w-full flex items-end rounded-xl': 'bg-secondary lg:my-10 lg:w-1/2 w-full flex justify-between items-center lg:rounded-xl m-auto'}>
+            <div className='flex items-center'>
+              <Link to={`/profile/${user.uid}`}>
+                <Image src={CopyUser.photo} preview={false} fallback='https://rb.gy/tebns' className='rounded-full w-1/2 opacity-80 border-2 border-dim-white lg:my-5 my-2 ml-5' width={55}/>
+              </Link>
+            </div>
+            <div className='lg:hidden'>
+            <Avatar icon={<MenuOutlined />} className='bg-secondary mr-2'/>
+            </div>
+          </div>
       </Skeleton>
-      <div className='flex justify-between w-11/12'>
-        <div className={posts.length === 0 ? '': 'px-2 ml-10 w-7/12'}>
+      <div className='flex flex-col lg:flex-row justify-between lg:w-11/12'>
+        <div className={posts.length === 0 ? '': 'px-2 m-auto lg:ml-10 w-full lg:w-7/12'}>
           {
             posts.map((item)=> {
-              return <section className='my-10'>
-                <div className='w-full my-5 bg-secondary pt-5 pb-5 px-5 rounded-xl'>
-                <div className='flex items-center w-full'>
+              return <section className='lg:my-10 my-5'>
+                <div className='w-full my-2 lg:my-5 bg-secondary pt-5 pb-5 px-5 rounded-xl'>
+                <div className='flex items-center lg:w-full w-10/12'>
                   <Skeleton paragraph={{rows:1}} loading={Loading} avatar>
-                    <Link to={`/profile/${item.post_useruid}`} className='flex items-center w-full'>
-                      <Image src={item.userPhoto} width={60} className='rounded-full'/>
+                    <Link to={`/profile/${item.post_useruid}`} className='flex items-center w-1/2 lg:w-full'>
+                      <Image src={item.userPhoto} width={60} preview={false} className='rounded-full'/>
                       <div className='flex items-start flex-col ml-3'>
-                        <h1 className='text-xl text-dim-white font-medium'>{item.userName}</h1>
-                        <p className='text-xs text-sim-white font-bold italic opacity-90'>@harisak</p>
+                        <h1 className='lg:text-xl font-base text-dim-white font-medium'>{item.userName}</h1>
+                        <p className='lg:text-sm text-xs text-sim-white font-bold italic opacity-90'>@{item.username}</p>
                       </div>
                     </Link>
                   </Skeleton>
                 </div>
-                <Skeleton paragraph={{rows:0}} className='my-4' loading={Loading}>
-                  <h1 className='text-xl my-3 ml-2 text-dim-white font-semibold'>{item.description}</h1>
+                <Skeleton paragraph={{rows:0}} className='lg:my-4' loading={Loading}>
+                  <h1 className='lg:text-xl text-base lg:my-3 my-2 ml-2 text-dim-white font-semibold'>{item.description}</h1>
                 </Skeleton>
-                <div className='mt-2'>
+                <div className='lg:mt-2 mt-1'>
                     <Image src={item.post_image} className='rounded-md'/>
                 </div>
               </div>
-              <div className='bg-secondary rounded-xl w-full py-5 '>
+              <div className='bg-secondary rounded-xl w-full lg:py-5 pb-2'>
               <div className='flex items-center w-11/12 m-auto justify-between'>
                 <button onClick={()=> handleLikes(item.Id)} className='flex items-end'>
-                  <h1 className='mx-2 text-xl font-thin text-dim-white'>{item.likes.length}</h1>
-                  <Avatar icon={<LikeOutlined />} className='bg-secondary' style={{fontSize: '150%'}} size={'large'}/>
+                  <h1 className='lg:mx-2 mx-1 lg:text-xl text-lg font-thin text-dim-white'>{item.likes.length}</h1>
+                  <Avatar icon={<LikeOutlined />} className='bg-secondary' style={{fontSize: '120%'}} size={'large'}/>
                 </button>
                 <button>
                   <Link to={`/comments/${item.Id}`}>
-                    <Avatar icon={<MessageOutlined />} className='bg-secondary'style={{fontSize: '150%'}} size={'large'}/>
+                    <Avatar icon={<MessageOutlined />} className='bg-secondary'style={{fontSize: '120%'}} size={'large'}/>
                   </Link>
                 </button>
                 <button>
-                  <Avatar icon={<SendOutlined />} className='bg-secondary -rotate-45'style={{fontSize: '150%'}} size={'large'}/>
+                  <Avatar icon={<SendOutlined />} className='bg-secondary -rotate-45'style={{fontSize: '120%'}} size={'large'}/>
                 </button>
                 <button onClick={()=> {savePost(item.Id)}}>
-                  <Avatar icon={<BookOutlined />} className='bg-secondary'style={{fontSize: '150%'}} size={'large'}/>
+                  <Avatar icon={<BookOutlined />} className='bg-secondary'style={{fontSize: '120%'}} size={'large'}/>
                 </button>
               </div>
           </div>
@@ -168,8 +174,8 @@ const savePost = async(id) => {
             })
           }
           </div>
-          <section className={posts.length === 0 ? ' flex flex-col w-1/2': 'flex flex-col sticky top-0 h-1/4 w-1/4'}>
-          <div className={posts.length === 0 ? 'w-full ml-96 my-10':'my-10 w-11/12'}>
+          <section className={posts.length === 0 ? ' flex flex-col w-1/2': 'bg-secondary flex flex-col w-11/12 m-auto lg:sticky lg:top-0 lg:h-1/4 lg:w-1/4'}>
+          <div className={posts.length === 0 ? 'w-full ml-96 my-10':'my-10 w-full lg:w-11/12'}>
               <Create/>
             </div>
             <span className={posts.length === 0 ? 'w-full border border-dim-white opacity-70 ml-96': 'w-full border border-dim-white opacity-70'}></span>

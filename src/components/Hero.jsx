@@ -31,7 +31,7 @@ function Hero() {
             transition={{duration:6,delay:0.6, ease:"easeInOut"}}
             >
             {photos?.map((element)=>
-                <img src={element.src.portrait} className='border-gray-50 border-2 sm:border brightness-50 even:saturate-100 odd:grayscale' alt={element.alt} key={element.id}/>
+                <img src={element.src.portrait} className='border-gray-50 lg:border-2 border brightness-50 even:saturate-100 odd:grayscale' alt={element.alt} key={element.id}/>
             )}
         </motion.div>
         <motion.div className='absolute lg:w-1/2 bottom-1/3 lg:left-1/4 sm:w-full sm:left-0'
