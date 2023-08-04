@@ -73,12 +73,19 @@ function Create() {
     }
   }
   return (
-    <section className='w-full text-dim-white'>
+    <section className='bg-main h-screen lg:h-full'>
+      <section className='lg:hidden block'>
+        <Nav/>
+      </section>
+      <section className='m-auto lg:hidden block my-6 w-9/12 py-2 rounded-xl'>
+        <h1 className='text-3xl text-center text-dim-white '>Create Post</h1>
+      </section>
+      <section className='w-11/12 lg:w-full m-auto text-dim-white'>
       <div className='w-full flex flex-col bg-secondary rounded-xl m-auto py-5'>
         <div className=' w-11/12 m-auto'>
           <div className='w-full'>
             <div className='flex items-center'>
-            <div className='w-2/5'>
+            <div className='lg:w-2/5 w-1/6'>
             <Image src={user.photo} className=' rounded-full' />
             </div>
             <div className='w-full ml-4'>
@@ -90,7 +97,7 @@ function Create() {
           <div className=''>
             <input type="text" onChange={(e)=> setDescription(e.target.value)} className=' w-9/12 bg-transparent outline-0 mt-5 placeholder:text-base text-sm font-semibold' placeholder="what's on your mind?"/>
           </div>
-          <div className='w-2/5 m-auto mt-2'>
+          <div className='w-2/5 m-auto pt-2'>
         <ImgCrop rotationSlider showReset={true} aspect={2/1}>
         <Upload 
         style={{aspectRatio: 2/1}}
@@ -115,6 +122,7 @@ function Create() {
         </div>
         <button onClick={setPost} className='border w-1/2 m-auto rounded my-3 border-dim-white hover:bg-dim-white hover:text-main transition ease-in-out delay-200 duration-200'>Post</button>
       </div>
+    </section>
     </section>
   )
 }

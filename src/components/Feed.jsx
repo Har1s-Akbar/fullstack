@@ -109,14 +109,14 @@ const savePost = async(id) => {
   // console.log(suggestionUser)
     return (
     <section className={posts.length === 0 ? 'grid grid-cols-5 justify-items-center flex min-h-screen bg-main': 'flex lg:flex-row flex-col min-h-screen bg-main text-dim-white'}>
-    <div className=''>
+    <div className='sm:sticky sm:top-0 sm:z-10'>
       <Nav/>
     </div>
     {/* {
       Loading ? <div>Loading the posts.....</div> : */}
     <div className={posts.length === 0? 'w-9/12 col-start-2 col-end-5': "flex flex-col"}>
       <Skeleton loading={Loading} paragraph={{rows:0}}>
-          <Link to={`/profile/${user.uid}`} className={posts.length === 0? 'bg-secondary my-10 w-full flex items-end rounded-xl': 'bg-secondary my-10 w-1/2 flex items-end rounded-xl m-auto sm:hidden'}>
+          <Link to={`/profile/${user.uid}`} className={posts.length === 0? 'bg-secondary my-10 w-full flex items-end rounded-xl': 'bg-secondary lg:my-10 lg:w-1/2 lg:flex lg:items-end lg:rounded-xl lg:m-auto hidden'}>
             <Image src={CopyUser.photo} preview={false} fallback='https://rb.gy/tebns' className='rounded-full w-1/2 opacity-80 border-2 border-dim-white my-5 ml-5' width={55}/>
             <PlusOutlined className='mb-4'/>
           </Link>
@@ -168,7 +168,7 @@ const savePost = async(id) => {
             })
           }
           </div>
-          <section className={posts.length === 0 ? ' flex flex-col w-1/2': 'flex flex-col sticky top-0 h-1/4 w-1/4'}>
+          <section className={posts.length === 0 ? 'lg:flex lg:flex-col lg:w-1/2 sm:hidden': 'hidden lg:flex lg:flex-col lg:sticky lg:top-0 lg:h-1/4 lg:w-1/4'}>
           <div className={posts.length === 0 ? 'w-full ml-96 my-10':'my-10 w-11/12'}>
               <Create/>
             </div>

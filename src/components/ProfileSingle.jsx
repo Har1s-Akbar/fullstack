@@ -176,28 +176,28 @@ useEffect(()=> handlePosts, [])
     setuniqueSaved(unique)
   },[saved])
   return (
-    <section className='flex bg-main text-dim-white min-h-screen'>
+    <section className='flex flex-col overflow-x-hidden lg:flex-row bg-main text-dim-white min-h-screen'>
     <div className=''>
       <Nav/>
     </div>
-    {Loading && <div className='sticky top-10 grid grid-cols-1 w-full place-content-center'>
-      <div className=' flex flex-col w-2/3 items-center justify-end m-auto'>
-          <div className='flex w-full justify-center items-start'>
-            <section className='flex w-full items-start justify-start'>
+    {Loading && <div className='sticky lg:top-10 grid lg:grid-cols-1 w-full place-content-center'>
+      <div className='flex lg:flex-col w-10/12 lg:w-2/3 lg:items-center lg:justify-end m-auto'>
+          <div className='flex flex-col lg:flex-row w-1/2 lg:w-full lg:justify-center lg:items-start'>
+            <section className='flex flex-col lg:flex-row lg:w-full lg:items-start lg:justify-start'>
             <ProfilePicture profile={profile}/>
               <div className='w-9/12 m-auto'>
                   <div className='flex'>
                     <Tooltip placement='right' color='volcano' title={'Edit the name by clicking on it'}>
-                      <input type="text" disabled={inputDisable} onChange={(e)=> setName(e.target.value)} className='bg-transparent w-11/12 outline-0 font-bold text-xl' defaultValue={profile.name} onClick={()=> {if(nameBtn){setnameBtn(false)}else{setnameBtn(true)}}}/>
+                      <input type="text" disabled={inputDisable} onChange={(e)=> setName(e.target.value)} className='bg-transparent lg:w-11/12 w-8/12 text-lg lg:text-xl outline-0 lg:font-bold font-semibold' defaultValue={profile.name} onClick={()=> {if(nameBtn){setnameBtn(false)}else{setnameBtn(true)}}}/>
                     </Tooltip>
                     <button onClick={nameChangeHandle} className={nameBtn ? 'block': 'hidden'}>
                       <Avatar size={'small'} icon={<RightOutlined />} className='bg-main'/>
                     </button>
                   </div>
-                  <h1 className='text-xs font-normal italic text-dim-white'>{profile.username}</h1>
-                  <div className='w-full mt-5 flex items-start justify-center'>
+                  <h1 className='text-xs font-normal italic text-dim-white'>@{profile.username}</h1>
+                  <div className='w-full lg:mt-5 mt-2 flex items-start justify-center'>
                     <Tooltip placement='right' title={'Edit the description by clicking on it'} color='volcano'>
-                      <textarea type="text" disabled={inputDisable} defaultValue={profile.description} onChange={(e)=> setDescpText(e.target.value)} onClick={()=>{if(showDescp){ setDescp(false)}else{setDescp(true)}}} className='w-full bg-transparent outline-0 text-xl font-thin' />
+                      <textarea type="text" disabled={inputDisable} defaultValue={profile.description} onChange={(e)=> setDescpText(e.target.value)} onClick={()=>{if(showDescp){ setDescp(false)}else{setDescp(true)}}} className=' w-full bg-transparent outline-0 text-sm lg:text-xl font-normal lg:font-thin' />
                     </Tooltip>
                   <button onClick={updateDescp}>
                   <Avatar icon={<RightOutlined/>} size={'small'} className={showDescp ? 'bg-main flex': 'hidden'}/>
@@ -205,16 +205,16 @@ useEffect(()=> handlePosts, [])
                   </div>
                 </div>
             </section>
-            <section className=' flex w-9/12 items-center justify-between'>
-              <div className='flex flex-col items-center border-r-2 px-8 border-dimest'>
+            <section className='hidden lg:flex lg:w-9/12 lg:items-center lg:justify-between'>
+              <div className='flex flex-col items-center border-r-2 lg:px-8 border-dimest'>
                 <h1 className='text-2xl font-bold'>{profilePosts.length}</h1>
                 <h1 className='text-lg font-normal'>Posts</h1>
               </div>
-              <div className='flex flex-col items-center px-8'>
+              <div className='flex flex-col items-center lg:px-8'>
                 <h1 className='text-2xl font-bold'>{profile?.followers.length}</h1>
                 <h1 className='text-lg font-normal'>Followers</h1>
               </div>
-              <div className='flex flex-col items-center border-l-2 px-8 border-dimest'>
+              <div className='flex flex-col items-center border-l-2 lg:px-8 border-dimest'>
                 <h1 className='text-2xl font-bold'>{profile?.following.length}</h1>
                 <h1 className='text-lg font-normal'>Following</h1>
               </div>

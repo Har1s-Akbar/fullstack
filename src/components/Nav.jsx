@@ -11,6 +11,7 @@ import {
   UserOutlined
 } from '@ant-design/icons';
 import { Button, Menu, ConfigProvider } from 'antd';
+import { v4 } from 'uuid';
 function getItem(label, key, icon, children, type) {
   return {
     key,
@@ -22,13 +23,14 @@ function getItem(label, key, icon, children, type) {
 }
 const App = () => {
   const [currentKey, setKey] = useState('1')
+  const uniq = v4();
   const User = useSelector((state)=> state.reducer.copyUserdata)
   const items = [
     getItem(<a href="/feed"></a> , '1', <HomeFilled style={{fontSize:'140%'}} />),
-    getItem(<a href="#"></a>, '3', <ContactsFilled style={{fontSize:'140%'}} />),
-    getItem(<a href="#"><img className='rounded-full w-10' src={User.photo} alt="" /></a>, '3'),
+    getItem(<a href="#"></a>, '2', <ContactsFilled style={{fontSize:'140%'}} />),
+    getItem(<a href={`/profile/${User.uid}`}><img className='rounded-full w-10' src={User.photo} alt="" /></a>, '3'),
     
-    getItem(<a href="/notifications"></a>, 'sub2', <PlusOutlined style={{fontSize:'140%'}} />),
+    getItem(<a href={`/create/${uniq}`}></a>, 'sub2', <PlusOutlined style={{fontSize:'140%'}} />),
     getItem('', 'sub1', <SettingFilled style={{fontSize:'140%'}} />, [
       getItem('Sign Out', '5'),
       getItem(<a href="/signup">Sign Up</a>, '6'),
@@ -36,8 +38,8 @@ const App = () => {
   ];
   const itemLap = [
     getItem(<a href="/feed"></a> , '1', <HomeFilled style={{fontSize:'120%'}} />),
-    getItem(<a href="#"></a>, '3', <ContactsFilled style={{fontSize:'120%'}} />),
-    getItem(<a href="#"><img className='rounded-full w-10' src={User.photo} alt="" /></a>, '3'),
+    getItem(<a href="#"></a>, '2', <ContactsFilled style={{fontSize:'120%'}} />),
+    // getItem(<a href="#"><img className='rounded-full w-10' src={User.photo} alt="" /></a>, '3'),
     
     getItem(<a href="/notifications"></a>, 'sub2', <BellFilled style={{fontSize:'120%'}} />),
     getItem('', 'sub1', <SettingFilled style={{fontSize:'120%'}} />, [
@@ -76,7 +78,7 @@ const App = () => {
     }
   };
   return (
-    <div className='sticky lg:ml-16 lg:top-48'
+    <div className='lg:sticky lg:ml-16 lg:top-48'
     >
       {/* </Button> */}
       <Menu
@@ -91,8 +93,7 @@ const App = () => {
         onClick={handleClick}    
         mode="horizontal"
         theme='dark'
-        className='bg-secondary p-2 lg:p-0 lg:rounded-full lg:hidden text-dim-white '
-        inlineCollapsed={true}
+        className='bg-secondary lg:p-0 lg:rounded-full lg:hidden text-dim-white '
         items={items}
       />
     </div>

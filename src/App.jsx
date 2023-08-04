@@ -1,6 +1,6 @@
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom'
 import { lazy,Suspense } from 'react';
-import {Home, Create, Comments, ProfileSingle} from './components/index';
+import {Home, Create, Comments, ProfileSingle, Nav} from './components/index';
 import Login from './auth/Login';
 // import Profile from './components/Profile';
 import Signin from './auth/Signin';
@@ -19,6 +19,7 @@ function App() {
             <Profile/>
           </React.Suspense>
         } />
+        <Route path='/create/:id' Component={Create}/>
         <Route path='/profile/:id' Component={ProfileSingle} />
         <Route path='/signin' Component={Signin} />
         <Route path='/create' Component={Create} />
