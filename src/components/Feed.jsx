@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { query,collection, getDocs, where, doc, getDoc, limit, orderBy, setDoc, updateDoc,arrayRemove, arrayUnion} from 'firebase/firestore/lite';
+import { query,collection, getDocs, where, doc, getDoc, limit, orderBy, setDoc, updateDoc,arrayRemove, arrayUnion, serverTimestamp, deleteDoc} from 'firebase/firestore/lite';
 import Nav from './Nav'
 import { db, storage } from '../auth/firebaseConfig';
-import { Image, Skeleton, Avatar } from 'antd';
+import { Image, Skeleton, Avatar, message } from 'antd';
 import { setcopyData } from '../store/slice';
 import { setPosts } from '../store/postSlice';
 import { Link } from 'react-router-dom';
@@ -13,7 +13,6 @@ import Create from './Create';
 function Profile() {
   const user = useSelector((state)=> state.reducer.userdata);
   const CopyUser = useSelector((state)=> state.reducer.copyUserdata)
-  const reload = useSelector((state)=> state.reducerPost.reload)
   const dispatch = useDispatch()
   const [Loading, setloading] = useState(true)
   const [posts, setposts] = useState([])
@@ -69,7 +68,7 @@ const savePost = async(id) => {
     
     if(getSave.exists() === true){
       const remove = deleteDoc(doc(db, 'saved' , id)).then(()=> {message.info('Post Unsaved Successfully')})
-      dispatch(setReload())
+      
     }else{
       const postSave = setDoc(doc(db, 'saved', id),{
         savedby: user.uid,
@@ -78,7 +77,7 @@ const savePost = async(id) => {
         ref: documentRef,
       }).then(()=> {message.success('Post Saved successfully')
     })
-    dispatch(setReload())
+    
     }
   }
 
