@@ -85,7 +85,7 @@ const showModal = () => {
   };
   useEffect(()=> getProfilepicture, [open])
 return (
-    <section className='w-9/12 lg:w-1/3'>
+    <section className='w-9/12 lg:w-full'>
               <button onClick={user.uid === id ? showModal: ''} className='w-10/12'>
                 <Image src={profilepic} preview={false} sizes={'large'} className=' rounded-full' />
               </button>

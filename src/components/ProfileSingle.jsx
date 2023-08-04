@@ -181,13 +181,13 @@ useEffect(()=> handlePosts, [])
     <div className=''>
       <Nav/>
     </div>
-    {Loading && <div className='sticky my-5 lg:my-0 lg:top-10 grid lg:grid-cols-1 w-full place-content-center'>
-      <div className='flex lg:flex-col w-full lg:w-2/3 lg:items-center lg:justify-end m-auto'>
-          <div className='grid lg:grid-cols-2 w-full  justify-items-center items-center'>
-            <section className='flex lg:flex-row w-full items-start justify-center'>
+    {Loading && <div className='sticky my-5 lg:my-10 lg:top-10 grid lg:grid-cols-1 w-full place-content-center'>
+      <div className='flex w-full m-auto'>
+          <div className='grid w-full lg:grid-cols-3 lg:w-1/2 justify-items-center lg:items-start items-center m-auto'>
+            <section className='flex w-full lg:w-1/2 items-start justify-center lg:justify-start'>
             <ProfilePicture profile={profile}/>
             </section>
-            <section className='flex lg:w-4/6 h-1/3 lg:w-9/12 col-start-2 col-end-3 items-center justify-self-start justify-between'>
+            <section className='flex h-1/3 lg:h-1/2 lg:col-start-3 lg:row-start-1 items-center justify-self-start justify-between'>
               <div className='flex px-2 flex-col items-center border-r-2 lg:px-8 border-dimest'>
                 <h1 className='lg:text-2xl text-base font-bold '>{profilePosts.length}</h1>
                 <h1 className='lg:text-lg text-sm font-normal'>Posts</h1>
@@ -201,8 +201,8 @@ useEffect(()=> handlePosts, [])
                 <h1 className='lg:text-lg text-sm font-normal'>Following</h1>
               </div>
             </section>
-            <section className='justify-self-start col-span-2'>
-              <div className='lg:w-9/12 w-10/12 m-auto'>
+            <section className='justify-self-start lg:col-start-2 lg:row-start-1 col-span-2'>
+              <div className=' w-10/12 m-auto'>
                   <div className='flex'>
                     <Tooltip placement='right' color='volcano' title={'Edit the name by clicking on it'}>
                       <input type="text" disabled={inputDisable} onChange={(e)=> setName(e.target.value)} className='bg-transparent lg:w-11/12 w-8/12 text-xl lg:text-xl outline-0 lg:font-bold font-semibold' defaultValue={profile.name} onClick={()=> {if(nameBtn){setnameBtn(false)}else{setnameBtn(true)}}}/>
