@@ -10,6 +10,9 @@ export default {
       sm: '200px'
     },
     extend:{
+      gridTemplateColumns:{
+        'laptop' : '15% 40% 45%'
+      },
       spacing:{
         '32rem': '38rem'
       },

@@ -82,26 +82,26 @@ const getSinglePost = async()=>{
   useEffect(()=> getComments, [loading])
   useEffect(()=> getSinglePost, [loading, editModal])
   return (
-    <main className= 'flex bg-main text-dim-white min-h-screen relative'>
+    <main className= 'flex flex-col overflow-x-hidden lg:flex-row bg-main text-dim-white min-h-screen'>
       <div>
         <Nav/>
       </div>
-      <section className='flex flex-col w-full'>
-      <div className='bg-secondary my-10 w-1/2 flex items-end rounded-xl m-auto'>
+      <section className='lg:flex lg:flex-col w-full'>
+      <div className='bg-secondary hidden my-10 w-1/2 lg:flex items-end rounded-xl m-auto'>
           <Image src={user.photo} preview={false} fallback='https://rb.gy/tebns' className='rounded-full w-1/2 opacity-80 border-2 border-dim-white my-5 ml-5' width={55}/>
-          <PlusOutlined className='mb-6'/>
+          <PlusOutlined className='lg:mb-6'/>
       </div>
-        <div className={editModal ? 'opacity-50 w-9/12': 'w-9/12'}>
-          <section className='bg-secondary w-full ml-14 rounded-xl flex my-5 justify-between'>
-                    <div className='w-1/2 flex flex-col justify-between'>
+        <div className={editModal ? 'opacity-50 w-9/12': ' lg:m-0 m-auto w-11/12 lg:w-9/12'}>
+          <section className='bg-secondary w-full grid grid-cols-1 lg:ml-14 rounded-xl lg:flex-row lg:flex my-5 lg:justify-between'>
+                    <div className='lg:w-1/2 w-full flex flex-col justify-between'>
                       <div className='flex flex-col'>
                       <div className='w-full flex items-satrt justify-between mt-3 border-b-2 pb-5 border-dimest'>
-                        <div className='flex ml-3 items-center'>
+                        <div className='flex ml-3 w-6/12 lg:w-full items-start lg:items-center'>
                           <Image src={specificPost.userPhoto} className='rounded-full' preview={false} width={60}/>
                           <div className='flex flex-col items-start mx-3'>
-                            <h1 className='text-dim-white font-semibold'>{specificPost.userName}</h1>
+                            <h1 className='text-dim-white text-lg font-bold lg:font-semibold'>{specificPost.userName}</h1>
                             <p className='italic text-xs font-bold'>@harisak</p>
-                            <p className='text-xs text-dim-white my-2 font-semibold'>{specificPost.description}</p>
+                            <p className='lg:text-xs text-sm font-thin text-dim-white my-2 font-semibold'>{specificPost.description}</p>
                           </div>
                         </div>
                         <div className=''>
@@ -109,10 +109,10 @@ const getSinglePost = async()=>{
                             <button className='relative' onClick={settingShow}>
                             <Avatar icon={<BarsOutlined/>} className='bg-secondary'/>
                           </button>
-                          <div className={showSetting ? 'absolute z-10 w-1/2' : 'hidden'} >
-                            <div className='bg-main flex flex-col bg-secondary w-1/6 justify-center p-3 rounded-lg'>
+                          <div className={showSetting ? 'absolute z-7 right-7 bg-main lg:w-1/2' : 'hidden'} >
+                            <div className='bg-main flex flex-col lg:bg-secondary w-1/6 justify-center p-3 rounded-lg'>
                               <button className='flex items-end my-2' onClick={()=> handleDelete(specificPost.Id)}>
-                                <Avatar className='bg-secondary' size={'small'} icon={<DeleteOutlined/>}/>
+                                <Avatar className='lg:bg-secondary' size={'small'} icon={<DeleteOutlined/>}/>
                                 <h1 className='text-xs font-medium '>Delete</h1>
                               </button>
                               <button className='flex items-end my-2 ' onClick={()=> handleEdit(specificPost.Id)}>
@@ -124,7 +124,7 @@ const getSinglePost = async()=>{
                           </div>}
                           </div>
                       </div>
-                        <div className=' flex-col flex overflow-y-scroll h-26'>
+                        <div className=' flex-col flex overflow-y-scroll h-60 lg:h-10'>
                           {cPost.map((cmnt)=> {
                             return <div className='my-2 ml-3 flex items-center'>
                               <Avatar src={cmnt.commentPhoto} size={'small'}/>
@@ -145,9 +145,9 @@ const getSinglePost = async()=>{
                               </div>
                         </div>  
                     </div>
-                  <div className='w-3/5 flex'>
+                  <div className='lg:w-3/5 w-full flex row-start-1'>
                     <Image src={specificPost.post_image} className='rounded-xl '/>
-                  </div> 
+                  </div>
                   </section>
               </div>
               

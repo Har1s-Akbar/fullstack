@@ -86,7 +86,7 @@ function Create() {
           <div className='w-full'>
             <div className='flex items-center'>
             <div className='lg:w-2/5 w-1/6'>
-            <Image src={user.photo} className=' rounded-full' />
+            <Image src={user.photo} preview={false} className=' rounded-full' />
             </div>
             <div className='w-full ml-4'>
               <h1 className='text-xl font-semibold'>{user.name}</h1>

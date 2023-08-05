@@ -29,7 +29,7 @@ function Login() {
         handleCodeInApp: true
       }
       sendSignInLinkToEmail(auth, email, actionSetting).then(()=>{
-        message.info('sent')
+        message.info('Sign up link has been sent to your gmail account')
       }).catch((e)=>{
         console.log(e)
       })

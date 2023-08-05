@@ -60,7 +60,6 @@ function Profile() {
         }
     })
 }
-// console.log(posts.map((Item)=> {return Item.likes.length}))
 const savePost = async(id) => {
     event.preventDefault();
     const documentRef = doc(db, 'users', id)
@@ -88,6 +87,7 @@ const savePost = async(id) => {
     const savedQuery = query(queryRef, where('savedby', '==', user.uid), orderBy('savedAt') ,limit(2))
     const getPosts = await getDocs(savedQuery)
     const Data =  getPosts.docs.map(async(items)=> {
+      
         if(items.exists()){
             const data = items.data()
             const getSaved = await getDoc(data.ref)
@@ -111,8 +111,6 @@ const savePost = async(id) => {
     <div className='sm:sticky sm:top-0 sm:z-10'>
       <Nav/>
     </div>
-    {/* {
-      Loading ? <div>Loading the posts.....</div> : */}
     <div className={posts.length === 0? 'w-9/12 col-start-2 col-end-5': "flex flex-col"}>
       <Skeleton loading={Loading} paragraph={{rows:0}}>
           <Link to={`/profile/${user.uid}`} className={posts.length === 0? 'bg-secondary my-10 w-full flex items-end rounded-xl': 'bg-secondary lg:my-10 lg:w-1/2 lg:flex lg:items-end lg:rounded-xl lg:m-auto hidden'}>
@@ -124,12 +122,12 @@ const savePost = async(id) => {
         <div className={posts.length === 0 ? '': 'px-2 lg:ml-10 lg:w-7/12'}>
           {
             posts.map((item)=> {
-              return <section className='lg:my-10 my-7'>
+              return <section key={item.Id} className='lg:my-10 my-7'>
                 <div className='w-full my-3 lg:my-5 bg-secondary pt-5 pb-5 px-5 rounded-xl'>
                 <div className='flex items-center w-full'>
                   <Skeleton paragraph={{rows:1}} loading={Loading} avatar>
                     <Link to={`/profile/${item.post_useruid}`} className='flex items-center lg:w-full w-2/5'>
-                      <Image src={item.userPhoto} width={60} className='rounded-full w-1/2'/>
+                      <Image src={item.userPhoto} preview={false} width={60} className='rounded-full w-1/2'/>
                       <div className='flex items-start flex-col ml-3'>
                         <h1 className='lg:text-xl text-lg text-dim-white font-medium'>{item.userName}</h1>
                         <p className='lg:text-sm text-xs text-sim-white font-bold italic opacity-90'>@{item.username}</p>
@@ -178,7 +176,7 @@ const savePost = async(id) => {
                 </div>
                 <div className='items-center rounded-xl gap-1 place-content-center grid grid-cols-2 w-full'>
                   {uniqueSaved.map((item)=> {
-                    return <div>
+                    return <div key={item.Id}>
                       <Image className='rounded-xl' preview={false} src={item.post_image}/>
                     </div>
                   })}
@@ -197,7 +195,6 @@ const savePost = async(id) => {
           </section>
       </div>
       </div>
-    {/* } */}
   </section>
 
   )
