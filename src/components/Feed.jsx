@@ -20,7 +20,7 @@ function Profile() {
   //  states for getting saved posts
   const [saved, setSaved] = useState([])
   const [uniqueSaved, setuniqueSaved] = useState([])
-  
+  console.log(CopyUser)
   const getcurrentUser = async() => {
     const getData = await getDoc(doc(db, 'usersProfile', user.uid))
     const data = getData.data()

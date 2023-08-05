@@ -98,7 +98,7 @@ function Create() {
             <input type="text" onChange={(e)=> setDescription(e.target.value)} className=' w-9/12 bg-transparent outline-0 mt-5 placeholder:text-base text-sm font-semibold' placeholder="what's on your mind?"/>
           </div>
           <div className='w-2/5 m-auto pt-2'>
-        <ImgCrop rotationSlider showReset={true} aspect={2/1}>
+        <ImgCrop rotationSlider aspect={2/1}>
         <Upload 
         style={{aspectRatio: 2/1}}
           listType="picture-card"

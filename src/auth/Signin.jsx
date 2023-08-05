@@ -20,7 +20,6 @@ function Signin() {
     const navigate = useNavigate();
     const unq = v4()
     const dispatch = useDispatch()
-    const api_key = '6hQbAQHftoja1nH9XPBCJ3g5vUrFBFPTIqmloRdxT5gih1o5aTFgQFQq';
     const signIn = (event) =>{
         event.preventDefault();
         signInWithEmailAndPassword(auth, email,password,).then((userCred)=>{
@@ -45,7 +44,7 @@ function Signin() {
   const fetchImage = async() => {
     setloading(true)
     try{    
-        const response = await fetch('https://api.pexels.com/v1/search?query=people&per_page=80',{headers:{Authorization: api_key}})
+        const response = await fetch('https://api.pexels.com/v1/search?query=people&per_page=80',{headers:{Authorization: import.meta.env.VITE_PEXEL_KEY}})
         const data = await response.json();
         setPhotos(data.photos);
         if (data){

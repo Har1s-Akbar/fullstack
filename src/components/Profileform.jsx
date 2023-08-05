@@ -38,6 +38,14 @@ const formItemLayout = {
     span: 30,
   },
 };
+const MobileItemLayout = {
+  labelCol: {
+    span: 10,
+  },
+  wrapperCol: {
+    span: 10,
+  },
+};
 function Profileform (){
   const {id} = useParams()
   const navigate = useNavigate()
@@ -48,6 +56,7 @@ function Profileform (){
   const [filelist, setFileList] = useState([])
   const handleChange = ({ fileList: newFileList }) => {setFileList(newFileList)};
   const handleCancel = () => setPreviewOpen(false);
+  console.log(user.emailVerified)
   const handlePreview = async (file) => {
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj);
@@ -86,7 +95,7 @@ function Profileform (){
     })
   };
   return(
-  <section className='flex flex-col items-center justify-center w-full mt-4'>
+  <section className='flex flex-col items-center justify-center w-full mt-4 overflow-x-hidden'>
     <div className='text-center'>
     <h1 className='text-2xl my-2 font-normal'>Hi, <span className='italic'>{user.email}</span></h1>
     <h1 className='text-lg font-normal my-4'>Help us set up your</h1>
@@ -94,8 +103,10 @@ function Profileform (){
     Profile
     </h1>
     </div>
+
+    {/* Laptop view form */}
     <Form
-    className='p-10 rounded-lg shadow-2xl'
+    className='rounded-lg hidden p-10 lg:block shadow-2xl'
     layout='vertical'
     name="validate_other"
     size='medium'
@@ -117,7 +128,7 @@ function Profileform (){
         },
       ]}>
       <Form.Item noStyle>
-      <ImgCrop rotationSlider showReset={true}>
+      <ImgCrop rotationSlider>
         <Upload 
         style={{aspectRatio: 2/1}}
           listType="picture-circle"
@@ -195,6 +206,123 @@ function Profileform (){
       wrapperCol={{
         span: 12,
         offset: 6,
+      }}
+    >
+      <Space>
+        <Button type="primary" className='bg-blue-600' htmlType="submit">
+          Submit
+        </Button>
+        <Button htmlType="reset" className='' type='primary bg-orange-500'>reset</Button>
+      </Space>
+    </Form.Item>
+    </div>
+  </Form>
+{/* laptop view end */}
+
+
+  {/* mobile view form */}
+    <Form
+    className='rounded-lg p-5 m-auto w-11/12 lg:hidden block shadow-2xl'
+    layout='vertical'
+    name="validate_form"
+    size='medium'
+    {...MobileItemLayout}
+    onFinish={onFinish}
+    initialValues={{
+      'input-number': 18,
+      'color-picker': null,
+    }}
+  >
+    <div className=''>
+
+    <section className=''>
+    <div className='w-full grid grid-cols-2'>
+    <Form.Item label="Profile Picture" rules={[
+        {
+          required: true,
+          message: 'profile picture is required',
+        },
+      ]}>
+      <Form.Item noStyle>
+      <ImgCrop rotationSlider >
+        <Upload 
+        style={{aspectRatio: 2/1}}
+          listType="picture-circle"
+          fileList={filelist}
+          onChange={handleChange}
+          onPreview={handlePreview}
+        >
+          {filelist.length === 0 && '+ Upload'}
+        </Upload>
+      </ImgCrop>
+    <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handleCancel}>
+        <img
+          alt="example"
+          style={{
+            width: '100%',
+          }}
+          src={previewImage}
+        />
+      </Modal>
+      </Form.Item>
+    </Form.Item>
+    <Form.Item
+      name="colorPicker"
+      
+      label="Favourite color"
+      rules={[
+        {
+          required: true,
+          message: 'color is required!',
+        },
+      ]}
+    >
+      <ColorPicker />
+    </Form.Item>
+
+    <Form.Item label="Age">
+      <Form.Item name='input_number' noStyle>
+        <InputNumber min={18} max={100} />
+      </Form.Item>
+    </Form.Item>
+    </div>
+    <div>
+    <Form.Item label="Name" style={{width: '75%'}} name='name' rules={[{ required: true, message: 'Please input your Name!' }]}>
+      <Input placeholder='Joh Doe' className=''/>
+    </Form.Item>
+    <Form.Item label="User Name" name='username' style={{width: '80%'}} rules={[{ required: true, message: 'Please input your username!' }]}>
+      <Input placeholder='@johndoe'/>
+    </Form.Item>
+    <Form.Item label="Description" name='description' style={{width: '90%'}} rules={[{ required: true, message: 'Please input your profile Description!' }]}>
+      <TextArea rows={3} placeholder='Hey new here....'/>
+    </Form.Item>
+    <Form.Item
+    style={{width: '60%'}}
+      name="select"
+      label="Select"
+      hasFeedback
+      rules={[
+        {
+          required: true,
+          message: 'Please select your country!',
+        },
+      ]}
+    >
+      <Select placeholder="Please select your Gender">
+        <Option value="gay">Gay</Option>
+        <Option value="lesbian">Lesbian</Option>
+        <Option value="queer">Queer</Option>
+        <Option value="disable">Disable</Option>
+        <Option value="others">Others</Option>
+      </Select>
+    </Form.Item>
+
+    </div>
+    </section>
+    <Form.Item
+      wrapperCol={{
+        span: 12,
+        offset: 5,
       }}
     >
       <Space>
