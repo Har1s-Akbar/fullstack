@@ -65,10 +65,10 @@ function Signin() {
             <div className='w-3/5 lg:w-1/2'>
                 <form onSubmit={signIn} className='flex flex-col'>
                     <label htmlFor="email" className='font-semibold my-2 text-base subpixel-antialiased antialiased'>Email</label>
-                    <input type="email" onChange={(e)=> setEmail(e.target.value)} name="email" id="email" className='bg-transparent outline-0 border-b-2 border-black placeholder:italic pl-2 ' placeholder='email@gmail.com'/>
+                    <input type="email" onChange={(e)=> setEmail(e.target.value)} name="email" id="emailSign" className='bg-transparent outline-0 border-b-2 border-black placeholder:italic pl-2 ' placeholder='email@gmail.com'/>
 
                     <label htmlFor="password" className='font-semibold  text-base mt-6  subpixel-antialiased antialiased'>Password</label>
-                    <input type="password" name="password" id="password" onChange={(e)=> setPassword(e.target.value)} className='appearance-none border-b-2 border-black bg-transparent placeholder:italic pl-2 focus:outline-0 hover:outline-0' placeholder='password'/>
+                    <input type="password" name="password" id="passwordSign" onChange={(e)=> setPassword(e.target.value)} className='appearance-none border-b-2 border-black bg-transparent placeholder:italic pl-2 focus:outline-0 hover:outline-0' placeholder='password'/>
                     {/* <Link className='text-blue-500 my-4' to={`/signin/${unq}`}>Forget Your password? Click here</Link> */}
                     <button onClick={()=> setModal2Open(true)} className='my-6 lg:my-3 text-blue-500'>Reset the password?</button>
                     
