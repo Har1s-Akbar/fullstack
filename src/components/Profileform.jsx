@@ -129,7 +129,7 @@ function Profileform (){
       ]}>
       <Form.Item noStyle>
       <ImgCrop rotationSlider>
-        <Upload 
+        <Upload
         style={{aspectRatio: 2/1}}
           listType="picture-circle"
           fileList={filelist}
@@ -154,12 +154,6 @@ function Profileform (){
       name="colorPicker"
       
       label="Select your favourite color"
-      rules={[
-        {
-          required: true,
-          message: 'color is required!',
-        },
-      ]}
     >
       <ColorPicker />
     </Form.Item>

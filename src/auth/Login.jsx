@@ -5,9 +5,11 @@ import {useDispatch} from 'react-redux';
 import { AuthFail, AuthSuccess, setUser } from '../store/slice';
 import { message } from 'antd';
 import { useState } from 'react';
+import { useNavigate} from 'react-router-dom';
 import { v4 } from 'uuid';
 
 function Login() {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('');
@@ -32,6 +34,7 @@ function Login() {
         console.log(e)
       })
       dispatch(setUser(user));
+      // navigate('/signin');
     }).catch((error)=> {
       const errorCode = error.code;
       const errorMessage = error.message;
@@ -43,6 +46,7 @@ function Login() {
       const user = result.user;
       dispatch(setUser(user));
       dispatch(AuthSuccess());
+      console.log(user)
       const unq = v4()
       navigate(`/${unq}/${user.uid}`)
     }).catch((error) => {
@@ -55,13 +59,13 @@ function Login() {
     <section className='h-min-screen text-dim-white'>
       {!visible && <section>
           <div className='flex justify-center items-center bg-secondary lg:my-4 sm:my-8 rounded-lg' onClick={openModel}>
-          <button name='signup' className='text-base subpixel-antialiased antialiased font-semibold mx-2'>
+          <button className='text-base subpixel-antialiased antialiased font-semibold mx-2'>
             Sign Up
           </button>
           <img width="100" height="100" className='w-1/6' src="https://img.icons8.com/clouds/100/new-post.png" alt="new-post"/>
         </div>
         <div className='flex justify-center px-2 rounded-lg bg-secondary items-center'>
-          <button name='login' className='text-base subpixel-antialiased antialiased font-semibold mx-2' onClick={handelGoogle}>Sign In with Google</button>
+          <button className='text-base subpixel-antialiased antialiased font-semibold mx-2' onClick={handelGoogle}>Sign In with Google</button>
           <img width="100" height="100" className='w-1/6' src="https://img.icons8.com/clouds/100/google-logo.png" alt="google-logo"/>
         </div>
         <div className='w-11/12 m-auto mt-6'>
