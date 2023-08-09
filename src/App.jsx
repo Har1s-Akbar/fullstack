@@ -16,11 +16,7 @@ function App() {
         <Route path='/' Component={Home} />
         <Route path='/signin' Component={Signin} />
         <Route element={<PrivateRoutes/>}>
-          <Route path='/feed' element={
-            <React.Suspense fallback={<div>Loading....</div>}>
-              <Profile/>
-            </React.Suspense>
-          } />
+          <Route path='/feed' element={<Profile/>} />
           <Route path='/create/:id' Component={Create}/>
           <Route path='/profile/:id' Component={ProfileSingle} />
           <Route path='/create' Component={Create} />
