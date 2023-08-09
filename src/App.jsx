@@ -8,7 +8,7 @@ import Signin from './auth/Signin';
 import React from 'react';
 import Loading from './components/Loading';
 import Profileform from './components/Profileform';
-const Profile = React.lazy(()=> import('./components/Feed'))
+import Profile from './components/Feed';
 function App() {
   return (
     <Router>
