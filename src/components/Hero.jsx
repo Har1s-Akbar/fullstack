@@ -11,6 +11,7 @@ function Hero() {
     try{    
         const response = await fetch('https://api.pexels.com/v1/curated?&per_page=80',{headers:{Authorization: api_key}})
         const data = await response.json();
+        console.log(data)
         setPhotos(data.photos);
         if (data){
          setloading(false)   
@@ -19,7 +20,6 @@ function Hero() {
         console.log(error);
     }
   }
-  console.log(photos)
   useEffect(()=>fetchImage,[])
     return (
         loading ? <div><h1>Loading...</h1></div>:
