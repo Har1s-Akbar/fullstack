@@ -1,4 +1,3 @@
-import { InboxOutlined, UploadOutlined } from '@ant-design/icons';
 import { db, storage } from '../auth/firebaseConfig';
 import { doc, serverTimestamp, setDoc } from 'firebase/firestore/lite';
 import { getDownloadURL, uploadBytes, ref } from 'firebase/storage';
@@ -20,7 +19,6 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { v4 } from 'uuid';
 import { useNavigate, useParams } from 'react-router-dom';
-import { setUser } from '../store/slice';
 const { Option } = Select;
 
 const getBase64 = (file) =>

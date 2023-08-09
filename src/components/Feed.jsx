@@ -11,9 +11,9 @@ import { PlusOutlined, LikeOutlined, MessageOutlined , SendOutlined, BookOutline
 import Create from './Create';
 
 function Profile() {
+  const dispatch = useDispatch()
   const user = useSelector((state)=> state.reducer.userdata);
   const CopyUser = useSelector((state)=> state.reducer.copyUserdata)
-  const dispatch = useDispatch()
   const [Loading, setloading] = useState(true)
   const [posts, setposts] = useState([])
   const [ render, setRender] = useState(false)

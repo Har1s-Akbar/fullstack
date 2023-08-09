@@ -3,8 +3,8 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { collection, doc, getDoc, getDocs, where, query, updateDoc, arrayRemove, arrayUnion, orderBy, limit } from 'firebase/firestore/lite'
 import { db } from '../auth/firebaseConfig'
 import Nav from './Nav'
-import { Avatar, Image, Tooltip, Modal, message } from 'antd'
-import { PlusOutlined, TableOutlined, TabletOutlined,CloseOutlined, RightOutlined, TabletFilled} from '@ant-design/icons'
+import { Avatar, Image, Tooltip, message } from 'antd'
+import { PlusOutlined, TableOutlined, TabletOutlined,RightOutlined} from '@ant-design/icons'
 import { Link } from 'react-router-dom'
 import { useSelector,useDispatch } from 'react-redux'
 import { motion } from 'framer-motion'
@@ -16,7 +16,6 @@ const variant ={
 }
 
 function ProfileSingle() {
-  const dispatch = useDispatch()
   const {id} = useParams()
   const [saved, setSaved] = useState([]);
   const [isFollower, setisFollower] = useState(false)

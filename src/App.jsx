@@ -1,9 +1,6 @@
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom'
-import { lazy,Suspense } from 'react';
 import {Home, Create, Comments, ProfileSingle, Nav} from './components/index';
-import Login from './auth/Login';
 import PrivateRoutes from './utils/PrivateRoutes';
-// import Profile from './components/Profile';
 import Signin from './auth/Signin';
 import React from 'react';
 import Loading from './components/Loading';

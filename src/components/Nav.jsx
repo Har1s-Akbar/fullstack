@@ -8,7 +8,6 @@ import {
   SettingFilled,
   ContactsFilled,
   BellFilled,
-  UserOutlined
 } from '@ant-design/icons';
 import { Menu, message } from 'antd';
 import { v4 } from 'uuid';

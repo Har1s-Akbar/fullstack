@@ -1,10 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useState } from 'react';
 import {auth, provider} from './firebaseConfig';
 import {signInWithPopup, createUserWithEmailAndPassword, sendSignInLinkToEmail} from 'firebase/auth';
 import {useDispatch} from 'react-redux';
 import { AuthFail, AuthSuccess, setUser } from '../store/slice';
-import { message } from 'antd';
-import { useState } from 'react';
 import { useNavigate} from 'react-router-dom';
 import { v4 } from 'uuid';
 
@@ -24,15 +22,6 @@ function Login() {
     event.preventDefault();
     createUserWithEmailAndPassword(auth, email, password).then(async(userCred)=>{
       const user = userCred.user;
-      // const actionSetting = {
-      //   url: 'http://localhost:5173/signin',
-      //   handleCodeInApp: true
-      // }
-      // sendSignInLinkToEmail(auth, email, actionSetting).then(()=>{
-      //   message.info('Sign up link has been sent to your gmail account')
-      // }).catch((e)=>{
-      //   console.log(e)
-      // })
       dispatch(setUser(user));
     }).then(()=>{
       navigate('/signin');

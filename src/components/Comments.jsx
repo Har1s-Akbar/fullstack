@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
 import { db } from '../auth/firebaseConfig';
 import {collection, doc, getDoc, updateDoc, deleteDoc, serverTimestamp, addDoc, query, where, getDocs} from 'firebase/firestore/lite';
 import Nav from './Nav';
 import { useSelector } from 'react-redux';
 import { Image, Avatar } from 'antd';
 import { EditOutlined, RightOutlined, BarsOutlined, DeleteOutlined, PlusOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 function Comments() {
   const [commentText, setComment] = useState('')
@@ -15,7 +14,6 @@ function Comments() {
   const [editModal, setmodal] = useState(false);
   const [loading, setloading] = useState(false);
   const [editText, setEditText] = useState('')
-  const Allposts = useSelector((state)=> state.reducerPost.userPosts); 
   const user = useSelector((state)=> state.reducer.copyUserdata);
   const [cPost, setcPost] = useState([]);
   const [specificPost, setSpecificPost] = useState([]) 
