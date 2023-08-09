@@ -21,7 +21,7 @@ function Hero() {
   }
   useEffect(()=>fetchImage,[])
     return (
-        loading ? <div><h1>Loading...</h1></div>:
+        // loading ? <div><h1>Loading...</h1></div>:
     <section className='w-full h-screen overflow-hidden relative grid gap-x-8 gap-y-4 sm:gap-x-1 sm-gap-y-1 items-center bg-black'>
         {/* bg-gradient-to-r from-left to-right */}
         <motion.div className='grid lg:grid-cols-8 m-auto sm:grid-cols-4'
