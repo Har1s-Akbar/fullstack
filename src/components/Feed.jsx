@@ -97,9 +97,9 @@ const savePost = async(id) => {
         }
     })
 }
-    useEffect(()=> getPosts, [user, render])
-    useEffect(()=> getcurrentUser , [])
-    useEffect(()=> getSavedPosts, [user, render])
+    useEffect(()=> getPosts(), [user, render])
+    useEffect(()=> getcurrentUser() , [])
+    useEffect(()=> getSavedPosts(), [user, render])
     useEffect(()=> {
       const unique = [...new Map(saved.map(item => [item['Id'], item])).values()]
       setuniqueSaved(unique)

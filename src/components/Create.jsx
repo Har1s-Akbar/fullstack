@@ -1,4 +1,3 @@
-import React, { useEffect } from 'react';
 import Nav from './Nav';
 import { Upload, Modal, Image, message } from 'antd';
 import ImgCrop from 'antd-img-crop';

@@ -83,7 +83,7 @@ const showModal = () => {
   const handleCancel = () => {
     setOpen(false);
   };
-  useEffect(()=> getProfilepicture, [open])
+  useEffect(()=> getProfilepicture(), [open])
 return (
     <section className='w-9/12 lg:w-full'>
               <button onClick={user.uid === id ? showModal: ''} className='w-10/12'>

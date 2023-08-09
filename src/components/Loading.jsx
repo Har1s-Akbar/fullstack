@@ -28,7 +28,7 @@ function Loading() {
                 console.log(e)
             }
         }
-        useEffect(()=> checkUser,[])
+        useEffect(()=> checkUser(),[])
   return (
     <section className='min-h-screen bg-main'>
         <div className='flex items-center justify-center'>
