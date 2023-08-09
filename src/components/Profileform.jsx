@@ -56,7 +56,6 @@ function Profileform (){
   const [filelist, setFileList] = useState([])
   const handleChange = ({ fileList: newFileList }) => {setFileList(newFileList)};
   const handleCancel = () => setPreviewOpen(false);
-  console.log(user.emailVerified)
   const handlePreview = async (file) => {
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj);
@@ -66,9 +65,15 @@ function Profileform (){
     setPreviewTitle(file.name || file.url.substring(file.url.lastIndexOf('/') + 1));
   };
   const onFinish = async(values) => {
+    const metaData = {
+      customMetaData:{
+        'uid': user.uid
+      }
+    }
     message.loading('creating your account', 7)
     const profilepicRef = ref(storage, `profile/${filelist[0].uid}`);
     const uploadPic = await  uploadBytes(profilepicRef, filelist[0].originFileObj).then((snap)=>{
+      // snap.metadata(metaData)
       getDownloadURL(snap.ref).then(async(url)=>{
         const unique = v4()
         await setDoc(doc(db, 'usersProfile', user.uid),{
@@ -87,7 +92,8 @@ function Profileform (){
               isanonymous : user.isAnonymous,
               Isverified: user.emailVerified,
               time: serverTimestamp(),
-        }).then(()=> {
+        }
+        ).then(()=> {
           message.success(`${values.name}, your account is created`)
           navigate('/feed')
         })
@@ -152,7 +158,6 @@ function Profileform (){
     </Form.Item>
     <Form.Item
       name="colorPicker"
-      
       label="Select your favourite color"
     >
       <ColorPicker />
@@ -240,7 +245,8 @@ function Profileform (){
       <Form.Item noStyle>
       <ImgCrop rotationSlider >
         <Upload 
-        style={{aspectRatio: 2/1}}
+          multiple={false}
+          style={{aspectRatio: 2/1}}
           listType="picture-circle"
           fileList={filelist}
           onChange={handleChange}
@@ -264,12 +270,6 @@ function Profileform (){
       name="colorPicker"
       
       label="Favourite color"
-      rules={[
-        {
-          required: true,
-          message: 'color is required!',
-        },
-      ]}
     >
       <ColorPicker />
     </Form.Item>
@@ -316,7 +316,7 @@ function Profileform (){
     <Form.Item
       wrapperCol={{
         span: 12,
-        offset: 5,
+        offset: 4,
       }}
     >
       <Space>

@@ -24,17 +24,18 @@ function Login() {
     event.preventDefault();
     createUserWithEmailAndPassword(auth, email, password).then(async(userCred)=>{
       const user = userCred.user;
-      const actionSetting = {
-        url: 'http://localhost:5173/signin',
-        handleCodeInApp: true
-      }
-      sendSignInLinkToEmail(auth, email, actionSetting).then(()=>{
-        message.info('Sign up link has been sent to your gmail account')
-      }).catch((e)=>{
-        console.log(e)
-      })
+      // const actionSetting = {
+      //   url: 'http://localhost:5173/signin',
+      //   handleCodeInApp: true
+      // }
+      // sendSignInLinkToEmail(auth, email, actionSetting).then(()=>{
+      //   message.info('Sign up link has been sent to your gmail account')
+      // }).catch((e)=>{
+      //   console.log(e)
+      // })
       dispatch(setUser(user));
-      // navigate('/signin');
+    }).then(()=>{
+      navigate('/signin');
     }).catch((error)=> {
       const errorCode = error.code;
       const errorMessage = error.message;

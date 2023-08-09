@@ -7,7 +7,9 @@ export default {
   theme: {
     screens:{
       lg: '700px',
-      sm: '200px'
+      sm: '200px',
+      sm1: '370px',
+      sm2: '420px',
     },
     extend:{
       gridTemplateColumns:{

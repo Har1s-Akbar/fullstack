@@ -51,6 +51,7 @@ function Create() {
       const imageRef = ref(storage, `/image/${fileList[0].name + v4()} `);
       const Img = await uploadBytes(imageRef, fileList[0].originFileObj).then((snapshot) => {
         getDownloadURL(snapshot.ref).then((url)=>{
+          message.loading('Adding Post', 5)
           setDoc(doc(db, "users", uniqueId), {
             Id : uniqueId,
             description: Description,
@@ -65,11 +66,12 @@ function Create() {
             time: serverTimestamp(),
             editedAt: null
           }).then(()=> {
+            message.success('post Added', 2)
             navigate(`/comments/${uniqueId}`)
-          message.success('Post Added', 1)
-          }).catch((error)=> console.log(error))  
+          }).catch((error)=> {
+          })
         });
-      });
+      })
     }
   }
   return (
@@ -99,7 +101,7 @@ function Create() {
           </div>
           <div className='w-2/5 m-auto pt-2'>
         <ImgCrop rotationSlider aspect={2/1}>
-        <Upload 
+        <Upload
         style={{aspectRatio: 2/1}}
           listType="picture-card"
           fileList={fileList}

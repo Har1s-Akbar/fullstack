@@ -91,7 +91,7 @@ const getSinglePost = async()=>{
           <Image src={user.photo} preview={false} fallback='https://rb.gy/tebns' className='rounded-full w-1/2 opacity-80 border-2 border-dim-white my-5 ml-5' width={55}/>
           <PlusOutlined className='lg:mb-6'/>
       </div>
-        <div className={editModal ? 'opacity-50 w-9/12': ' lg:m-0 m-auto w-11/12 lg:w-9/12'}>
+        <div className={editModal ? 'opacity-50 w-11/12 m-auto lg:m-0 lg:w-9/12': ' lg:m-0 m-auto w-11/12 lg:w-9/12'}>
           <section className='bg-secondary w-full grid grid-cols-1 lg:ml-14 rounded-xl lg:flex-row lg:flex my-5 lg:justify-between'>
                     <div className='lg:w-1/2 w-full flex flex-col justify-between'>
                       <div className='flex flex-col'>
@@ -100,7 +100,7 @@ const getSinglePost = async()=>{
                           <Image src={specificPost.userPhoto} className='rounded-full' preview={false} width={60}/>
                           <div className='flex flex-col items-start mx-3'>
                             <h1 className='text-dim-white text-lg font-bold lg:font-semibold'>{specificPost.userName}</h1>
-                            <p className='italic text-xs font-bold'>@harisak</p>
+                            <p className='italic text-xs font-bold'>{specificPost.username}</p>
                             <p className='lg:text-xs text-sm font-thin text-dim-white my-2 font-semibold'>{specificPost.description}</p>
                           </div>
                         </div>
@@ -125,8 +125,8 @@ const getSinglePost = async()=>{
                           </div>
                       </div>
                         <div className=' flex-col flex overflow-y-scroll h-60 lg:h-10'>
-                          {cPost.map((cmnt)=> {
-                            return <div className='my-2 ml-3 flex items-center'>
+                          {cPost.map((cmnt, index)=> {
+                            return <div key={index} className='my-2 ml-3 flex items-center'>
                               <Avatar src={cmnt.commentPhoto} size={'small'}/>
                               <p className='text-xs font-bold text-dim-white mx-2'>{cmnt.commnetProfile} :</p>
                               <p className='text-xs font-medium opacity-80 text-dim-white'>{cmnt.comment}</p>
@@ -151,7 +151,7 @@ const getSinglePost = async()=>{
                   </section>
               </div>
               
-              <div className={editModal ? `border-2 border-secondary opacity-100 bg-main p-10 rounded-md my-2 w-1/2 absolute left-96 top-80`: 'hidden'}>
+              <div className={editModal ? `border-2 border-secondary opacity-100 bg-main p-10 rounded-md my-2 w-full lg:w-1/2 absolute left-0 lg:left-96 top-80`: 'hidden'}>
                   <div className='flex justify-between mb-10' onClick={()=>{setmodal(false); setSetting(false)}}>
                   <h1 className='text-dim-white text-xl'>Edit Description</h1>
                   <Avatar icon={<CloseOutlined />} className='bg-main'/>

@@ -63,11 +63,12 @@ const App = () => {
     const signOutFunct = () => {
       currentUser();
       auth.signOut().then(()=>{
-        console.log('signned out');
+        message.success('Logged Out Successfully')
+      }).then(()=>{
         navigate('/');
         dispatch(setUser([]));
-        message.success('Logged Out Successfully')
-      }).catch((error)=> 
+      })
+      .catch((error)=> 
         {console.log(error);
         message.error('Failed to log out')}
       )
@@ -93,7 +94,7 @@ const App = () => {
         onClick={handleClick}    
         mode="horizontal"
         theme='dark'
-        className='bg-secondary lg:p-0 lg:rounded-full lg:hidden text-dim-white '
+        className='bg-secondary sm1:px-8 sm1:py-2 sm2:px-14 sm2:py-2 lg:p-0 lg:rounded-full lg:hidden text-dim-white '
         items={items}
       />
     </div>

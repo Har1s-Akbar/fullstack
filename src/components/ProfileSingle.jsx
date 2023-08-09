@@ -133,9 +133,8 @@ const nameChangeHandle = async() =>{
   }
 }
 
-const updateDescp = async() => {
-  event.preventDefault();
-  
+const updateDescp = async(e) => {
+  e.preventDefault()
   if(descp.length <1){
    alert('Add an appropriate description')
   }else{
@@ -143,7 +142,7 @@ const updateDescp = async() => {
     updateDoc(updateRef,{
       description: descp
     })
-    setloading(false)
+    navigate(`/profile/${user.uid}`)
   }
 }
 
@@ -216,7 +215,7 @@ useEffect(()=> handlePosts, [])
                     <Tooltip placement='right' title={'Edit the description by clicking on it'} color='volcano'>
                       <textarea type="text" disabled={inputDisable} defaultValue={profile.description} onChange={(e)=> setDescpText(e.target.value)} onClick={()=>{if(showDescp){ setDescp(false)}else{setDescp(true)}}} className=' w-full bg-transparent outline-0 text-base lg:text-xl font-normal lg:font-thin' />
                     </Tooltip>
-                  <button onClick={updateDescp}>
+                  <button onClick={(e)=>{updateDescp(e)}}>
                   <Avatar icon={<RightOutlined/>} size={'small'} className={showDescp ? 'bg-main flex': 'hidden'}/>
                   </button>
                   </div>

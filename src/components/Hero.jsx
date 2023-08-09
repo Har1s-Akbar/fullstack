@@ -9,7 +9,7 @@ function Hero() {
   const fetchImage = async() => {
     setloading(true)
     try{    
-        const response = await fetch('https://api.pexels.com/v1/curated?&per_page=40',{headers:{Authorization: api_key}})
+        const response = await fetch('https://api.pexels.com/v1/curated?&per_page=80',{headers:{Authorization: api_key}})
         const data = await response.json();
         setPhotos(data.photos);
         if (data){
