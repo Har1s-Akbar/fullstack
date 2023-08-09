@@ -1,13 +1,12 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { db } from '../auth/firebaseConfig';
-import {arrayUnion, collection, doc, getDoc, setDoc, updateDoc, deleteDoc, serverTimestamp, addDoc, query, where, getDocs} from 'firebase/firestore/lite';
+import {collection, doc, getDoc, updateDoc, deleteDoc, serverTimestamp, addDoc, query, where, getDocs} from 'firebase/firestore/lite';
 import Nav from './Nav';
-import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Image, Avatar } from 'antd';
 import { EditOutlined, RightOutlined, BarsOutlined, DeleteOutlined, PlusOutlined, CheckOutlined, CloseOutlined } from '@ant-design/icons';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 function Comments() {
   const [commentText, setComment] = useState('')

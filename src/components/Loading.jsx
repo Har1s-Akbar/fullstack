@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { Spin } from 'antd'
 import { useNavigate, useParams } from 'react-router-dom'
-import { collection, getDoc, getDocs, query, where, doc, runTransaction, Transaction } from 'firebase/firestore/lite'
+import { doc, runTransaction } from 'firebase/firestore/lite'
 import { db } from '../auth/firebaseConfig'
 import { v4 } from 'uuid'
 

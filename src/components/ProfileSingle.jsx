@@ -9,7 +9,6 @@ import { Link } from 'react-router-dom'
 import { useSelector,useDispatch } from 'react-redux'
 import { motion } from 'framer-motion'
 import ProfilePicture from './ProfilePicture'
-import { setUser } from '../store/slice'
 
 const variant ={
   open: { opacity : 1, y : 0, sizeX: '100%'},

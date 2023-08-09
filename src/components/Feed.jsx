@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { query,collection, getDocs, where, doc, getDoc, limit, orderBy, setDoc, updateDoc,arrayRemove, arrayUnion, serverTimestamp, deleteDoc} from 'firebase/firestore/lite';
 import Nav from './Nav'
-import { db, storage } from '../auth/firebaseConfig';
+import { db} from '../auth/firebaseConfig';
 import { Image, Skeleton, Avatar, message } from 'antd';
 import { setcopyData } from '../store/slice';
 import { setPosts } from '../store/postSlice';

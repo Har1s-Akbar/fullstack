@@ -1,6 +1,5 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Image, Modal,Upload, message } from 'antd'
-import { useState } from 'react';
 import ImgCrop from 'antd-img-crop';
 import { collection, doc, getDoc, getDocs, query, setDoc, updateDoc, where } from 'firebase/firestore/lite';
 import { db,storage } from '../auth/firebaseConfig';
@@ -11,7 +10,7 @@ import { useSelector } from 'react-redux';
 
 
 function ProfilePicture({profile}) {
-    const user = useSelector((state)=> state.reducer.copyUserdata)
+const user = useSelector((state)=> state.reducer.copyUserdata)
 const {id} = useParams()
 const [open, setOpen] = useState(false);
 const [confirmLoading, setConfirmLoading] = useState(false);

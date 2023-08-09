@@ -1,6 +1,5 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {motion} from 'framer-motion'
-import { useState } from 'react';
 import Login from '../auth/Login';
 function Hero() {
     const [photos, setPhotos] = useState([])

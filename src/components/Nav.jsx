@@ -10,7 +10,7 @@ import {
   BellFilled,
   UserOutlined
 } from '@ant-design/icons';
-import { Button, Menu, message } from 'antd';
+import { Menu, message } from 'antd';
 import { v4 } from 'uuid';
 function getItem(label, key, icon, children, type, disabled) {
   return {
@@ -47,7 +47,6 @@ const App = () => {
       getItem(<a href="/signup">Sign Up</a>, '6'),
     ]),
   ];
-    const name = User.name
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const currentUser = () => {
