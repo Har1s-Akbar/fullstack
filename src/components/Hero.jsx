@@ -19,6 +19,7 @@ function Hero() {
         console.log(error);
     }
   }
+  console.log(photos)
   useEffect(()=>fetchImage,[])
     return (
         loading ? <div><h1>Loading...</h1></div>:
