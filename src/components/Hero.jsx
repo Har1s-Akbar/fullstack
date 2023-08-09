@@ -5,11 +5,10 @@ import Login from '../auth/Login';
 function Hero() {
     const [photos, setPhotos] = useState([])
     const [loading, setloading] = useState(true)
-    const api_key = '6hQbAQHftoja1nH9XPBCJ3g5vUrFBFPTIqmloRdxT5gih1o5aTFgQFQq' 
   const fetchImage = async() => {
     setloading(true)
     try{    
-        const response = await fetch('https://api.pexels.com/v1/curated?&per_page=80',{headers:{Authorization: api_key}})
+        const response = await fetch('https://api.pexels.com/v1/curated?&per_page=80',{headers:{Authorization: import.meta.env.VITE_PEXEL_KEY}})
         const data = await response.json();
         setPhotos(data.photos);
         if (data){
