@@ -159,8 +159,8 @@ const getSavedPosts = async() => {
       }
   })
 }
-useEffect(()=> handlePosts(), [])
-  useEffect(()=> getProfile(), [nameBtn, followerReload])
+useEffect(()=> handlePosts, [])
+  useEffect(()=> getProfile, [nameBtn, followerReload])
   useEffect(()=>{
     if(user.uid !== id){
     setDisable(true)
@@ -168,7 +168,7 @@ useEffect(()=> handlePosts(), [])
     setDisable(false)
   }
   },[])
-  useEffect(()=> getSavedPosts(), [user])
+  useEffect(()=> getSavedPosts, [user])
   useEffect(()=> {
     const unique = [...new Map(saved.map(item => [item['Id'], item])).values()]
     setuniqueSaved(unique)
