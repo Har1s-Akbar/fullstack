@@ -8,7 +8,11 @@ function Hero() {
   const fetchImage = async() => {
     setloading(true)
     try{    
-        const response = await fetch('https://api.pexels.com/v1/curated?&per_page=80',{headers:{Authorization: import.meta.env.VITE_PEXEL_KEY}})
+        const response = await fetch('https://api.pexels.com/v1/curated?&per_page=80',{
+            headers:{
+                Authorization: import.meta.env.VITE_PEXEL_KEY,
+                
+            }})
         const data = await response.json();
         setPhotos(data.photos);
         if (data){
@@ -18,7 +22,7 @@ function Hero() {
         console.log(error);
     }
   }
-  useEffect(()=>fetchImage,[])
+  useEffect(()=>fetchImage(),[])
     return (
         loading ? <div><h1>Loading...</h1></div>:
     <section className='w-full h-screen overflow-hidden relative grid gap-x-8 gap-y-4 sm:gap-x-1 sm-gap-y-1 items-center bg-black'>
