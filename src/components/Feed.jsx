@@ -104,7 +104,7 @@ const savePost = async(id) => {
       const unique = [...new Map(saved.map(item => [item['Id'], item])).values()]
       setuniqueSaved(unique)
     },[saved])
-  // console.log(suggestionUser)
+  console.log(CopyUser)
     return (
     <section className={posts.length === 0 ? 'lg:grid lg:grid-cols-5 lg:justify-items-center flex flex-col lg:flex min-h-screen bg-main': 'flex lg:flex-row flex-col min-h-screen bg-main text-dim-white'}>
     <div className='sm:sticky sm:top-0 sm:z-10'>
@@ -113,7 +113,8 @@ const savePost = async(id) => {
     <div className={posts.length === 0? 'w-9/12 col-start-2 col-end-5': "flex flex-col"}>
       <Skeleton loading={Loading} paragraph={{rows:0}}>
           <Link to={`/profile/${user.uid}`} className={posts.length === 0? 'bg-secondary lg:my-10 lg:w-full lg:flex hidden lg:items-end lg:rounded-xl': 'bg-secondary lg:my-10 lg:w-1/2 lg:flex lg:items-end lg:rounded-xl lg:m-auto hidden'}>
-            <Image src={CopyUser.photo} preview={false} fallback='https://rb.gy/tebns' className='rounded-full w-1/2 opacity-80 border-2 border-dim-white my-5 ml-5' width={55}/>
+            {/* <Image src={CopyUser.photo} preview={false} fallback='https://rb.gy/tebns' className='rounded-full w-1/2 opacity-80 border-2 border-dim-white my-5 ml-5' width={55}/> */}
+            <img src={CopyUser.photo} className='rounded-full w-1/2 opacity-80 border-2 border-dim-white my-5 ml-5'/>
             <PlusOutlined className='mb-4'/>
           </Link>
       </Skeleton>
