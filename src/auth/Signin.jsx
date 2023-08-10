@@ -53,7 +53,7 @@ function Signin() {
         console.log(error);
     }
   }
-  useEffect(()=>fetchImage,[])
+  useEffect(()=>{fetchImage()},[])
   return (
     <section className='overflow-hidden h-screen'>
         <div className='flex flex-col relative items-center z-10 top-10 lg:top-0 justify-center rounded drop-shadow-2xl bg-orange-50 outline-8 outline-slate-500 border-amber-100 m-auto border-black w-11/12 lg:w-2/5 h-4/5 '>

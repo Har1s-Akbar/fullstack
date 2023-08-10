@@ -76,8 +76,8 @@ const getSinglePost = async()=>{
     setloading(true);
     setSetting(false)
   }
-  useEffect(()=> getComments(), [loading])
-  useEffect(()=> getSinglePost(), [loading, editModal])
+  useEffect(()=> {getComments()}, [loading])
+  useEffect(()=> {getSinglePost()}, [loading, editModal])
   return (
     <main className= 'flex flex-col overflow-x-hidden lg:flex-row bg-main text-dim-white min-h-screen'>
       <div>

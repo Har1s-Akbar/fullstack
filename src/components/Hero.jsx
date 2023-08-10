@@ -21,7 +21,7 @@ function Hero() {
         console.log(error);
     }
   }
-  useEffect(()=>fetchImage(),[])
+  useEffect(()=>{fetchImage()},[])
     return (
         loading ? <div><h1>Loading...</h1></div>:
     <section className='w-full h-screen overflow-hidden relative grid gap-x-8 gap-y-4 sm:gap-x-1 sm-gap-y-1 items-center bg-black'>
