@@ -15,7 +15,6 @@ function Profile() {
   const user = useSelector((state)=> state.reducer.userdata);
   const CopyUser = useSelector((state)=> state.reducer.copyUserdata)
   const [Loading, setloading] = useState(true)
-  const [currentUser, setCurrentUser] = useState([])
   const [posts, setposts] = useState([])
   const [ render, setRender] = useState(false)
   //  states for getting saved posts
@@ -24,7 +23,6 @@ function Profile() {
   const getcurrentUser = async() => {
     const getData = await getDoc(doc(db, 'usersProfile', user.uid))
     const data = getData.data()
-    setCurrentUser(data)
     dispatch(setcopyData(data))
   }
 
@@ -106,7 +104,7 @@ const savePost = async(id) => {
       const unique = [...new Map(saved.map(item => [item['Id'], item])).values()]
       setuniqueSaved(unique)
     },[saved])
-  console.log(currentUser.photo)
+  console.log(CopyUser)
     return (
     <section className={posts.length === 0 ? 'lg:grid lg:grid-cols-5 lg:justify-items-center flex flex-col lg:flex min-h-screen bg-main': 'flex lg:flex-row flex-col min-h-screen bg-main text-dim-white'}>
     <div className='sm:sticky sm:top-0 sm:z-10'>
@@ -115,8 +113,7 @@ const savePost = async(id) => {
     <div className={posts.length === 0? 'w-9/12 col-start-2 col-end-5': "flex flex-col"}>
       <Skeleton loading={Loading} paragraph={{rows:0}}>
           <Link to={`/profile/${user.uid}`} className={posts.length === 0? 'bg-secondary lg:my-10 lg:w-full lg:flex hidden lg:items-end lg:rounded-xl': 'bg-secondary lg:my-10 lg:w-1/2 lg:flex lg:items-end lg:rounded-xl lg:m-auto hidden'}>
-            {/* <Image src={CopyUser.photo} preview={false} fallback='https://rb.gy/tebns' className='rounded-full w-1/2 opacity-80 border-2 border-dim-white my-5 ml-5' width={55}/> */}
-            <img src={currentUser.photo} className='rounded-full w-1/2 opacity-80 border-2 border-dim-white my-5 ml-5'/>
+            <Image src={CopyUser.photo} preview={false} fallback='https://rb.gy/tebns' className='rounded-full w-1/2 opacity-80 border-2 border-dim-white my-5 ml-5' width={55}/>
             <PlusOutlined className='mb-4'/>
           </Link>
       </Skeleton>

@@ -11,12 +11,12 @@ function App() {
     <Router>
       <Routes>
         <Route path='/' Component={Home} />
-        <Route path='/signin' Component={Signin} />
+        <Route exact path='/signin' Component={Signin} />
         <Route element={<PrivateRoutes/>}>
-          <Route path='/feed' element={<Profile/>} />
+          <Route exact path='/feed' element={<Profile/>} />
           <Route path='/create/:id' Component={Create}/>
           <Route path='/profile/:id' Component={ProfileSingle} />
-          <Route path='/create' Component={Create} />
+          <Route exact path='/create' Component={Create} />
           <Route path='/comments/:id' Component={Comments} />
           <Route path='/:id/:id' Component={Loading}/>
           <Route path='/userform/:id/:id' Component={Profileform}/>
