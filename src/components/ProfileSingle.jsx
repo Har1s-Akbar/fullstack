@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { NavLink, useNavigate, useParams } from 'react-router-dom'
 import { collection, doc, getDoc, getDocs, where, query, updateDoc, arrayRemove, arrayUnion, orderBy, limit } from 'firebase/firestore/lite'
 import { db } from '../auth/firebaseConfig'
 import Nav from './Nav'
@@ -255,7 +255,7 @@ useEffect(()=> {handlePosts()}, [])
             </div>
       <div className={showPosts ? 'lg:gap-4 gap-2 mt-2 overflow-y-scroll lg:h-96 place-content-start grid grid-cols-2 w-11/12 lg:grid-cols-3 m-auto': 'hidden'}>
         {profilePosts.map((item)=> {
-          return <Link key={item.Id} to={`/comments/${item.Id}`}>
+          return <Link as={NavLink} key={item.Id} to={`/comments/${item.Id}`}>
             <motion.div
             animate={showPosts ? 'open' : 'closed'}
             variants={variant}>
@@ -267,7 +267,7 @@ useEffect(()=> {handlePosts()}, [])
         <div className='lg:gap-4 gap-2 mt-2 overflow-y-scroll h-96 place-content-start grid grid-cols-2 w-11/12 lg:grid-cols-3 m-auto'>
         {
           uniqueSaved.map((item)=>{
-            return <Link key={item.Id} className={showSaved ? '' : 'hidden'} to={`/comments/${item.Id}`}>
+            return <Link as={NavLink} key={item.Id} className={showSaved ? '' : 'hidden'} to={`/comments/${item.Id}`}>
             <motion.div
             animate={showSaved ? 'open' : 'closed'}
             variants={variant}

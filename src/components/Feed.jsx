@@ -6,7 +6,7 @@ import { db} from '../auth/firebaseConfig';
 import { Image, Skeleton, Avatar, message } from 'antd';
 import { setcopyData } from '../store/slice';
 import { setPosts } from '../store/postSlice';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import { PlusOutlined, LikeOutlined, MessageOutlined , SendOutlined, BookOutlined} from '@ant-design/icons';
 import Create from './Create';
 
@@ -104,7 +104,6 @@ const savePost = async(id) => {
       const unique = [...new Map(saved.map(item => [item['Id'], item])).values()]
       setuniqueSaved(unique)
     },[saved])
-  console.log(CopyUser)
     return (
     <section className={posts.length === 0 ? 'lg:grid lg:grid-cols-5 lg:justify-items-center flex flex-col lg:flex min-h-screen bg-main': 'flex lg:flex-row flex-col min-h-screen bg-main text-dim-white'}>
     <div className='sm:sticky sm:top-0 sm:z-10'>
@@ -112,7 +111,7 @@ const savePost = async(id) => {
     </div>
     <div className={posts.length === 0? 'w-9/12 col-start-2 col-end-5': "flex flex-col"}>
       <Skeleton loading={Loading} paragraph={{rows:0}}>
-          <Link to={`/profile/${user.uid}`} className={posts.length === 0? 'bg-secondary lg:my-10 lg:w-full lg:flex hidden lg:items-end lg:rounded-xl': 'bg-secondary lg:my-10 lg:w-1/2 lg:flex lg:items-end lg:rounded-xl lg:m-auto hidden'}>
+          <Link as={NavLink} to={`/profile/${user.uid}`} className={posts.length === 0? 'bg-secondary lg:my-10 lg:w-full lg:flex hidden lg:items-end lg:rounded-xl': 'bg-secondary lg:my-10 lg:w-1/2 lg:flex lg:items-end lg:rounded-xl lg:m-auto hidden'}>
             <Image src={CopyUser.photo} preview={false} fallback='https://rb.gy/tebns' className='rounded-full w-1/2 opacity-80 border-2 border-dim-white my-5 ml-5' width={55}/>
             <PlusOutlined className='mb-4'/>
           </Link>
@@ -125,7 +124,7 @@ const savePost = async(id) => {
                 <div className='w-full my-3 lg:my-5 bg-secondary pt-5 pb-5 px-5 rounded-xl'>
                 <div className='flex items-center w-full'>
                   <Skeleton paragraph={{rows:1}} loading={Loading} avatar>
-                    <Link to={`/profile/${item.post_useruid}`} className='flex items-center lg:w-full w-2/5'>
+                    <Link as={NavLink} to={`/profile/${item.post_useruid}`} className='flex items-center lg:w-full w-2/5'>
                       <Image src={item.userPhoto} preview={false} width={60} className='rounded-full w-1/2'/>
                       <div className='flex items-start flex-col ml-3'>
                         <h1 className='lg:text-xl text-lg text-dim-white font-medium'>{item.userName}</h1>
@@ -148,7 +147,7 @@ const savePost = async(id) => {
                   <Avatar icon={<LikeOutlined />} className='bg-secondary' style={{fontSize: '150%'}} size={'large'}/>
                 </button>
                 <button>
-                  <Link to={`/comments/${item.Id}`}>
+                  <Link as={NavLink} to={`/comments/${item.Id}`}>
                     <Avatar icon={<MessageOutlined />} className='bg-secondary'style={{fontSize: '150%'}} size={'large'}/>
                   </Link>
                 </button>
@@ -184,7 +183,7 @@ const savePost = async(id) => {
                       uniqueSaved.length === 0 ? 'Save some posts' : 'See All Saved Posts' 
                     }</h1>
                     <button className={uniqueSaved.length === 0 ? 'hidden': 'w-9/12 bg-secondary rounded-lg py-2 my-1 opacity-60 hover:opacity-100 transition delay-200 ease-in-out'}>
-                      <Link to={`/profile/${user.uid}`}>
+                      <Link as={NavLink} to={`/profile/${user.uid}`}>
                         Visit
                       </Link>
                     </button>
